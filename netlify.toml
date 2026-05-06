@@ -11,6 +11,12 @@
 [build]
   # Arquivo principal do site
   publish = "."
+  # Pasta das funções serverless (botão Sincronizar)
+  functions = "netlify/functions"
+
+[functions]
+  # Node.js 20 com suporte nativo a fetch e ES Modules
+  node_bundler = "esbuild"
 
 # Cabeçalhos de segurança
 [[headers]]

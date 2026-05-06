@@ -1,827 +1,659 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Modelagem 3D — Grupo Soma</title>
-
-  <!-- Chart.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-
-  <style>
-    /* ── Reset & Base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:       #0f1117;
-      --surface:  #1a1d27;
-      --card:     #22263a;
-      --border:   #2e3248;
-      --text:     #e8eaf6;
-      --muted:    #8891b2;
-      --accent1:  #7c6af5;   /* roxo */
-      --accent2:  #f5a623;   /* laranja estilista */
-      --accent3:  #4caf50;   /* verde inv27 */
-      --montagem: #7c6af5;
-      --novo:     #26c6da;
-      --ajuste:   #ff7043;
-      --farm:     #ec407a;
-      --gl:       #42a5f5;
-      --filó:     #66bb6a;
-      --outras:   #bdbdbd;
-    }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── Header ── */
-    header {
-      background: linear-gradient(135deg, #1a1d27 0%, #12152a 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 1.2rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: 0.02em; }
-    header h1 span { color: var(--accent1); }
-    .header-meta { font-size: 0.78rem; color: var(--muted); text-align: right; }
-    .header-meta strong { color: var(--text); }
-
-    /* ── Layout principal ── */
-    main { padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
-
-    /* ── Seções ── */
-    .section-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin: 2rem 0 0.8rem;
-    }
-
-    /* ── KPI Cards (topo) ── */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 0.75rem;
-    }
-    .kpi {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-    .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-    .kpi-value { font-size: 2rem; font-weight: 800; line-height: 1; }
-    .kpi-sub   { font-size: 0.72rem; color: var(--muted); }
-    .kpi.c-montagem .kpi-value { color: var(--montagem); }
-    .kpi.c-novo     .kpi-value { color: var(--novo);     }
-    .kpi.c-ajuste   .kpi-value { color: var(--ajuste);   }
-    .kpi.c-total    .kpi-value { color: var(--accent1);  }
-    .kpi.c-free     .kpi-value { color: var(--accent2);  }
-
-    /* ── Grade de gráficos ── */
-    .chart-grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 1rem;
-    }
-    .chart-grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1rem;
-    }
-    .chart-box {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-    }
-    .chart-box.wide { grid-column: 1 / -1; }
-    .chart-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 1rem;
-    }
-    .chart-wrap { position: relative; height: 260px; }
-    .chart-wrap.tall { height: 340px; }
-
-    /* ── Tabela detalhada ── */
-    .table-wrap { overflow-x: auto; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.82rem;
-    }
-    thead th {
-      background: var(--surface);
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      padding: 0.6rem 0.9rem;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-      white-space: nowrap;
-    }
-    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
-    tbody tr:hover { background: var(--surface); }
-    tbody td { padding: 0.55rem 0.9rem; color: var(--text); vertical-align: middle; }
-    tbody td:nth-child(1) { color: var(--muted); font-size: 0.75rem; }
-
-    /* Badges de tipo */
-    .badge {
-      display: inline-block;
-      padding: 0.18rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-    }
-    .badge-Montagem { background: #7c6af520; color: var(--montagem); }
-    .badge-Novo     { background: #26c6da20; color: var(--novo);     }
-    .badge-Ajuste   { background: #ff704320; color: var(--ajuste);   }
-    .badge-Outro    { background: #ffffff10; color: var(--muted);    }
-    .badge-Baixa    { background: #4caf5020; color: #4caf50; }
-    .badge-Média    { background: #ffc10720; color: #ffc107; }
-    .badge-Alta     { background: #f4433620; color: #f44336; }
-
-    /* ── Loading / Erro ── */
-    #loading, #error {
-      position: fixed; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg);
-      z-index: 999;
-      flex-direction: column;
-      gap: 1rem;
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-    #error { display: none; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent1);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #loading { transition: opacity 0.4s; }
-    #loading.hidden { opacity: 0; pointer-events: none; }
-
-    /* ── Filtros ── */
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 1rem;
-    }
-    .filters label { font-size: 0.78rem; color: var(--muted); }
-    .filters select {
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.82rem;
-      cursor: pointer;
-    }
-    .filters select:focus { outline: 2px solid var(--accent1); }
-    .btn-reset {
-      margin-left: auto;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 6px;
-      padding: 0.3rem 0.8rem;
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-reset:hover { border-color: var(--accent1); color: var(--accent1); }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: var(--muted);
-      font-size: 0.75rem;
-      border-top: 1px solid var(--border);
-      margin-top: 3rem;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier Analytics · Quadro 3D</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231F1218'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' fill='%23C99A8A' font-family='Georgia,serif' font-weight='700' font-size='14'%3EAt%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--noir:#1F1218;--noir-2:#281820;--noir-3:#33202A;--noir-4:#422836;--blush:#F5EDE6;--blush-80:rgba(245,237,230,0.84);--blush-60:rgba(245,237,230,0.60);--blush-40:rgba(245,237,230,0.38);--blush-20:rgba(245,237,230,0.18);--rose:#C99A8A;--rose-soft:rgba(201,154,138,0.14);--rose-line:rgba(201,154,138,0.30);--bordeaux:#8C3148;--champagne:#E5C9A8;--sage:#9CB39E;--noise-opacity:0.22;--noise-blend:overlay;--glow-strength:0.08}
+html[data-theme=light]{--noir:#F5EDE6;--noir-2:#EDE2D8;--noir-3:#E3D3C5;--noir-4:#D8C5B5;--blush:#2A1820;--blush-80:rgba(42,24,32,0.86);--blush-60:rgba(42,24,32,0.62);--blush-40:rgba(42,24,32,0.40);--blush-20:rgba(42,24,32,0.18);--rose:#A6614A;--rose-soft:rgba(166,97,74,0.10);--rose-line:rgba(166,97,74,0.32);--bordeaux:#7A2238;--champagne:#B58657;--sage:#6A8470;--line:rgba(42,24,32,0.10);--line-strong:rgba(42,24,32,0.20);--c-montagem:#A6614A;--c-novo:#B58657;--c-ajuste:#7A2238;--c-farm:#A6614A;--c-gl:#7A2238;--c-mariafilo:#B58657;--c-outras:#6A8470;--noise-opacity:0.05;--noise-blend:multiply;--glow-strength:0.04}
+:root{--c-montagem:#C99A8A;--c-novo:#E5C9A8;--c-ajuste:#8C3148;--c-farm:#C99A8A;--c-gl:#8C3148;--c-mariafilo:#E5C9A8;--c-outras:#9CB39E;--line:rgba(245,237,230,0.08);--line-strong:rgba(245,237,230,0.18);--font-display:'Fraunces',Georgia,serif;--font-body:'Instrument Sans',system-ui,sans-serif;--font-mono:ui-monospace,'JetBrains Mono',monospace;--fs-3xs:0.6875rem;--fs-2xs:0.75rem;--fs-xs:0.8125rem;--fs-sm:0.9375rem;--fs-base:1rem;--fs-lg:1.125rem;--fs-xl:1.3125rem;--fs-2xl:1.6rem;--fs-3xl:2.25rem;--fs-hero:clamp(2.5rem,1.6rem + 4vw,4.5rem);--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:48px;--sp-8:64px;--sp-9:96px;--r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--max-w:1440px;--gutter:clamp(1rem,3vw,2rem);--ease-out:cubic-bezier(0.2,0.8,0.2,1);--dur-fast:180ms;--dur-med:280ms}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--noir);color:var(--blush-80);font-family:var(--font-body);font-size:var(--fs-base);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:var(--noise-opacity);mix-blend-mode:var(--noise-blend);background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.32 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+body::after{content:"";position:fixed;top:-30vh;left:50%;transform:translateX(-50%);width:140vmin;height:140vmin;pointer-events:none;z-index:0;background:radial-gradient(circle at center,rgba(201,154,138,var(--glow-strength)) 0%,rgba(201,154,138,calc(var(--glow-strength)*0.25)) 30%,transparent 60%)}
+h1,h2,h3,h4,h5{margin:0;color:var(--blush);font-family:var(--font-display);font-weight:700;line-height:1.08;letter-spacing:-0.02em}
+h1{font-size:var(--fs-hero);font-weight:900;letter-spacing:-0.03em}
+h2{font-size:var(--fs-3xl)}
+h3{font-size:var(--fs-xl);font-weight:600}
+em,.italic{font-style:italic;color:var(--rose)}
+.mono{font-family:var(--font-mono);font-size:var(--fs-2xs);font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--blush-60)}
+.wrap{width:100%;max-width:var(--max-w);margin-inline:auto;padding-inline:var(--gutter);position:relative;z-index:2}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(31,18,24,0.78);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--line)}
+.topbar__inner{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);padding-block:var(--sp-4)}
+.brand{display:flex;align-items:center;gap:var(--sp-3)}
+.brand__mark{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--rose-line);background:var(--rose-soft);display:grid;place-items:center;font-family:var(--font-display);font-weight:900;font-size:13px;color:var(--rose);letter-spacing:-0.02em}
+.brand__kicker{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--rose);line-height:1;margin-bottom:3px}
+.brand__name{font-family:var(--font-display);font-size:var(--fs-sm);font-weight:600;color:var(--blush);line-height:1.2}
+.topbar__meta{display:flex;align-items:center;gap:var(--sp-4);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.topbar__dot{display:inline-flex;align-items:center;gap:var(--sp-2)}
+.topbar__dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 3px rgba(156,179,158,0.18)}
+.topbar__sep{width:1px;height:12px;background:var(--line-strong)}
+.theme-toggle{display:inline-flex;align-items:center;gap:var(--sp-2);background:transparent;border:1px solid var(--line-strong);color:var(--blush);padding:4px 10px 4px 4px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out)}
+.theme-toggle:hover{border-color:var(--rose-line);background:var(--rose-soft)}
+.theme-toggle__track{position:relative;width:30px;height:16px;border-radius:999px;background:var(--rose-soft);border:1px solid var(--rose-line);flex-shrink:0}
+.theme-toggle__thumb{position:absolute;top:1px;left:1px;width:12px;height:12px;border-radius:50%;background:var(--rose);transition:transform var(--dur-med) var(--ease-out)}
+html[data-theme=light] .theme-toggle__thumb{transform:translateX(14px)}
+.theme-toggle__label::before{content:attr(data-dark)}
+html[data-theme=light] .theme-toggle__label::before{content:attr(data-light)}
+.theme-toggle__label{color:var(--blush-80)}
+.sync-btn{display:inline-flex;align-items:center;gap:var(--sp-2);background:var(--rose-soft);border:1px solid var(--rose-line);color:var(--rose);padding:4px 12px 4px 8px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:all var(--dur-fast) var(--ease-out)}
+.sync-btn:hover:not(:disabled){border-color:var(--rose);background:rgba(201,154,138,0.22);color:var(--blush)}
+.sync-btn:disabled{opacity:0.6;cursor:not-allowed}
+.sync-btn__icon{width:14px;height:14px;flex-shrink:0}
+.sync-btn--loading .sync-btn__icon{animation:spin 1s linear infinite}
+.sync-btn--ok{border-color:var(--sage);color:var(--sage);background:rgba(156,179,158,0.10)}
+.sync-btn--err{border-color:var(--bordeaux);color:var(--bordeaux);background:rgba(140,49,72,0.10)}
+@keyframes spin{to{transform:rotate(360deg)}}
+#demo-banner{display:none;background:linear-gradient(90deg,rgba(140,49,72,0.18),rgba(140,49,72,0.06));border-bottom:1px solid rgba(140,49,72,0.4);padding:var(--sp-2) var(--sp-5);text-align:center;font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.16em;color:var(--rose);position:relative;z-index:2}
+#demo-banner.visible{display:block}
+.hero{padding-block:var(--sp-8) var(--sp-7)}
+.hero__meta{display:flex;align-items:center;gap:var(--sp-4);flex-wrap:wrap;margin-bottom:var(--sp-6);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.hero__meta-item{display:inline-flex;align-items:center;gap:var(--sp-2)}
+.hero__meta-item::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--rose)}
+.hero__title{margin-bottom:var(--sp-5);max-width:18ch}
+.hero__lead{font-family:var(--font-display);font-size:var(--fs-xl);font-weight:400;line-height:1.5;color:var(--blush-80);max-width:56ch;margin-bottom:var(--sp-6)}
+.hero__tldr{border-left:2px solid var(--rose);padding-left:var(--sp-4);max-width:64ch}
+.hero__tldr .label{display:block;margin-bottom:var(--sp-2);color:var(--rose);font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.18em;text-transform:uppercase}
+.hero__tldr p{margin:0;color:var(--blush-80)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3);margin-top:var(--sp-7);padding-top:var(--sp-6);border-top:1px solid var(--line)}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{padding:var(--sp-5);border-radius:var(--r-lg);border:1px solid var(--line);background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));display:flex;flex-direction:column;gap:var(--sp-3);position:relative;overflow:hidden;transition:border-color var(--dur-med) var(--ease-out)}
+.kpi:hover{border-color:var(--rose-line)}
+.kpi--accent{background:linear-gradient(180deg,rgba(201,154,138,0.06),rgba(201,154,138,0.01));border-color:var(--rose-line)}
+.kpi__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--blush-60)}
+.kpi__num{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:var(--blush);line-height:1;letter-spacing:-0.03em}
+.kpi__num sub{font-size:0.42em;color:var(--rose);vertical-align:super;margin-left:4px;font-weight:400;letter-spacing:0}
+.kpi__sub{font-size:var(--fs-xs);color:var(--blush-60);line-height:1.45}
+.kpi__sub strong{color:var(--blush);font-weight:600}
+.filters{margin-top:var(--sp-7);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(245,237,230,0.015);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-5)}
+.filters__group{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
+.filters__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--sp-2)}
+.chip{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-80);padding:var(--sp-2) var(--sp-3);border-radius:999px;border:1px solid var(--line-strong);background:transparent;cursor:pointer;transition:all var(--dur-fast) var(--ease-out);min-height:32px;display:inline-flex;align-items:center;gap:var(--sp-2)}
+.chip:hover{border-color:var(--rose-line);color:var(--blush)}
+.chip[aria-pressed=true]{background:var(--rose);color:var(--noir);border-color:var(--rose);font-weight:600}
+.section{padding-block:var(--sp-8)}
+.section+.section{border-top:1px solid var(--line)}
+.section__num{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;color:var(--rose);margin-bottom:var(--sp-3)}
+.section__title{margin-bottom:var(--sp-3)}
+.section__intro{font-size:var(--fs-lg);color:var(--blush-80);max-width:64ch;margin-bottom:var(--sp-7)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:var(--sp-5)}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-5)}
+@media(max-width:880px){.grid-2{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-5) var(--sp-6);transition:border-color var(--dur-med) var(--ease-out);position:relative;opacity:0;transform:translateY(18px)}
+.card.is-in{animation:cardIn var(--dur-med) var(--ease-out) forwards}
+@keyframes cardIn{to{opacity:1;transform:translateY(0)}}
+.card:hover{border-color:var(--line-strong)}
+.card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-5);padding-bottom:var(--sp-4);border-bottom:1px solid var(--line)}
+.card__title{font-family:var(--font-display);font-size:var(--fs-xl);font-weight:600;color:var(--blush);margin:0}
+.card__sub{display:block;margin-top:6px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.card__num{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;color:var(--rose);flex-shrink:0}
+.legend{display:flex;flex-wrap:wrap;gap:var(--sp-4) var(--sp-5);margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px dashed var(--line-strong)}
+.legend__item{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-60)}
+.legend__swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+.legend__item strong{color:var(--blush);font-weight:600;margin-left:0.4em;font-family:var(--font-display);letter-spacing:0;text-transform:none;font-size:var(--fs-sm)}
+.donut-wrap{display:grid;grid-template-columns:220px 1fr;gap:var(--sp-6);align-items:center}
+@media(max-width:600px){.donut-wrap{grid-template-columns:1fr;justify-items:center}}
+.donut{width:220px;height:220px;position:relative}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut circle{fill:none;stroke-width:18;transition:stroke-dashoffset var(--dur-med) var(--ease-out)}
+.donut__center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+.donut__total{font-family:var(--font-display);font-size:2.5rem;font-weight:700;color:var(--blush);line-height:1;letter-spacing:-0.03em}
+.donut__label{display:block;margin-top:6px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--blush-60)}
+.breakdown{display:flex;flex-direction:column;gap:var(--sp-4)}
+.breakdown__row{display:flex;flex-direction:column;gap:6px}
+.breakdown__top{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-3)}
+.breakdown__name{font-family:var(--font-display);font-size:var(--fs-base);font-weight:600;color:var(--blush);display:inline-flex;align-items:center;gap:var(--sp-2)}
+.breakdown__name::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--swatch,var(--rose))}
+.breakdown__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush-60);letter-spacing:0.06em}
+.breakdown__val strong{color:var(--blush);font-weight:600;margin-right:6px}
+.breakdown__bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.breakdown__fill{height:100%;background:var(--swatch,var(--rose));transition:width var(--dur-med) var(--ease-out)}
+.hbars{display:flex;flex-direction:column;gap:var(--sp-4)}
+.hbar{display:grid;grid-template-columns:140px 1fr 64px;gap:var(--sp-4);align-items:center}
+.hbar__label{font-family:var(--font-display);font-size:var(--fs-sm);color:var(--blush);font-weight:500;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.hbar__track{position:relative;height:26px;background:rgba(245,237,230,0.04);border-radius:4px;overflow:hidden;display:flex}
+.hbar__seg{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.hbar__seg+.hbar__seg{border-left:1px solid rgba(31,18,24,0.4)}
+.hbar__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush);text-align:right;letter-spacing:0.04em}
+.gbars{display:grid;grid-template-columns:1fr;gap:var(--sp-6);padding-top:var(--sp-3)}
+.gbar-row{display:grid;grid-template-columns:140px 1fr;gap:var(--sp-5);align-items:center}
+.gbar-row__name{display:flex;flex-direction:column;gap:2px}
+.gbar-row__name strong{font-family:var(--font-display);font-size:var(--fs-base);color:var(--blush);font-weight:600}
+.gbar-row__name span{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.gbar-row__bars{display:flex;flex-direction:column;gap:4px}
+.gbar{display:grid;grid-template-columns:80px 1fr 36px;gap:var(--sp-3);align-items:center;font-family:var(--font-mono);font-size:var(--fs-3xs)}
+.gbar__type{color:var(--blush-60);letter-spacing:0.14em;text-transform:uppercase}
+.gbar__bar{height:14px;background:rgba(245,237,230,0.05);border-radius:3px;overflow:hidden}
+.gbar__fill{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.gbar__val{color:var(--blush);text-align:right;font-weight:500}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-md);background:rgba(245,237,230,0.015)}
+table.spec{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+table.spec th,table.spec td{padding:var(--sp-3) var(--sp-4);text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+table.spec th{font-family:var(--font-mono);font-size:var(--fs-3xs);font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--rose);background:rgba(201,154,138,0.04)}
+table.spec td.num{font-family:var(--font-mono);color:var(--blush);text-align:right;font-feature-settings:"tnum"}
+table.spec td.num--muted{color:var(--blush-60)}
+table.spec tbody tr:last-child td{border-bottom:none}
+table.spec tbody tr:hover{background:rgba(201,154,138,0.03)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--line-strong);color:var(--blush-80)}
+.pill--ext{color:var(--bordeaux);border-color:rgba(140,49,72,0.4);background:rgba(140,49,72,0.10)}
+.complex-row{display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-3) 0;border-bottom:1px dashed var(--line)}
+.complex-row:last-child{border-bottom:none}
+.complex-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.complex-row__label{flex:1;display:flex;flex-direction:column;gap:2px}
+.complex-row__label strong{font-family:var(--font-display);color:var(--blush);font-weight:600;font-size:var(--fs-base)}
+.complex-row__label span{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-60)}
+.complex-row__num{font-family:var(--font-display);font-size:var(--fs-2xl);color:var(--blush);font-weight:700;letter-spacing:-0.02em}
+.timebars{display:flex;flex-direction:column;gap:var(--sp-4);padding-top:var(--sp-3)}
+.timebar{display:grid;grid-template-columns:110px 1fr 72px;gap:var(--sp-4);align-items:center}
+.timebar__name{font-family:var(--font-display);font-size:var(--fs-sm);font-weight:600;color:var(--blush);display:inline-flex;align-items:center;gap:var(--sp-2)}
+.timebar__name::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--swatch,var(--rose))}
+.timebar__bar{height:22px;border-radius:4px;background:rgba(245,237,230,0.04);overflow:hidden}
+.timebar__fill{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.timebar__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush);text-align:right;letter-spacing:0.04em}
+.note{border-left:2px solid var(--rose);padding:var(--sp-2) 0 var(--sp-2) var(--sp-4);margin-top:var(--sp-5);font-family:var(--font-display);font-style:italic;font-size:var(--fs-base);color:var(--blush-80);line-height:1.55}
+.note strong{color:var(--rose);font-style:normal;font-weight:600}
+#loading-overlay{display:none;position:fixed;inset:0;z-index:100;background:var(--noir);place-items:center}
+#loading-overlay.visible{display:grid}
+.loading__inner{text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--sp-5)}
+.loading__ring{width:64px;height:64px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--rose);animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading__text{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--blush-60)}
+footer{padding-block:var(--sp-7);border-top:1px solid var(--line);margin-top:var(--sp-8)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:var(--sp-5);justify-content:space-between;align-items:baseline}
+footer .mono{color:var(--blush-40)}
+footer a{color:var(--rose);border-bottom:1px solid var(--rose-line);padding-bottom:2px;transition:color var(--dur-fast);text-decoration:none}
+footer a:hover{color:var(--champagne)}
+@media(max-width:720px){.hbar{grid-template-columns:100px 1fr 48px;gap:var(--sp-3)}.gbar-row{grid-template-columns:1fr}.gbar{grid-template-columns:64px 1fr 30px}.timebar{grid-template-columns:90px 1fr 60px}.topbar__sep{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
+</style>
 </head>
 <body>
 
-<!-- Loading overlay -->
-<div id="loading"><div class="spinner"></div><span>Carregando dados...</span></div>
-<div id="error"><span id="error-msg">Erro ao carregar dados.</span></div>
+<div id="loading-overlay" class="visible">
+  <div class="loading__inner">
+    <div class="loading__ring"></div>
+    <span class="loading__text">Carregando dados &middot; Supabase</span>
+  </div>
+</div>
 
-<header>
-  <h1>Dashboard Modelagem <span>3D</span> — Grupo Soma</h1>
-  <div class="header-meta">
-    <div>Quadro: <strong>Trello 3D</strong> &nbsp;|&nbsp; Escopo: até <strong>Montagem TQ Liberado/Feito</strong></div>
-    <div>Atualizado em: <strong id="ts">—</strong></div>
+<div id="demo-banner">&#9889; Modo demonstra&ccedil;&atilde;o &mdash; dados de exemplo &middot; conecte o Supabase para dados reais</div>
+
+<header class="topbar">
+  <div class="wrap topbar__inner">
+    <div class="brand">
+      <div class="brand__mark">At</div>
+      <div>
+        <div class="brand__kicker">Atelier &middot; Analytics</div>
+        <div class="brand__name">Quadro 3D &middot; Painel Editorial</div>
+      </div>
+    </div>
+    <div class="topbar__meta">
+      <span class="topbar__dot" id="sync-status">Sincronizado &middot; Trello</span>
+      <span class="topbar__sep"></span>
+      <span id="topbar-date">&mdash;</span>
+      <span class="topbar__sep"></span>
+      <button class="sync-btn" id="sync-btn" aria-label="Sincronizar dados do Trello" title="Busca os cards mais recentes do Trello e atualiza o banco de dados">
+        <svg class="sync-btn__icon" id="sync-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13.5 2.5A6.5 6.5 0 0 0 2 8"/>
+          <path d="M2.5 13.5A6.5 6.5 0 0 0 14 8"/>
+          <polyline points="2,5 2,2 5,2"/>
+          <polyline points="14,11 14,14 11,14"/>
+        </svg>
+        <span id="sync-label">Sincronizar</span>
+      </button>
+      <span class="topbar__sep"></span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema">
+        <span class="theme-toggle__track"><span class="theme-toggle__thumb"></span></span>
+        <span class="theme-toggle__label" data-dark="Noir" data-light="Blush">Noir</span>
+      </button>
+    </div>
   </div>
 </header>
 
-<main>
+<main id="main">
 
-  <!-- Filtros -->
-  <div class="filters">
-    <label>Marca</label>
-    <select id="f-marca">
-      <option value="">Todas</option>
-      <option>Farm BR</option><option>GL</option>
-      <option>Maria Filó</option><option>Outras</option>
-    </select>
-    <label>Tipo</label>
-    <select id="f-tipo">
-      <option value="">Todos</option>
-      <option>Montagem</option><option>Novo</option><option>Ajuste</option>
-    </select>
-    <label>Estilista</label>
-    <select id="f-estilista"><option value="">Todas</option></select>
-    <label>Inv 27</label>
-    <select id="f-inv27">
-      <option value="">Todos</option>
-      <option value="true">Somente Inv 27</option>
-      <option value="false">Outras coleções</option>
-    </select>
-    <button class="btn-reset" onclick="resetarFiltros()">↺ Limpar filtros</button>
-  </div>
-
-  <!-- KPIs -->
-  <p class="section-title">Visão Geral</p>
-  <div class="kpi-grid">
-    <div class="kpi c-total">
-      <span class="kpi-label">Total de Cards</span>
-      <span class="kpi-value" id="kpi-total">—</span>
-      <span class="kpi-sub">no escopo</span>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero__meta">
+      <span class="hero__meta-item">Cole&ccedil;&atilde;o Inv 27</span>
+      <span class="hero__meta-item">Escopo &middot; At&eacute; Montagem TQ Liberado</span>
+      <span class="hero__meta-item" id="meta-total">&mdash; cards lidos</span>
     </div>
-    <div class="kpi c-montagem">
-      <span class="kpi-label">Montagens</span>
-      <span class="kpi-value" id="kpi-mont">—</span>
-      <span class="kpi-sub" id="kpi-mont-pct">—</span>
+    <h1 class="hero__title">Onde a cole&ccedil;&atilde;o <em>realmente</em> vive.</h1>
+    <p class="hero__lead">Um retrato editorial do quadro 3D &mdash; quem sustenta a montagem, quais marcas pressionam o ateli&ecirc;, e em que pe&ccedil;as a complexidade se concentra.</p>
+    <div class="hero__tldr" id="hero-tldr">
+      <span class="label">Resumo</span>
+      <p>Carregando dados&hellip;</p>
     </div>
-    <div class="kpi c-novo">
-      <span class="kpi-label">Novos</span>
-      <span class="kpi-value" id="kpi-novo">—</span>
-      <span class="kpi-sub" id="kpi-novo-pct">—</span>
+    <div class="kpis">
+      <div class="kpi kpi--accent">
+        <span class="kpi__label">Total &middot; Cards</span>
+        <span class="kpi__num" id="kpi-total">&mdash;</span>
+        <span class="kpi__sub">Escopo at&eacute; <strong>Montagem TQ Liberado</strong>.</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi__label">Montagem</span>
+        <span class="kpi__num" id="kpi-montagem">&mdash;</span>
+        <span class="kpi__sub" id="kpi-montagem-sub">&mdash;</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi__label">Novo</span>
+        <span class="kpi__num" id="kpi-novo">&mdash;</span>
+        <span class="kpi__sub" id="kpi-novo-sub">&mdash;</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi__label">Ajuste</span>
+        <span class="kpi__num" id="kpi-ajuste">&mdash;</span>
+        <span class="kpi__sub" id="kpi-ajuste-sub">&mdash;</span>
+      </div>
     </div>
-    <div class="kpi c-ajuste">
-      <span class="kpi-label">Ajustes</span>
-      <span class="kpi-value" id="kpi-ajuste">—</span>
-      <span class="kpi-sub" id="kpi-ajuste-pct">—</span>
-    </div>
-    <div class="kpi c-free">
-      <span class="kpi-label">Modelista Externo</span>
-      <span class="kpi-value" id="kpi-free">—</span>
-      <span class="kpi-sub">freelancer</span>
-    </div>
-    <div class="kpi">
-      <span class="kpi-label">Estilistas</span>
-      <span class="kpi-value" id="kpi-est">—</span>
-      <span class="kpi-sub">distintas</span>
-    </div>
-    <div class="kpi">
-      <span class="kpi-label">Estação Inv 27</span>
-      <span class="kpi-value" id="kpi-inv">—</span>
-      <span class="kpi-sub">cards com etiqueta verde</span>
-    </div>
-  </div>
-
-  <!-- Distribuição geral -->
-  <p class="section-title">Distribuição Geral</p>
-  <div class="chart-grid-3">
-    <div class="chart-box">
-      <p class="chart-title">Montagem / Novo / Ajuste</p>
-      <div class="chart-wrap"><canvas id="c-tipo-pizza"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <p class="chart-title">Interno vs. Modelista Externo</p>
-      <div class="chart-wrap"><canvas id="c-free-pizza"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <p class="chart-title">Complexidade de Montagem</p>
-      <div class="chart-wrap"><canvas id="c-complex-pizza"></canvas></div>
+    <div class="filters" role="group" aria-label="Filtros do painel">
+      <div class="filters__group">
+        <span class="filters__label">Marca</span>
+        <div class="chips" data-filter="brand">
+          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+          <button class="chip" aria-pressed="false" data-value="Farm BR">Farm BR</button>
+          <button class="chip" aria-pressed="false" data-value="GL">GL</button>
+          <button class="chip" aria-pressed="false" data-value="Maria Fil&#xF3;">Maria Fil&oacute;</button>
+          <button class="chip" aria-pressed="false" data-value="Outras">Outras</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Tipo</span>
+        <div class="chips" data-filter="type">
+          <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
+          <button class="chip" aria-pressed="false" data-value="Montagem">Montagem</button>
+          <button class="chip" aria-pressed="false" data-value="Novo">Novo</button>
+          <button class="chip" aria-pressed="false" data-value="Ajuste">Ajuste</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Origem</span>
+        <div class="chips" data-filter="source">
+          <button class="chip" aria-pressed="true"  data-value="all">Equipe + Externo</button>
+          <button class="chip" aria-pressed="false" data-value="interna">Interna</button>
+          <button class="chip" aria-pressed="false" data-value="externo">Externo</button>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- Por marca -->
-  <p class="section-title">Por Marca</p>
-  <div class="chart-grid-2">
-    <div class="chart-box wide">
-      <p class="chart-title">Montagem / Novo / Ajuste por Marca</p>
-      <div class="chart-wrap"><canvas id="c-marca-barra"></canvas></div>
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B1 &middot; B3 &middot; Distribui&ccedil;&atilde;o</div>
+    <h2 class="section__title">Composi&ccedil;&atilde;o do quadro.</h2>
+    <p class="section__intro">A pizza diz o que est&aacute; em produ&ccedil;&atilde;o; as barras dizem onde a press&atilde;o recai. Farm BR n&atilde;o &eacute; s&oacute; a maior marca &mdash; &eacute; tamb&eacute;m a que puxa a fila de novos modelos.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Distribui&ccedil;&atilde;o geral por tipo</h3><span class="card__sub" id="sub-tipo">Bloco 1.3</span></div>
+          <span class="card__num">Fig. 01</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-montagem" cx="60" cy="60" r="48" stroke="var(--c-montagem)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-novo"     cx="60" cy="60" r="48" stroke="var(--c-novo)"     stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-ajuste"   cx="60" cy="60" r="48" stroke="var(--c-ajuste)"   stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-tipo-total">&mdash;</div><span class="donut__label">Cards &middot; escopo</span></div></div>
+          </div>
+          <div class="breakdown" id="breakdown-tipo"></div>
+        </div>
+        <p class="note" id="note-tipo">&mdash;</p>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Participa&ccedil;&atilde;o por marca</h3><span class="card__sub" id="sub-marca">Bloco 3.4</span></div>
+          <span class="card__num">Fig. 02</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-farm"      cx="60" cy="60" r="48" stroke="var(--c-farm)"      stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-gl"        cx="60" cy="60" r="48" stroke="var(--c-gl)"        stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-mariafilo" cx="60" cy="60" r="48" stroke="var(--c-mariafilo)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-outras"    cx="60" cy="60" r="48" stroke="var(--c-outras)"    stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-marca-total">&mdash;</div><span class="donut__label">Marcas ativas</span></div></div>
+          </div>
+          <div class="breakdown" id="breakdown-marca"></div>
+        </div>
+        <p class="note" id="note-marca">&mdash;</p>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- Por estilista -->
-  <p class="section-title">Por Estilista × Coleção</p>
-  <div class="chart-grid-2">
-    <div class="chart-box wide">
-      <p class="chart-title">Distribuição de tipos por Estilista</p>
-      <div class="chart-wrap tall"><canvas id="c-estilista-barra"></canvas></div>
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B2 &middot; Estilistas</div>
+    <h2 class="section__title">Cards por estilista &mdash; empilhado por tipo.</h2>
+    <p class="section__intro">Cada barra &eacute; o volume total da estilista, partido entre montagem, novo e ajuste.</p>
+    <div class="card">
+      <div class="card__head">
+        <div><h3 class="card__title">Volume por estilista</h3><span class="card__sub">Bloco 2.1 &middot; etiqueta laranja</span></div>
+        <span class="card__num">Fig. 03</span>
+      </div>
+      <div class="hbars" id="hbars-estilista"></div>
+      <div class="legend">
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-montagem)"></span>Montagem</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-novo)"></span>Novo</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-ajuste)"></span>Ajuste</span>
+      </div>
+      <p class="note" id="note-estilista">&mdash;</p>
     </div>
   </div>
+</section>
 
-  <!-- Por membro -->
-  <p class="section-title">Desempenho por Membro</p>
-  <div class="chart-grid-2">
-    <div class="chart-box">
-      <p class="chart-title">Montagens por Membro</p>
-      <div class="chart-wrap tall"><canvas id="c-membro-mont"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <p class="chart-title">Ajustes por Membro</p>
-      <div class="chart-wrap tall"><canvas id="c-membro-ajuste"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <p class="chart-title">Novos por Membro</p>
-      <div class="chart-wrap tall"><canvas id="c-membro-novo"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <p class="chart-title">Total por Membro (todos os tipos)</p>
-      <div class="chart-wrap tall"><canvas id="c-membro-total"></canvas></div>
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B3 &middot; Marcas</div>
+    <h2 class="section__title">Marca por tipo &mdash; onde est&aacute; cada esfor&ccedil;o.</h2>
+    <p class="section__intro">Mesma marca, tr&ecirc;s comportamentos. Farm puxa a montagem; GL puxa o novo; Maria Fil&oacute; concentra ajustes.</p>
+    <div class="card">
+      <div class="card__head">
+        <div><h3 class="card__title">Composi&ccedil;&atilde;o por marca</h3><span class="card__sub">Bloco 3.1 &rarr; 3.3 &middot; barras agrupadas</span></div>
+        <span class="card__num">Fig. 04</span>
+      </div>
+      <div class="gbars" id="gbars-marca"></div>
+      <div class="legend">
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-montagem)"></span>Montagem</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-novo)"></span>Novo</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-ajuste)"></span>Ajuste</span>
+      </div>
+      <p class="note" id="note-marca-tipo">&mdash;</p>
     </div>
   </div>
+</section>
 
-  <!-- Modelista Externo -->
-  <p class="section-title">Análise — Modelista Externo (Freelancer)</p>
-  <div class="chart-grid-2">
-    <div class="chart-box">
-      <p class="chart-title">Tipos — Freelancer</p>
-      <div class="chart-wrap"><canvas id="c-free-tipo"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <p class="chart-title">Marcas — Freelancer</p>
-      <div class="chart-wrap"><canvas id="c-free-marca"></canvas></div>
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B4 &middot; Equipe</div>
+    <h2 class="section__title">Carga consolidada por modelista.</h2>
+    <p class="section__intro">Vis&atilde;o integrada do bloco 4: quem est&aacute; com mais cards e em que tipo.</p>
+    <div class="card">
+      <div class="card__head">
+        <div><h3 class="card__title">Tabela &middot; Modelistas</h3><span class="card__sub">Bloco 4.4 &middot; Montagem &middot; Novo &middot; Ajuste</span></div>
+        <span class="card__num">Fig. 05</span>
+      </div>
+      <div class="table-wrap">
+        <table class="spec">
+          <thead><tr><th>Modelista</th><th>V&iacute;nculo</th><th style="text-align:right">Montagem</th><th style="text-align:right">Novo</th><th style="text-align:right">Ajuste</th><th style="text-align:right">Total</th></tr></thead>
+          <tbody id="tbody-equipe"></tbody>
+        </table>
+      </div>
+      <p class="note" id="note-equipe">&mdash;</p>
     </div>
   </div>
+</section>
 
-  <!-- Tabela detalhada -->
-  <p class="section-title">Tabela Completa de Cards</p>
-  <div class="chart-box">
-    <div class="table-wrap">
-      <table id="tabela">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Card</th>
-            <th>Coluna</th>
-            <th>Tipo</th>
-            <th>Estilista</th>
-            <th>Coleção</th>
-            <th>Marca</th>
-            <th>Membros</th>
-            <th>Externo</th>
-            <th>Tempo (h)</th>
-            <th>Complexidade</th>
-          </tr>
-        </thead>
-        <tbody id="tabela-body"></tbody>
-      </table>
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B5 &middot; Modelista Externo</div>
+    <h2 class="section__title">Equipe interna &times; freelancer.</h2>
+    <p class="section__intro">Quanto da cole&ccedil;&atilde;o sai pela porta? O Modelista Externo &eacute; estrat&eacute;gia &mdash; n&atilde;o acidente.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Origem da execu&ccedil;&atilde;o</h3><span class="card__sub">Bloco 5.2 &middot; interno &times; terceirizado</span></div>
+          <span class="card__num">Fig. 06</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-interna" cx="60" cy="60" r="48" stroke="var(--rose)"     stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-externo" cx="60" cy="60" r="48" stroke="var(--bordeaux)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-ext-pct">&mdash;</div><span class="donut__label">Externo</span></div></div>
+          </div>
+          <div class="breakdown" id="breakdown-ext"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Modelista Externo &middot; onde atua</h3><span class="card__sub" id="sub-ext">Bloco 5.1</span></div>
+          <span class="card__num">Fig. 07</span>
+        </div>
+        <div class="hbars" id="hbars-ext-marca" style="margin-top:8px"></div>
+        <p class="note" id="note-externo">&mdash;</p>
+      </div>
     </div>
   </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B6 &middot; Complexidade &middot; Tempo</div>
+    <h2 class="section__title">A geometria do esfor&ccedil;o.</h2>
+    <p class="section__intro">N&atilde;o basta saber quantas pe&ccedil;as h&aacute; &mdash; &eacute; preciso saber quanto custam em horas.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Distribui&ccedil;&atilde;o de complexidade</h3><span class="card__sub">Bloco 6.5 &middot; baixa &middot; m&eacute;dia &middot; alta</span></div>
+          <span class="card__num">Fig. 08</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-baixa" cx="60" cy="60" r="48" stroke="var(--sage)"      stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-media" cx="60" cy="60" r="48" stroke="var(--champagne)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-alta"  cx="60" cy="60" r="48" stroke="var(--bordeaux)"  stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-cx-total">&mdash;</div><span class="donut__label">Cards calculados</span></div></div>
+          </div>
+          <div id="complex-rows"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Tempo m&eacute;dio por tipo</h3><span class="card__sub">Bloco 6.3 &middot; horas &middot; entrada &rarr; sa&iacute;da</span></div>
+          <span class="card__num">Fig. 09</span>
+        </div>
+        <div class="timebars" id="timebars-tipo"></div>
+        <div class="table-wrap" style="margin-top:var(--sp-6)">
+          <table class="spec">
+            <thead><tr><th>Modelista</th><th style="text-align:right">Tempo m&eacute;dio</th><th style="text-align:right">Cards c/ tempo</th></tr></thead>
+            <tbody id="tbody-tempo"></tbody>
+          </table>
+        </div>
+        <p class="note" id="note-complexidade">&mdash;</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 </main>
 
 <footer>
-  Dashboard gerado automaticamente via API Trello &amp; Supabase &nbsp;•&nbsp; Grupo Soma / Estágio Vagner
+  <div class="wrap">
+    <span class="mono">Atelier Analytics &middot; Quadro 3D &middot; Grupo Soma</span>
+    <span class="mono" id="footer-date">&mdash;</span>
+  </div>
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════
-//  CONFIG — altere SUPABASE_URL e SUPABASE_KEY
-//  após criar seu projeto em supabase.com
-// ═══════════════════════════════════════════════
-const SUPABASE_URL = "https://rvwatkeyjnbqnxkwadwo.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2d2F0a2V5am5icW54a3dhZHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTc3NjIsImV4cCI6MjA5MzU5Mzc2Mn0.Wl9S8iNuVVwpiHGXPJTpaNyHtbXzsQcLsDNwkivc8g0";
-
-// Se Supabase ainda não estiver configurado, o dashboard
-// tentará carregar o arquivo data.json local automaticamente.
-
-// ═══════════════════════════════════════════════
-//  CORES
-// ═══════════════════════════════════════════════
-const CORES = {
-  Montagem: "#7c6af5",
-  Novo:     "#26c6da",
-  Ajuste:   "#ff7043",
-  Outro:    "#9e9e9e",
-  "Farm BR":    "#ec407a",
-  GL:           "#42a5f5",
-  "Maria Filó": "#66bb6a",
-  Outras:       "#bdbdbd",
-  Interno:      "#7c6af5",
-  "Modelista Externo": "#f5a623",
-  Baixa:  "#4caf50",
-  Média:  "#ffc107",
-  Alta:   "#f44336",
-  "Não calculado": "#607d8b",
-};
-
-const ALPHA = (hex, a) => {
-  const r = parseInt(hex.slice(1,3),16);
-  const g = parseInt(hex.slice(3,5),16);
-  const b = parseInt(hex.slice(5,7),16);
-  return `rgba(${r},${g},${b},${a})`;
-};
-
-Chart.defaults.color = "#8891b2";
-Chart.defaults.borderColor = "#2e3248";
-Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
-
-// ═══════════════════════════════════════════════
-//  ESTADO GLOBAL
-// ═══════════════════════════════════════════════
-let TODOS_CARDS = [];
-let CHARTS = {};
-
-// ═══════════════════════════════════════════════
-//  DADOS DE DEMONSTRAÇÃO (fallback local)
-// ═══════════════════════════════════════════════
-const DEMO_CARDS = [
-  { trello_id:"d1",  nome:"Vestido Midi Floral",      coluna:"Montagem TQ Liberado/Feito", tipo:"Montagem", estilista:"Ana Lima",    colecao:"Farm BR Verão 27",  marca:"Farm BR",    membros:'["Carla","Maria"]',         is_modelista_externo:false, is_inv27:true,  tempo_horas:1.5, complexidade:"Média" },
-  { trello_id:"d2",  nome:"Blusa Estampada Nova",      coluna:"Montagem TQ Liberado/Feito", tipo:"Novo",     estilista:"Ana Lima",    colecao:"Farm BR Verão 27",  marca:"Farm BR",    membros:'["Carla"]',                 is_modelista_externo:false, is_inv27:true,  tempo_horas:0.8, complexidade:"Baixa" },
-  { trello_id:"d3",  nome:"Calça Jeans Ajuste Cintura",coluna:"Montagem TQ Liberado/Feito", tipo:"Ajuste",   estilista:"Beatriz Cruz",colecao:"GL Coleção Inv 27", marca:"GL",         membros:'["Pedro","Modelista Externo"]', is_modelista_externo:true,  is_inv27:true,  tempo_horas:2.3, complexidade:"Alta"  },
-  { trello_id:"d4",  nome:"Saia Plissada",             coluna:"Montagem TQ Liberado/Feito", tipo:"Montagem", estilista:"Beatriz Cruz",colecao:"GL Coleção Inv 27", marca:"GL",         membros:'["Pedro"]',                 is_modelista_externo:false, is_inv27:true,  tempo_horas:0.5, complexidade:"Baixa" },
-  { trello_id:"d5",  nome:"Vestido Longo Bordado",     coluna:"Montagem TQ Liberado/Feito", tipo:"Novo",     estilista:"Carla Rocha", colecao:"Maria Filó SS27",   marca:"Maria Filó", membros:'["Julia","Ana"]',           is_modelista_externo:false, is_inv27:false, tempo_horas:3.1, complexidade:"Alta"  },
-  { trello_id:"d6",  nome:"Camisa Social Ajuste",      coluna:"Montagem TQ Liberado/Feito", tipo:"Ajuste",   estilista:"Ana Lima",    colecao:"Farm BR Verão 27",  marca:"Farm BR",    membros:'["Carla","Modelista Externo"]', is_modelista_externo:true,  is_inv27:true,  tempo_horas:1.8, complexidade:"Média" },
-  { trello_id:"d7",  nome:"Short Jeans Novo",          coluna:"Montagem TQ Liberado/Feito", tipo:"Novo",     estilista:"Beatriz Cruz",colecao:"GL Coleção Inv 27", marca:"GL",         membros:'["Pedro","Julia"]',         is_modelista_externo:false, is_inv27:true,  tempo_horas:0.9, complexidade:"Baixa" },
-  { trello_id:"d8",  nome:"Top Cropped Montagem",      coluna:"Montagem TQ Liberado/Feito", tipo:"Montagem", estilista:"Carla Rocha", colecao:"Maria Filó SS27",   marca:"Maria Filó", membros:'["Ana"]',                   is_modelista_externo:false, is_inv27:false, tempo_horas:1.2, complexidade:"Média" },
-  { trello_id:"d9",  nome:"Macaquinho Floral",         coluna:"Montagem TQ Liberado/Feito", tipo:"Montagem", estilista:"Ana Lima",    colecao:"Farm BR Verão 27",  marca:"Farm BR",    membros:'["Carla","Maria"]',         is_modelista_externo:false, is_inv27:true,  tempo_horas:2.0, complexidade:"Média" },
-  { trello_id:"d10", nome:"Blazer Ajuste Ombro",       coluna:"Montagem TQ Liberado/Feito", tipo:"Ajuste",   estilista:"Beatriz Cruz",colecao:"Outras Marcas",     marca:"Outras",     membros:'["Modelista Externo"]',     is_modelista_externo:true,  is_inv27:false, tempo_horas:2.7, complexidade:"Alta"  },
-  { trello_id:"d11", nome:"Vestido Curto Babado",      coluna:"Montagem TQ Liberado/Feito", tipo:"Novo",     estilista:"Carla Rocha", colecao:"Maria Filó SS27",   marca:"Maria Filó", membros:'["Julia"]',                 is_modelista_externo:false, is_inv27:false, tempo_horas:1.0, complexidade:"Baixa" },
-  { trello_id:"d12", nome:"Calça Wide Leg",            coluna:"Montagem TQ Liberado/Feito", tipo:"Montagem", estilista:"Ana Lima",    colecao:"GL Coleção Inv 27", marca:"GL",         membros:'["Pedro","Ana"]',           is_modelista_externo:false, is_inv27:true,  tempo_horas:1.5, complexidade:"Média" },
-];
-
-// ═══════════════════════════════════════════════
-//  BANNER DE MODO DEMO
-// ═══════════════════════════════════════════════
-function mostrarBannerDemo(motivo) {
-  const banner = document.createElement("div");
-  banner.style.cssText = `
-    background:#f5a62322; border:1px solid #f5a623; border-radius:8px;
-    padding:0.6rem 1rem; margin-bottom:1rem; font-size:0.8rem; color:#f5a623;
-    display:flex; align-items:center; gap:0.5rem;
-  `;
-  banner.innerHTML = `⚠️ <strong>Modo demonstração</strong> — ${motivo} Execute <code>python trello_extractor.py</code> para carregar dados reais.`;
-  document.querySelector("main").prepend(banner);
+const SUPABASE_URL="https://rvwatkeyjnbqnxkwadwo.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2d2F0a2V5am5icW54a3dhZHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTc3NjIsImV4cCI6MjA5MzU5Mzc2Mn0.Wl9S8iNuVVwpiHGXPJTpaNyHtbXzsQcLsDNwkivc8g0";
+const DEMO=[{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},{tipo:"Novo",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},{tipo:"Montagem",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},{tipo:"Novo",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},{tipo:"Montagem",estilista:"Marina Sotto",marca:"GL",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},{tipo:"Novo",estilista:"Marina Sotto",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},{tipo:"Ajuste",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},{tipo:"Novo",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Outras",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Maria Filó",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}];
+const C=301.59,AF={brand:"all",type:"all",source:"all"};
+let ALL=[];
+const pct=(n,t)=>t>0?Math.round(n/t*100):0;
+function fmtH(h){if(h==null)return"—";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
+function mArr(m){if(!m)return[];if(Array.isArray(m))return m;try{return JSON.parse(m)}catch{return[]}}
+function donutSeg(arcs){const t=arcs.reduce((s,a)=>s+a.val,0);let off=0;arcs.forEach(a=>{const el=document.getElementById(a.id);if(!el)return;const d=t>0?C*a.val/t:0;el.setAttribute("stroke-dasharray",d.toFixed(2)+" "+C.toFixed(2));el.setAttribute("stroke-dashoffset",(-off).toFixed(2));off+=d})}
+function bRow(name,val,total,sw){const p=pct(val,total);return'<div class="breakdown__row" style="--swatch:'+sw+'"><div class="breakdown__top"><span class="breakdown__name">'+name+'</span><span class="breakdown__val"><strong>'+val+'</strong>'+p+'%</span></div><div class="breakdown__bar"><div class="breakdown__fill" style="width:'+p+'%"></div></div></div>'}
+function topE(cards,f){const c={};cards.forEach(x=>{c[x[f]]=(c[x[f]]||0)+1});const s=Object.entries(c).sort((a,b)=>b[1]-a[1]);return s.length?{name:s[0][0],count:s[0][1]}:null}
+function filtered(){return ALL.filter(c=>{if(AF.brand!=="all"&&c.marca!==AF.brand)return false;if(AF.type!=="all"&&c.tipo!==AF.type)return false;if(AF.source==="interna"&&c.is_modelista_externo)return false;if(AF.source==="externo"&&!c.is_modelista_externo)return false;return true})}
+const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria Filó":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
+const MORD=["Farm BR","GL","Maria Filó","Outras"];
+function render(){
+  const cards=filtered(),N=cards.length;
+  const byT={Montagem:0,Novo:0,Ajuste:0};
+  cards.forEach(c=>{if(byT[c.tipo]!==undefined)byT[c.tipo]++});
+  document.getElementById("kpi-total").textContent=N;
+  document.getElementById("meta-total").textContent=N+" cards lidos";
+  document.getElementById("kpi-montagem").innerHTML=byT.Montagem+"<sub>"+pct(byT.Montagem,N)+"%</sub>";
+  document.getElementById("kpi-novo").innerHTML=byT.Novo+"<sub>"+pct(byT.Novo,N)+"%</sub>";
+  document.getElementById("kpi-ajuste").innerHTML=byT.Ajuste+"<sub>"+pct(byT.Ajuste,N)+"%</sub>";
+  document.getElementById("kpi-montagem-sub").innerHTML="Volume principal &middot; <strong>"+pct(byT.Montagem,N)+"%</strong> do total.";
+  document.getElementById("kpi-novo-sub").innerHTML="Novos modelos &middot; <strong>"+pct(byT.Novo,N)+"%</strong> do escopo.";
+  document.getElementById("kpi-ajuste-sub").innerHTML="Refinamentos &middot; <strong>"+pct(byT.Ajuste,N)+"%</strong> do quadro.";
+  const marcas=[...new Set(cards.map(c=>c.marca))].filter(Boolean);
+  const ests=[...new Set(cards.map(c=>c.estilista))].filter(m=>m&&m!=="Sem Estilista");
+  const mods=new Set();cards.forEach(c=>mArr(c.membros).forEach(m=>{if(m)mods.add(m)}));
+  const topM=topE(cards,"marca");
+  const extN=cards.filter(c=>c.is_modelista_externo).length;
+  document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+' cards</strong> em produ&ccedil;&atilde;o entre '+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
+  document.getElementById("donut-tipo-total").textContent=N;
+  document.getElementById("sub-tipo").textContent="Bloco 1.3 · "+N+" cards";
+  donutSeg([{id:"d-montagem",val:byT.Montagem},{id:"d-novo",val:byT.Novo},{id:"d-ajuste",val:byT.Ajuste}]);
+  document.getElementById("breakdown-tipo").innerHTML=[{n:"Montagem",v:byT.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:byT.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:byT.Ajuste,s:"var(--c-ajuste)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
+  const bigT=byT.Montagem>=byT.Novo&&byT.Montagem>=byT.Ajuste?"Montagem":byT.Novo>=byT.Ajuste?"Novo":"Ajuste";
+  document.getElementById("note-tipo").innerHTML="<strong>"+bigT+"</strong> domina o quadro &mdash; s&atilde;o <strong>"+pct(byT[bigT],N)+"%</strong> do volume.";
+  const byM={};cards.forEach(c=>{byM[c.marca]=(byM[c.marca]||0)+1});
+  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria Filó"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
+  const actM=MORD.filter(m=>byM[m]>0);
+  document.getElementById("donut-marca-total").textContent=actM.length;
+  document.getElementById("sub-marca").textContent="Bloco 3.4 · "+actM.length+" marcas";
+  document.getElementById("breakdown-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>bRow(m,byM[m]||0,N,MCOLS[m])).join("");
+  const top2=MORD.filter(m=>byM[m]).sort((a,b)=>(byM[b]||0)-(byM[a]||0)).slice(0,2);
+  if(top2.length>=2){const c2=(byM[top2[0]]||0)+(byM[top2[1]]||0);document.getElementById("note-marca").innerHTML="<strong>"+top2[0]+"</strong> e <strong>"+top2[1]+"</strong> juntas fazem <strong>"+pct(c2,N)+"%</strong> do volume."}
+  const byE={};cards.forEach(c=>{const k=c.estilista||"Sem Estilista";if(!byE[k])byE[k]={M:0,N:0,A:0};if(c.tipo==="Montagem")byE[k].M++;else if(c.tipo==="Novo")byE[k].N++;else if(c.tipo==="Ajuste")byE[k].A++});
+  const srtE=Object.entries(byE).map(([n,v])=>({n,t:v.M+v.N+v.A,...v})).sort((a,b)=>b.t-a.t);
+  const maxE=srtE[0]?.t||1;
+  document.getElementById("hbars-estilista").innerHTML=srtE.map(e=>'<div class="hbar"><span class="hbar__label">'+e.n+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(e.M,maxE)+'%;background:var(--c-montagem)" title="Montagem '+e.M+'"></div><div class="hbar__seg" style="width:'+pct(e.N,maxE)+'%;background:var(--c-novo)" title="Novo '+e.N+'"></div><div class="hbar__seg" style="width:'+pct(e.A,maxE)+'%;background:var(--c-ajuste)" title="Ajuste '+e.A+'"></div></div><span class="hbar__val">'+e.t+'</span></div>').join("");
+  if(srtE.length>0){const te=srtE[0],mn=[...srtE].sort((a,b)=>b.N-a.N)[0];document.getElementById("note-estilista").innerHTML="<strong>"+te.n+"</strong> conduz o volume com <strong>"+te.t+"</strong> cards."+(mn&&mn.n!==te.n?" <em>"+mn.n+"</em> tem a maior fatia de novos.":"")}
+  const maxG=Math.max(...MORD.map(m=>{const mc=cards.filter(c=>c.marca===m);return Math.max(mc.filter(c=>c.tipo==="Montagem").length,mc.filter(c=>c.tipo==="Novo").length,mc.filter(c=>c.tipo==="Ajuste").length)}),1);
+  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards · '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
+  document.getElementById("note-marca-tipo").innerHTML="Calendários distintos sob o mesmo ateliê.";
+  const modMap={};cards.forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!modMap[m])modMap[m]={M:0,N:0,A:0,ext:false};if(c.tipo==="Montagem")modMap[m].M++;else if(c.tipo==="Novo")modMap[m].N++;else if(c.tipo==="Ajuste")modMap[m].A++;if(c.is_modelista_externo)modMap[m].ext=true})});
+  const srtM=Object.entries(modMap).map(([n,v])=>({n,...v,t:v.M+v.N+v.A})).sort((a,b)=>b.t-a.t);
+  document.getElementById("tbody-equipe").innerHTML=srtM.map(m=>'<tr><td>'+m.n+'</td><td>'+(m.ext?'<span class="pill pill--ext">Freelance</span>':'<span class="pill">Interna</span>')+'</td><td class="num">'+m.M+'</td><td class="num num--muted">'+m.N+'</td><td class="num num--muted">'+m.A+'</td><td class="num"><strong>'+m.t+'</strong></td></tr>').join("");
+  const topMod=srtM[0],topExt=srtM.find(m=>m.ext);
+  document.getElementById("note-equipe").innerHTML=(topMod?"<strong>"+topMod.n+"</strong> sustenta o maior volume com <strong>"+topMod.t+"</strong> cards.":"")+(topExt?" O <em>Modelista Externo</em> responde por <strong>"+topExt.A+"</strong> ajuste"+(topExt.A!==1?"s":"")+".":" ");
+  const extC=cards.filter(c=>c.is_modelista_externo),intC=cards.filter(c=>!c.is_modelista_externo),extN2=extC.length;
+  document.getElementById("donut-ext-pct").textContent=pct(extN2,N)+"%";
+  donutSeg([{id:"d-interna",val:intC.length},{id:"d-externo",val:extN2}]);
+  document.getElementById("breakdown-ext").innerHTML=[{n:"Equipe interna",v:intC.length,s:"var(--rose)"},{n:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
+  const extByM={};extC.forEach(c=>{extByM[c.marca]=(extByM[c.marca]||0)+1});
+  const maxEM=Math.max(...Object.values(extByM),1);
+  document.getElementById("sub-ext").textContent="Bloco 5.1 · "+extN2+" cards terceirizados";
+  document.getElementById("hbars-ext-marca").innerHTML=Object.entries(extByM).sort((a,b)=>b[1]-a[1]).map(([m,v])=>'<div class="hbar"><span class="hbar__label">'+m+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(v,maxEM)+'%;background:'+(MCOLS[m]||"var(--rose)")+'"></div></div><span class="hbar__val">'+v+'</span></div>').join("");
+  const topEM=Object.entries(extByM).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById("note-externo").innerHTML=topEM?"O externo cobre principalmente <em>"+topEM[0]+"</em> &mdash; <strong>"+topEM[1]+"</strong> cards terceirizados.":extN2>0?"Freelancer ativo.":"Nenhum card externo no filtro.";
+  const cxMap={"Baixa":0,"Média":0,"Alta":0};
+  cards.filter(c=>c.complexidade&&c.complexidade!=="Não calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"Média":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
+  const cxT=cxMap["Baixa"]+cxMap["Média"]+cxMap["Alta"];
+  document.getElementById("donut-cx-total").textContent=cxT;
+  donutSeg([{id:"d-baixa",val:cxMap["Baixa"]},{id:"d-media",val:cxMap["Média"]},{id:"d-alta",val:cxMap["Alta"]}]);
+  document.getElementById("complex-rows").innerHTML=[{n:"Baixa",sub:"até 1h · simples",v:cxMap["Baixa"],dot:"var(--sage)"},{n:"Média",sub:"até 2h · padrão",v:cxMap["Média"],dot:"var(--champagne)"},{n:"Alta",sub:"2h+ · estrutural",v:cxMap["Alta"],dot:"var(--bordeaux)"}].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num">'+r.v+'</span></div>').join("");
+  const tpT={Montagem:{s:0,n:0},Novo:{s:0,n:0},Ajuste:{s:0,n:0}};
+  cards.filter(c=>c.tempo_horas!=null&&tpT[c.tipo]).forEach(c=>{tpT[c.tipo].s+=c.tempo_horas;tpT[c.tipo].n++});
+  const avg={Montagem:tpT.Montagem.n?tpT.Montagem.s/tpT.Montagem.n:null,Novo:tpT.Novo.n?tpT.Novo.s/tpT.Novo.n:null,Ajuste:tpT.Ajuste.n?tpT.Ajuste.s/tpT.Ajuste.n:null};
+  const mxA=Math.max(...Object.values(avg).filter(v=>v!=null),0.01);
+  document.getElementById("timebars-tipo").innerHTML=[{n:"Montagem",v:avg.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:avg.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:avg.Ajuste,s:"var(--c-ajuste)"}].map(r=>'<div class="timebar" style="--swatch:'+r.s+'"><span class="timebar__name">'+r.n+'</span><div class="timebar__bar"><div class="timebar__fill" style="width:'+(r.v!=null?pct(r.v,mxA):0)+'%;background:'+r.s+'"></div></div><span class="timebar__val">'+fmtH(r.v)+'</span></div>').join("");
+  const tpM={};cards.filter(c=>c.tempo_horas!=null).forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!tpM[m])tpM[m]={s:0,n:0};tpM[m].s+=c.tempo_horas;tpM[m].n++})});
+  document.getElementById("tbody-tempo").innerHTML=Object.entries(tpM).map(([n,v])=>({n,avg:v.s/v.n,n2:v.n})).sort((a,b)=>b.n2-a.n2).slice(0,6).map(m=>'<tr><td>'+m.n+'</td><td class="num">'+fmtH(m.avg)+'</td><td class="num">'+m.n2+'</td></tr>').join("");
+  document.getElementById("note-complexidade").innerHTML=cxMap["Alta"]>0?"<strong>"+cxMap["Alta"]+"</strong> card"+(cxMap["Alta"]!==1?"s":"")+" de alta complexidade &mdash; onde o cronograma mais sente press&atilde;o.":"Sem dados de complexidade no filtro atual.";
 }
+async function fetchCards(){
+  const ctrl=new AbortController();
+  const tid=setTimeout(()=>ctrl.abort(),8000);
+  try{
+    const r=await fetch(SUPABASE_URL+"/rest/v1/cards?select=*&limit=2000",{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
+    clearTimeout(tid);
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||d.length===0)throw new Error("empty");
+    return d;
+  }catch(e){clearTimeout(tid);throw e}
+}
+async function init(){
+  const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
+  try{
+    ALL=await fetchCards();
+    bn.classList.remove("visible");
+    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
+    const last=dates[dates.length-1];
+    if(last){const d=new Date(last);const mo=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];document.getElementById("topbar-date").textContent=mo[d.getMonth()]+" · "+d.getFullYear();document.getElementById("footer-date").textContent="Atualizado "+d.toLocaleDateString("pt-BR")}
+  }catch(e){
+    console.warn("Supabase indisponível, usando demo:",e.message);
+    ALL=DEMO;bn.classList.add("visible");
+    document.getElementById("sync-status").textContent="Modo Demo";
+    const now=new Date();document.getElementById("topbar-date").textContent=now.toLocaleString("pt-BR",{month:"short",year:"numeric"}).replace(" de "," · ");
+    document.getElementById("footer-date").textContent="Dados de demonstração";
+  }
+  render();
+  ov.style.opacity="0";ov.style.transition="opacity 0.4s";
+  setTimeout(()=>ov.classList.remove("visible"),400);
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}})},{threshold:0.08});
+  document.querySelectorAll(".card").forEach(c=>io.observe(c));
+}
+document.querySelectorAll(".chips").forEach(g=>{
+  g.addEventListener("click",e=>{
+    const b=e.target.closest(".chip");if(!b)return;
+    const k=g.dataset.filter==="brand"?"brand":g.dataset.filter==="type"?"type":"source";
+    g.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");AF[k]=b.dataset.value;render();
+    document.body.animate([{filter:"saturate(1)"},{filter:"saturate(1.08)"},{filter:"saturate(1)"}],{duration:360,easing:"ease-out"});
+  });
+});
+(function(){const KEY="atelier-theme",root=document.documentElement,stored=localStorage.getItem(KEY);if(stored)root.setAttribute("data-theme",stored);const btn=document.getElementById("theme-toggle");if(btn)btn.addEventListener("click",()=>{const next=root.getAttribute("data-theme")==="light"?"dark":"light";root.setAttribute("data-theme",next);localStorage.setItem(KEY,next)})})();
 
-// ═══════════════════════════════════════════════
-//  CARREGAMENTO DE DADOS
-// ═══════════════════════════════════════════════
-async function carregarDados() {
-  // 1. Tenta Supabase (com timeout de 6s)
-  if (SUPABASE_URL !== "SUA_URL_SUPABASE_AQUI") {
+// ── Botão Sincronizar ──────────────────────────────────────────────────────────
+(function(){
+  const btn   = document.getElementById("sync-btn");
+  const label = document.getElementById("sync-label");
+  const icon  = document.getElementById("sync-icon");
+  const status= document.getElementById("sync-status");
+  if(!btn) return;
+
+  let resetTimer = null;
+
+  function setState(state, msg) {
+    clearTimeout(resetTimer);
+    btn.disabled = (state === "loading");
+    btn.className = "sync-btn" + (state !== "idle" ? " sync-btn--" + state : "");
+    label.textContent = msg;
+    if(state !== "idle") {
+      resetTimer = setTimeout(() => setState("idle","Sincronizar"), 5000);
+    }
+  }
+
+  btn.addEventListener("click", async () => {
+    setState("loading","Sincronizando…");
+    icon.style.animationPlayState = "running";
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 6000);
-      const url = `${SUPABASE_URL}/rest/v1/cards?select=*&limit=5000`;
-      const res = await fetch(url, {
-        signal: controller.signal,
-        headers: {
-          "apikey":        SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
-        }
-      });
-      clearTimeout(timeout);
-      if (!res.ok) throw new Error(`Supabase HTTP ${res.status}`);
+      const res  = await fetch("/.netlify/functions/sync", {method:"POST"});
       const data = await res.json();
-      if (data && data.length > 0) {
-        return { cards: data, fonte: "Supabase" };
+      if(data.ok) {
+        setState("ok", `✓ ${data.total} cards`);
+        if(status) status.textContent = `Atualizado agora · ${data.total} cards`;
+        // Recarrega dados do Supabase silenciosamente
+        setTimeout(()=>{ fetchCards().then(cards=>{ if(cards.length){ALL=cards;render();} }); }, 800);
+      } else {
+        console.error("[sync]", data.erro);
+        setState("err", "Erro — ver console");
       }
-      // Supabase OK mas vazio — usa demo com aviso
-      mostrarBannerDemo("Supabase conectado mas sem dados ainda.");
-      return { cards: DEMO_CARDS, fonte: "Demonstração", demo: true };
-    } catch (e) {
-      console.warn("Supabase indisponível:", e.message);
-    }
-  }
-
-  // 2. Tenta data.json (quando servido por servidor)
-  try {
-    const res = await fetch("data.json");
-    if (res.ok) {
-      const json = await res.json();
-      if (json.cards && json.cards.length > 0) {
-        return { cards: json.cards, fonte: "data.json", gerado: json.gerado_em };
-      }
-    }
-  } catch (_) { /* silencioso */ }
-
-  // 3. Fallback final: dados de demonstração
-  mostrarBannerDemo("Nenhuma fonte de dados encontrada.");
-  return { cards: DEMO_CARDS, fonte: "Demonstração", demo: true };
-}
-
-// ═══════════════════════════════════════════════
-//  FILTROS
-// ═══════════════════════════════════════════════
-function filtrar() {
-  const marca    = document.getElementById("f-marca").value;
-  const tipo     = document.getElementById("f-tipo").value;
-  const estilista= document.getElementById("f-estilista").value;
-  const inv27    = document.getElementById("f-inv27").value;
-
-  return TODOS_CARDS.filter(c => {
-    if (marca     && c.marca     !== marca)        return false;
-    if (tipo      && c.tipo      !== tipo)         return false;
-    if (estilista && c.estilista !== estilista)    return false;
-    if (inv27 === "true"  && !c.is_inv27)          return false;
-    if (inv27 === "false" &&  c.is_inv27)          return false;
-    return true;
-  });
-}
-
-function resetarFiltros() {
-  ["f-marca","f-tipo","f-estilista","f-inv27"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
-  renderizar();
-}
-
-// ═══════════════════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════════════════
-function contarPor(cards, campo) {
-  const acc = {};
-  cards.forEach(c => {
-    const v = c[campo] || "Sem dado";
-    acc[v] = (acc[v] || 0) + 1;
-  });
-  return acc;
-}
-
-function contarPorDois(cards, campo1, campo2) {
-  const acc = {};
-  cards.forEach(c => {
-    const k = c[campo1] || "Sem dado";
-    const v = c[campo2] || "Outro";
-    if (!acc[k]) acc[k] = {};
-    acc[k][v] = (acc[k][v] || 0) + 1;
-  });
-  return acc;
-}
-
-function membros(card) {
-  if (!card.membros) return [];
-  if (Array.isArray(card.membros)) return card.membros;
-  try { return JSON.parse(card.membros); } catch { return []; }
-}
-
-function contarMembrosPorTipo(cards, tipoAlvo) {
-  const acc = {};
-  cards.filter(c => !tipoAlvo || c.tipo === tipoAlvo).forEach(c => {
-    membros(c).forEach(m => {
-      acc[m] = (acc[m] || 0) + 1;
-    });
-  });
-  return acc;
-}
-
-function pct(n, total) {
-  return total ? ((n / total) * 100).toFixed(1) + "%" : "0%";
-}
-
-function makePizza(id, labels, values, colors) {
-  if (CHARTS[id]) CHARTS[id].destroy();
-  const ctx = document.getElementById(id);
-  if (!ctx) return;
-  CHARTS[id] = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: colors.map(c => ALPHA(c || "#607d8b", 0.85)),
-        borderColor:     colors.map(c => c || "#607d8b"),
-        borderWidth: 2,
-      }]
-    },
-    options: {
-      cutout: "55%",
-      plugins: {
-        legend: { position: "bottom", labels: { padding: 12, font: { size: 11 } } },
-        tooltip: {
-          callbacks: {
-            label: ctx => `${ctx.label}: ${ctx.raw} (${pct(ctx.raw, ctx.dataset.data.reduce((a,b)=>a+b,0))})`
-          }
-        }
-      }
+    } catch(e) {
+      console.error("[sync]", e);
+      setState("err", "Falhou");
     }
   });
-}
-
-function makeBarra(id, labels, datasets, horizontal = false) {
-  if (CHARTS[id]) CHARTS[id].destroy();
-  const ctx = document.getElementById(id);
-  if (!ctx) return;
-  CHARTS[id] = new Chart(ctx, {
-    type: "bar",
-    data: { labels, datasets },
-    options: {
-      indexAxis:  horizontal ? "y" : "x",
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { position: "bottom", labels: { padding: 10, font: { size: 11 } } } },
-      scales: {
-        x: { grid: { color: "#2e3248" }, ticks: { font: { size: 11 } } },
-        y: { grid: { color: "#2e3248" }, ticks: { font: { size: 11 } } },
-      }
-    }
-  });
-}
-
-function makeBarraSimples(id, dados, cor, horizontal = true) {
-  const sorted = Object.entries(dados).sort((a,b) => b[1] - a[1]).slice(0, 15);
-  makeBarra(id, sorted.map(e=>e[0]), [{
-    label: "Cards",
-    data:  sorted.map(e=>e[1]),
-    backgroundColor: ALPHA(cor, 0.75),
-    borderColor: cor,
-    borderWidth: 1,
-    borderRadius: 4,
-  }], horizontal);
-}
-
-// ═══════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════
-function renderizar() {
-  const cards = filtrar();
-  const total = cards.length;
-
-  // ── KPIs ──────────────────────────────────────
-  const tipos = contarPor(cards, "tipo");
-  document.getElementById("kpi-total").textContent  = total;
-  document.getElementById("kpi-mont").textContent   = tipos["Montagem"] || 0;
-  document.getElementById("kpi-novo").textContent   = tipos["Novo"]     || 0;
-  document.getElementById("kpi-ajuste").textContent = tipos["Ajuste"]   || 0;
-  document.getElementById("kpi-mont-pct").textContent   = pct(tipos["Montagem"]||0, total);
-  document.getElementById("kpi-novo-pct").textContent   = pct(tipos["Novo"]    ||0, total);
-  document.getElementById("kpi-ajuste-pct").textContent = pct(tipos["Ajuste"]  ||0, total);
-
-  const nFree = cards.filter(c => c.is_modelista_externo).length;
-  const nInv  = cards.filter(c => c.is_inv27).length;
-  const estilistas = new Set(cards.map(c => c.estilista).filter(Boolean));
-  document.getElementById("kpi-free").textContent = nFree;
-  document.getElementById("kpi-inv").textContent  = nInv;
-  document.getElementById("kpi-est").textContent  = estilistas.size;
-
-  // ── Pizza tipo ─────────────────────────────────
-  const tiposOrdem = ["Montagem","Novo","Ajuste","Outro"];
-  makePizza("c-tipo-pizza",
-    tiposOrdem.filter(t => tipos[t]),
-    tiposOrdem.filter(t => tipos[t]).map(t => tipos[t]),
-    tiposOrdem.map(t => CORES[t])
-  );
-
-  // ── Pizza freelancer ───────────────────────────
-  makePizza("c-free-pizza",
-    ["Interno", "Modelista Externo"],
-    [total - nFree, nFree],
-    [CORES.Interno, CORES["Modelista Externo"]]
-  );
-
-  // ── Pizza complexidade ─────────────────────────
-  const complex = contarPor(cards, "complexidade");
-  const cxOrd = ["Baixa","Média","Alta","Não calculado"];
-  makePizza("c-complex-pizza",
-    cxOrd.filter(k => complex[k]),
-    cxOrd.filter(k => complex[k]).map(k => complex[k]),
-    cxOrd.map(k => CORES[k])
-  );
-
-  // ── Barras por marca ───────────────────────────
-  const marcas = ["Farm BR","GL","Maria Filó","Outras"];
-  const tiposList = ["Montagem","Novo","Ajuste"];
-  const porMarcaTipo = contarPorDois(cards, "marca", "tipo");
-  makeBarra("c-marca-barra", marcas, tiposList.map(t => ({
-    label: t,
-    data: marcas.map(m => (porMarcaTipo[m] || {})[t] || 0),
-    backgroundColor: ALPHA(CORES[t], 0.75),
-    borderColor:     CORES[t],
-    borderWidth: 1, borderRadius: 4,
-  })));
-
-  // ── Barras por estilista ───────────────────────
-  const porEstTipo = contarPorDois(cards, "estilista", "tipo");
-  const estList = Object.keys(porEstTipo).sort();
-  makeBarra("c-estilista-barra", estList, tiposList.map(t => ({
-    label: t,
-    data: estList.map(e => (porEstTipo[e] || {})[t] || 0),
-    backgroundColor: ALPHA(CORES[t], 0.75),
-    borderColor:     CORES[t],
-    borderWidth: 1, borderRadius: 4,
-  })));
-
-  // ── Barras por membro ─────────────────────────
-  makeBarraSimples("c-membro-mont",   contarMembrosPorTipo(cards, "Montagem"), CORES.Montagem);
-  makeBarraSimples("c-membro-ajuste", contarMembrosPorTipo(cards, "Ajuste"),   CORES.Ajuste);
-  makeBarraSimples("c-membro-novo",   contarMembrosPorTipo(cards, "Novo"),     CORES.Novo);
-  makeBarraSimples("c-membro-total",  contarMembrosPorTipo(cards, null),       CORES["Farm BR"]);
-
-  // ── Freelancer detalhe ─────────────────────────
-  const cardsExt = cards.filter(c => c.is_modelista_externo);
-  const fTipo  = contarPor(cardsExt, "tipo");
-  const fMarca = contarPor(cardsExt, "marca");
-  makePizza("c-free-tipo",
-    Object.keys(fTipo), Object.values(fTipo),
-    Object.keys(fTipo).map(k => CORES[k])
-  );
-  makePizza("c-free-marca",
-    Object.keys(fMarca), Object.values(fMarca),
-    Object.keys(fMarca).map(k => CORES[k])
-  );
-
-  // ── Tabela ─────────────────────────────────────
-  const tbody = document.getElementById("tabela-body");
-  tbody.innerHTML = cards.map((c, i) => `
-    <tr>
-      <td>${i + 1}</td>
-      <td>${c.nome || "—"}</td>
-      <td>${c.coluna || "—"}</td>
-      <td><span class="badge badge-${c.tipo}">${c.tipo || "—"}</span></td>
-      <td>${c.estilista || "—"}</td>
-      <td>${c.colecao || "—"}</td>
-      <td>${c.marca || "—"}</td>
-      <td>${membros(c).join(", ") || "—"}</td>
-      <td>${c.is_modelista_externo ? "✅" : ""}</td>
-      <td>${c.tempo_horas != null ? c.tempo_horas + "h" : "—"}</td>
-      <td><span class="badge badge-${c.complexidade}">${c.complexidade || "—"}</span></td>
-    </tr>
-  `).join("");
-}
-
-// ═══════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════
-async function init() {
-  // Garante que o loading some em no máximo 8s, não importa o que aconteça
-  const safetyTimeout = setTimeout(() => {
-    document.getElementById("loading").classList.add("hidden");
-  }, 8000);
-
-  try {
-    const { cards, fonte, gerado } = await carregarDados();
-    TODOS_CARDS = cards;
-
-    // Preenche filtro de estilistas
-    const estilistas = [...new Set(cards.map(c => c.estilista).filter(Boolean))].sort();
-    const sel = document.getElementById("f-estilista");
-    estilistas.forEach(e => {
-      const op = document.createElement("option");
-      op.value = op.textContent = e;
-      sel.appendChild(op);
-    });
-
-    // Timestamp
-    const ts = gerado
-      ? new Date(gerado).toLocaleString("pt-BR")
-      : new Date().toLocaleString("pt-BR");
-    document.getElementById("ts").textContent = `${ts} (${fonte})`;
-
-    // Listeners de filtros
-    ["f-marca","f-tipo","f-estilista","f-inv27"].forEach(id => {
-      document.getElementById(id).addEventListener("change", renderizar);
-    });
-
-    renderizar();
-
-  } catch (err) {
-    console.error("Erro no init:", err);
-    // Mesmo com erro crítico, mostra o dashboard vazio com aviso
-    mostrarBannerDemo("Erro inesperado: " + err.message);
-    TODOS_CARDS = DEMO_CARDS;
-    renderizar();
-  } finally {
-    clearTimeout(safetyTimeout);
-    document.getElementById("loading").classList.add("hidden");
-  }
-}
+})();
 
 init();
 </script>
