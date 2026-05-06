@@ -1,0 +1,15 @@
+# Credenciais — nunca versionar
+.env
+
+# Dados gerados pelo extrator
+data.json
+
+# Arquivos temporários de deploy
+deploy-*.zip
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
