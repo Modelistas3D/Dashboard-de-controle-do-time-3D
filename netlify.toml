@@ -1,0 +1,30 @@
+# netlify.toml
+# Configuração de deploy do Dashboard no Netlify
+#
+# Como publicar:
+#   1. Acesse app.netlify.com → "Add new site" → "Deploy manually"
+#   2. Arraste a pasta do projeto para a área de upload
+#   OU
+#   1. Conecte este repositório ao Netlify via GitHub
+#   2. O Netlify detecta este arquivo e publica automaticamente
+
+[build]
+  # Arquivo principal do site
+  publish = "."
+
+# Cabeçalhos de segurança
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+
+# Permite que o dashboard.html leia o data.json local sem problemas de CORS
+[[headers]]
+  for = "/data.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "no-cache"
+
+# index.html já é servido automaticamente na raiz

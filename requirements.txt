@@ -1,0 +1,6 @@
+# Dependências do trello_extractor.py
+# Instale com: pip install -r requirements.txt
+
+requests>=2.31.0       # Chamadas à API Trello
+supabase>=2.3.0        # Cliente Supabase (envio dos dados)
+python-dotenv>=1.0.0   # Carregar variáveis de ambiente do .env (opcional)
