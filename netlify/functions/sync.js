@@ -205,7 +205,8 @@ function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
 // ─── UPSERT SUPABASE ─────────────────────────────────────────────────────────
 
 async function upsertSupabase(cards, env) {
-  const url = `${env.SUPABASE_URL}/rest/v1/cards`;
+  // on_conflict=trello_id garante upsert correto mesmo sem PK no trello_id
+  const url = `${env.SUPABASE_URL}/rest/v1/cards?on_conflict=trello_id`;
   const headers = {
     "Content-Type":  "application/json",
     "apikey":        env.SUPABASE_SERVICE_KEY,
