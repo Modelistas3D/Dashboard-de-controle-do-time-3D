@@ -587,7 +587,7 @@ function render(){
   const extC=cards.filter(c=>c.is_modelista_externo),intC=cards.filter(c=>!c.is_modelista_externo),extN2=extC.length;
   document.getElementById("donut-ext-pct").textContent=pct(extN2,N)+"%";
   donutSeg([{id:"d-interna",val:intC.length},{id:"d-externo",val:extN2}]);
-  document.getElementById("breakdown-ext").innerHTML=[{no:"Equipe interna",v:intC.length,s:"var(--rose)"},{no:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.no,r.v,N,r.s)).join("");
+  document.getElementById("breakdown-ext").innerHTML=[{n:"Equipe interna",v:intC.length,s:"var(--rose)"},{n:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
   const extByM={};extC.forEach(c=>{extByM[c.marca]=(extByM[c.marca]||0)+1});
   const maxEM=Math.max(...Object.values(extByM),1);
   document.getElementById("sub-ext").textContent="Bloco 5.1 Â· "+extN2+" cards terceirizados";
@@ -597,3 +597,122 @@ function render(){
   const cxMap={"Baixa":0,"MÃ©dia":0,"Alta":0};
   cards.filter(c=>c.complexidade&&c.complexidade!=="NÃ£o calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"MÃ©dia":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
   const cxT=cxMap["Baixa"]+cxMap["MÃ©dia"]+cxMap["Alta"];
+  document.getElementById("donut-cx-total").textContent=cxT;
+  donutSeg([{id:"d-baixa",val:cxMap["Baixa"]},{id:"d-media",val:cxMap["MÃ©dia"]},{id:"d-alta",val:cxMap["Alta"]}]);
+  document.getElementById("complex-rows").innerHTML=[{n:"Baixa",sub:"atÃ© 1h Â· simples",v:cxMap["Baixa"],dot:"var(--sage)"},{n:"MÃ©dia",sub:"atÃ© 2h Â· padrÃ£o",v:cxMap["MÃ©dia"],dot:"var(--champagne)"},{n:"Alta",sub:"2h+ Â· estrutural",v:cxMap["Alta"],dot:"var(--bordeaux)"}].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num">'+r.v+'</span></div>').join("");
+  const tpT={Montagem:{s:0,n:0},Novo:{s:0,n:0},Ajuste:{s:0,n:0}};
+  cards.filter(c=>c.tempo_horas!=null&&tpT[c.tipo]).forEach(c=>{tpT[c.tipo].s+=c.tempo_horas;tpT[c.tipo].n++});
+  const avg={Montagem:tpT.Montagem.n?tpT.Montagem.s/tpT.Montagem.n:null,Novo:tpT.Novo.n?tpT.Novo.s/tpT.Novo.n:null,Ajuste:tpT.Ajuste.n?tpT.Ajuste.s/tpT.Ajuste.n:null};
+  const mxA=Math.max(...Object.values(avg).filter(v=>v!=null),0.01);
+  document.getElementById("timebars-tipo").innerHTML=[{n:"Montagem",v:avg.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:avg.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:avg.Ajuste,s:"var(--c-ajuste)"}].map(r=>'<div class="timebar" style="--swatch:'+r.s+'"><span class="timebar__name">'+r.n+'</span><div class="timebar__bar"><div class="timebar__fill" style="width:'+(r.v!=null?pct(r.v,mxA):0)+'%;background:'+r.s+'"></div></div><span class="timebar__val">'+fmtH(r.v)+'</span></div>').join("");
+  const tpM={};cards.filter(c=>c.tempo_horas!=null).forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!tpM[m])tpM[m]={s:0,n:0};tpM[m].s+=c.tempo_horas;tpM[m].n++})});
+  document.getElementById("tbody-tempo").innerHTML=Object.entries(tpM).map(([n,v])=>({n,avg:v.s/v.n,n2:v.n})).sort((a,b)=>b.n2-a.n2).slice(0,6).map(m=>'<tr><td>'+m.n+'</td><td class="num">'+fmtH(m.avg)+'</td><td class="num">'+m.n2+'</td></tr>').join("");
+  document.getElementById("note-complexidade").innerHTML=cxMap["Alta"]>0?"<strong>"+cxMap["Alta"]+"</strong> card"+(cxMap["Alta"]!==1?"s":"")+" de alta complexidade &mdash; onde o cronograma mais sente press&atilde;o.":"Sem dados de complexidade no filtro atual.";
+  renderPipeline();
+}
+
+// ââ Pipeline / Fluxo ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+let PT="all"; // pipeline type filter (independent of global AF)
+const DONE_KEYWORDS=["liberado","feito","concluÃ­do","finalizado","pronto","done","entregue"];
+function isDoneCol(name){return DONE_KEYWORDS.some(k=>name.toLowerCase().includes(k))}
+
+function renderPipeline(){
+  const base=filtered();
+  const cards=PT==="all"?base:base.filter(c=>c.tipo===PT);
+  const N=cards.length;
+
+  // group by coluna
+  const byCol={};
+  cards.forEach(c=>{
+    const col=(c.coluna||"Sem coluna").trim();
+    if(!byCol[col])byCol[col]={count:0,cards:[]};
+    byCol[col].count++;
+    byCol[col].cards.push(c);
+  });
+
+  // sort: done columns last, rest by count descending
+  const cols=Object.entries(byCol).sort((a,b)=>{
+    const da=isDoneCol(a[0]),db=isDoneCol(b[0]);
+    if(da!==db)return da?1:-1;
+    return b[1].count-a[1].count;
+  });
+
+  if(!cols.length){
+    document.getElementById("pipeline").innerHTML='<p class="note" style="padding:var(--sp-5)">Nenhum card no filtro atual.</p>';
+    return;
+  }
+
+  document.getElementById("pipeline").innerHTML=cols.map(([col,data])=>{
+    const done=isDoneCol(col);
+    const p=pct(data.count,N);
+    const items=data.cards.slice(0,30).map(c=>{
+      const mems=mArr(c.membros);
+      const ext=c.is_modelista_externo;
+      const tags=mems.length?mems.map(m=>'<span class="p-item__tag'+(ext?" p-item__tag--ext":"")+'">'+m+'</span>').join(""):'<span class="p-item__tag" style="opacity:0.5">Sem atribuiÃ§Ã£o</span>';
+      const tipoColor=c.tipo==="Montagem"?"var(--c-montagem)":c.tipo==="Novo"?"var(--c-novo)":"var(--c-ajuste)";
+      return '<div class="p-item"><span class="p-item__name" title="'+c.nome+'">'+c.nome+'</span><div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin-top:2px"><span class="p-item__tag" style="background:transparent;color:'+tipoColor+';border-color:'+tipoColor+';opacity:0.75">'+c.tipo+'</span>'+tags+'</div></div>';
+    }).join("");
+    const more=data.cards.length>30?'<p style="font-family:var(--font-mono);font-size:9px;color:var(--blush-40);padding:var(--sp-2) var(--sp-3)">+' +(data.cards.length-30)+' mais</p>':"";
+    return '<div class="p-col'+(done?" p-col--done":"")+'"><div class="p-col__head"><div class="p-col__stage">'+col+'</div><div class="p-col__count-row"><span class="p-col__count">'+data.count+'</span><span class="p-col__pct">'+p+'%</span></div></div><div class="p-col__body">'+items+more+'</div></div>';
+  }).join("");
+}
+async function fetchCards(){
+  const ctrl=new AbortController();
+  const tid=setTimeout(()=>ctrl.abort(),8000);
+  try{
+    const r=await fetch(SUPABASE_URL+"/rest/v1/cards?select=*&limit=2000",{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
+    clearTimeout(tid);if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||d.length===0)throw new Error("empty");
+    return d;
+  }catch(e){clearTimeout(tid);throw e}
+}
+// ââ Event listeners âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+document.querySelectorAll('.chips[data-filter]').forEach(group=>{
+  group.querySelectorAll('.chip[data-value]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const f=group.dataset.filter,v=btn.dataset.value;
+      if(f==="brand")AF.brand=v;else if(f==="type")AF.type=v;else if(f==="source")AF.source=v;
+      group.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
+      render();
+    });
+  });
+});
+document.getElementById("pipeline-tabs")?.querySelectorAll('.chip[data-pt]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    PT=btn.dataset.pt;
+    document.querySelectorAll('#pipeline-tabs .chip').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
+    renderPipeline();
+  });
+});
+document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  document.documentElement.setAttribute('data-theme',isLight?'dark':'light');
+});
+// ââ Init ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+(async function init(){
+  const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
+  try{
+    ALL=await fetchCards();
+    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
+    const last=dates[dates.length-1];
+    if(last){
+      const d=new Date(last);
+      const mo=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+      document.getElementById("footer-date").textContent="Atualizado "+d.toLocaleDateString("pt-BR");
+    }
+  }catch(e){
+    console.warn("Supabase unavailable, using demo:",e.message);
+    ALL=DEMO;
+    bn.classList.add("visible");
+  }
+  ov.style.opacity="0";
+  ov.style.transition="opacity 0.4s";
+  setTimeout(()=>ov.classList.remove("visible"),400);
+  render();
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}})},{threshold:0.08});
+  document.querySelectorAll(".card").forEach(c=>io.observe(c));
+})();
+</script>
+</body>
+</html>
