@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atelier Analytics · Quadro 3D</title>
+<title>Atelier Analytics Â· Quadro 3D</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231F1218'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' fill='%23C99A8A' font-family='Georgia,serif' font-weight='700' font-size='14'%3EAt%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -172,6 +172,30 @@ footer a{color:var(--rose);border-bottom:1px solid var(--rose-line);padding-bott
 footer a:hover{color:var(--champagne)}
 @media(max-width:720px){.hbar{grid-template-columns:100px 1fr 48px;gap:var(--sp-3)}.gbar-row{grid-template-columns:1fr}.gbar{grid-template-columns:64px 1fr 30px}.timebar{grid-template-columns:90px 1fr 60px}.topbar__sep{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
+
+/* ââ Pipeline / Fluxo âââââââââââââââââââââââââââââââââââââââââââââââââ */
+.pipeline-tabs{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap}
+.pipeline{display:flex;gap:var(--sp-3);overflow-x:auto;padding-bottom:var(--sp-3);scrollbar-width:thin;scrollbar-color:var(--rose-line) transparent}
+.pipeline::-webkit-scrollbar{height:4px}
+.pipeline::-webkit-scrollbar-thumb{background:var(--rose-line);border-radius:2px}
+.p-col{min-width:210px;max-width:230px;flex-shrink:0;display:flex;flex-direction:column;background:rgba(245,237,230,0.015);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.p-col__head{padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line)}
+.p-col__stage{font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-60);margin-bottom:var(--sp-2);line-height:1.3}
+.p-col__count-row{display:flex;align-items:baseline;gap:var(--sp-2)}
+.p-col__count{font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:700;color:var(--blush);line-height:1;letter-spacing:-0.02em}
+.p-col__pct{font-family:var(--font-mono);font-size:var(--fs-2xs);color:var(--blush-60)}
+.p-col--done{border-color:rgba(156,179,158,0.28)}
+.p-col--done .p-col__head{background:rgba(156,179,158,0.04)}
+.p-col--done .p-col__stage{color:var(--sage)}
+.p-col--done .p-col__count{color:var(--sage)}
+.p-col__body{padding:var(--sp-2);display:flex;flex-direction:column;gap:var(--sp-2);overflow-y:auto;max-height:380px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.p-item{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--line);background:rgba(245,237,230,0.01);display:flex;flex-direction:column;gap:4px}
+.p-item__name{font-size:11px;color:var(--blush-80);line-height:1.35;word-break:break-word}
+.p-item__tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
+.p-item__tag{font-family:var(--font-mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:999px;background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-line);line-height:1.6;white-space:nowrap}
+.p-item__tag--ext{background:rgba(140,49,72,0.10);color:var(--bordeaux);border-color:rgba(140,49,72,0.28)}
+.p-more{padding:var(--sp-2) var(--sp-3);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.12em;color:var(--blush-40);text-align:center}
+.p-empty{padding:var(--sp-5);text-align:center;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;color:var(--blush-40)}
 </style>
 </head>
 <body>
@@ -475,6 +499,22 @@ footer a:hover{color:var(--champagne)}
   </div>
 </section>
 
+<!-- ââ B7 Â· Pipeline / Fluxo âââââââââââââââââââââââââââââââââââââââââââââ -->
+<section class="section" id="section-pipeline">
+  <div class="wrap">
+    <div class="section__num">B7 &middot; Fluxo</div>
+    <h2 class="section__title">Onde cada pe&ccedil;a est&aacute; no processo.</h2>
+    <p class="section__intro">Cards por etapa &mdash; quantos h&aacute; em cada fase, quem est&aacute; fazendo e em qual coluna do quadro.</p>
+    <div class="pipeline-tabs" id="pipeline-tabs">
+      <button class="chip" aria-pressed="true"  data-pt="all">Todos</button>
+      <button class="chip" aria-pressed="false" data-pt="Montagem">Montagem</button>
+      <button class="chip" aria-pressed="false" data-pt="Novo">Novo</button>
+      <button class="chip" aria-pressed="false" data-pt="Ajuste">Ajuste</button>
+    </div>
+    <div class="pipeline" id="pipeline"></div>
+  </div>
+</section>
+
 </main>
 
 <footer>
@@ -487,18 +527,18 @@ footer a:hover{color:var(--champagne)}
 <script>
 const SUPABASE_URL="https://rvwatkeyjnbqnxkwadwo.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2d2F0a2V5am5icW54a3dhZHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTc3NjIsImV4cCI6MjA5MzU5Mzc2Mn0.Wl9S8iNuVVwpiHGXPJTpaNyHtbXzsQcLsDNwkivc8g0";
-const DEMO=[{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},{tipo:"Novo",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},{tipo:"Montagem",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},{tipo:"Novo",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},{tipo:"Montagem",estilista:"Marina Sotto",marca:"GL",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},{tipo:"Novo",estilista:"Marina Sotto",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},{tipo:"Ajuste",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},{tipo:"Novo",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Outras",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Maria Filó",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}];
+const DEMO=[{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},{tipo:"Novo",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Tatiana Lemos",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},{tipo:"Montagem",estilista:"Tatiana Lemos",marca:"Maria FilÃ³",membros:'["PatrÃ­cia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},{tipo:"Novo",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},{tipo:"Montagem",estilista:"Marina Sotto",marca:"GL",membros:'["CÃ­ntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},{tipo:"Novo",estilista:"Marina Sotto",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},{tipo:"Montagem",estilista:"JÃºlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},{tipo:"Ajuste",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},{tipo:"Novo",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},{tipo:"Montagem",estilista:"JÃºlia Andrade",marca:"Outras",membros:'["PatrÃ­cia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Maria FilÃ³",membros:'["CÃ­ntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}];
 const C=301.59,AF={brand:"all",type:"all",source:"all"};
 let ALL=[];
 const pct=(n,t)=>t>0?Math.round(n/t*100):0;
-function fmtH(h){if(h==null)return"—";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
+function fmtH(h){if(h==null)return"â";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
 function mArr(m){if(!m)return[];if(Array.isArray(m))return m;try{return JSON.parse(m)}catch{return[]}}
 function donutSeg(arcs){const t=arcs.reduce((s,a)=>s+a.val,0);let off=0;arcs.forEach(a=>{const el=document.getElementById(a.id);if(!el)return;const d=t>0?C*a.val/t:0;el.setAttribute("stroke-dasharray",d.toFixed(2)+" "+C.toFixed(2));el.setAttribute("stroke-dashoffset",(-off).toFixed(2));off+=d})}
 function bRow(name,val,total,sw){const p=pct(val,total);return'<div class="breakdown__row" style="--swatch:'+sw+'"><div class="breakdown__top"><span class="breakdown__name">'+name+'</span><span class="breakdown__val"><strong>'+val+'</strong>'+p+'%</span></div><div class="breakdown__bar"><div class="breakdown__fill" style="width:'+p+'%"></div></div></div>'}
 function topE(cards,f){const c={};cards.forEach(x=>{c[x[f]]=(c[x[f]]||0)+1});const s=Object.entries(c).sort((a,b)=>b[1]-a[1]);return s.length?{name:s[0][0],count:s[0][1]}:null}
 function filtered(){return ALL.filter(c=>{if(AF.brand!=="all"&&c.marca!==AF.brand)return false;if(AF.type!=="all"&&c.tipo!==AF.type)return false;if(AF.source==="interna"&&c.is_modelista_externo)return false;if(AF.source==="externo"&&!c.is_modelista_externo)return false;return true})}
-const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria Filó":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
-const MORD=["Farm BR","GL","Maria Filó","Outras"];
+const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria FilÃ³":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
+const MORD=["Farm BR","GL","Maria FilÃ³","Outras"];
 function render(){
   const cards=filtered(),N=cards.length;
   const byT={Montagem:0,Novo:0,Ajuste:0};
@@ -518,16 +558,16 @@ function render(){
   const extN=cards.filter(c=>c.is_modelista_externo).length;
   document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+' cards</strong> em produ&ccedil;&atilde;o entre '+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
   document.getElementById("donut-tipo-total").textContent=N;
-  document.getElementById("sub-tipo").textContent="Bloco 1.3 · "+N+" cards";
+  document.getElementById("sub-tipo").textContent="Bloco 1.3 Â· "+N+" cards";
   donutSeg([{id:"d-montagem",val:byT.Montagem},{id:"d-novo",val:byT.Novo},{id:"d-ajuste",val:byT.Ajuste}]);
   document.getElementById("breakdown-tipo").innerHTML=[{n:"Montagem",v:byT.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:byT.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:byT.Ajuste,s:"var(--c-ajuste)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
   const bigT=byT.Montagem>=byT.Novo&&byT.Montagem>=byT.Ajuste?"Montagem":byT.Novo>=byT.Ajuste?"Novo":"Ajuste";
   document.getElementById("note-tipo").innerHTML="<strong>"+bigT+"</strong> domina o quadro &mdash; s&atilde;o <strong>"+pct(byT[bigT],N)+"%</strong> do volume.";
   const byM={};cards.forEach(c=>{byM[c.marca]=(byM[c.marca]||0)+1});
-  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria Filó"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
+  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria FilÃ³"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
   const actM=MORD.filter(m=>byM[m]>0);
   document.getElementById("donut-marca-total").textContent=actM.length;
-  document.getElementById("sub-marca").textContent="Bloco 3.4 · "+actM.length+" marcas";
+  document.getElementById("sub-marca").textContent="Bloco 3.4 Â· "+actM.length+" marcas";
   document.getElementById("breakdown-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>bRow(m,byM[m]||0,N,MCOLS[m])).join("");
   const top2=MORD.filter(m=>byM[m]).sort((a,b)=>(byM[b]||0)-(byM[a]||0)).slice(0,2);
   if(top2.length>=2){const c2=(byM[top2[0]]||0)+(byM[top2[1]]||0);document.getElementById("note-marca").innerHTML="<strong>"+top2[0]+"</strong> e <strong>"+top2[1]+"</strong> juntas fazem <strong>"+pct(c2,N)+"%</strong> do volume."}
@@ -537,8 +577,8 @@ function render(){
   document.getElementById("hbars-estilista").innerHTML=srtE.map(e=>'<div class="hbar"><span class="hbar__label">'+e.n+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(e.M,maxE)+'%;background:var(--c-montagem)" title="Montagem '+e.M+'"></div><div class="hbar__seg" style="width:'+pct(e.N,maxE)+'%;background:var(--c-novo)" title="Novo '+e.N+'"></div><div class="hbar__seg" style="width:'+pct(e.A,maxE)+'%;background:var(--c-ajuste)" title="Ajuste '+e.A+'"></div></div><span class="hbar__val">'+e.t+'</span></div>').join("");
   if(srtE.length>0){const te=srtE[0],mn=[...srtE].sort((a,b)=>b.N-a.N)[0];document.getElementById("note-estilista").innerHTML="<strong>"+te.n+"</strong> conduz o volume com <strong>"+te.t+"</strong> cards."+(mn&&mn.n!==te.n?" <em>"+mn.n+"</em> tem a maior fatia de novos.":"")}
   const maxG=Math.max(...MORD.map(m=>{const mc=cards.filter(c=>c.marca===m);return Math.max(mc.filter(c=>c.tipo==="Montagem").length,mc.filter(c=>c.tipo==="Novo").length,mc.filter(c=>c.tipo==="Ajuste").length)}),1);
-  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards · '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
-  document.getElementById("note-marca-tipo").innerHTML="Calendários distintos sob o mesmo ateliê.";
+  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards Â· '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
+  document.getElementById("note-marca-tipo").innerHTML="CalendÃ¡rios distintos sob o mesmo ateliÃª.";
   const modMap={};cards.forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!modMap[m])modMap[m]={M:0,N:0,A:0,ext:false};if(c.tipo==="Montagem")modMap[m].M++;else if(c.tipo==="Novo")modMap[m].N++;else if(c.tipo==="Ajuste")modMap[m].A++;if(c.is_modelista_externo)modMap[m].ext=true})});
   const srtM=Object.entries(modMap).map(([n,v])=>({n,...v,t:v.M+v.N+v.A})).sort((a,b)=>b.t-a.t);
   document.getElementById("tbody-equipe").innerHTML=srtM.map(m=>'<tr><td>'+m.n+'</td><td>'+(m.ext?'<span class="pill pill--ext">Freelance</span>':'<span class="pill">Interna</span>')+'</td><td class="num">'+m.M+'</td><td class="num num--muted">'+m.N+'</td><td class="num num--muted">'+m.A+'</td><td class="num"><strong>'+m.t+'</strong></td></tr>').join("");
@@ -547,115 +587,13 @@ function render(){
   const extC=cards.filter(c=>c.is_modelista_externo),intC=cards.filter(c=>!c.is_modelista_externo),extN2=extC.length;
   document.getElementById("donut-ext-pct").textContent=pct(extN2,N)+"%";
   donutSeg([{id:"d-interna",val:intC.length},{id:"d-externo",val:extN2}]);
-  document.getElementById("breakdown-ext").innerHTML=[{n:"Equipe interna",v:intC.length,s:"var(--rose)"},{n:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
+  document.getElementById("breakdown-ext").innerHTML=[{no:"Equipe interna",v:intC.length,s:"var(--rose)"},{no:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.no,r.v,N,r.s)).join("");
   const extByM={};extC.forEach(c=>{extByM[c.marca]=(extByM[c.marca]||0)+1});
   const maxEM=Math.max(...Object.values(extByM),1);
-  document.getElementById("sub-ext").textContent="Bloco 5.1 · "+extN2+" cards terceirizados";
+  document.getElementById("sub-ext").textContent="Bloco 5.1 Â· "+extN2+" cards terceirizados";
   document.getElementById("hbars-ext-marca").innerHTML=Object.entries(extByM).sort((a,b)=>b[1]-a[1]).map(([m,v])=>'<div class="hbar"><span class="hbar__label">'+m+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(v,maxEM)+'%;background:'+(MCOLS[m]||"var(--rose)")+'"></div></div><span class="hbar__val">'+v+'</span></div>').join("");
   const topEM=Object.entries(extByM).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById("note-externo").innerHTML=topEM?"O externo cobre principalmente <em>"+topEM[0]+"</em> &mdash; <strong>"+topEM[1]+"</strong> cards terceirizados.":extN2>0?"Freelancer ativo.":"Nenhum card externo no filtro.";
-  const cxMap={"Baixa":0,"Média":0,"Alta":0};
-  cards.filter(c=>c.complexidade&&c.complexidade!=="Não calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"Média":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
-  const cxT=cxMap["Baixa"]+cxMap["Média"]+cxMap["Alta"];
-  document.getElementById("donut-cx-total").textContent=cxT;
-  donutSeg([{id:"d-baixa",val:cxMap["Baixa"]},{id:"d-media",val:cxMap["Média"]},{id:"d-alta",val:cxMap["Alta"]}]);
-  document.getElementById("complex-rows").innerHTML=[{n:"Baixa",sub:"até 1h · simples",v:cxMap["Baixa"],dot:"var(--sage)"},{n:"Média",sub:"até 2h · padrão",v:cxMap["Média"],dot:"var(--champagne)"},{n:"Alta",sub:"2h+ · estrutural",v:cxMap["Alta"],dot:"var(--bordeaux)"}].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num">'+r.v+'</span></div>').join("");
-  const tpT={Montagem:{s:0,n:0},Novo:{s:0,n:0},Ajuste:{s:0,n:0}};
-  cards.filter(c=>c.tempo_horas!=null&&tpT[c.tipo]).forEach(c=>{tpT[c.tipo].s+=c.tempo_horas;tpT[c.tipo].n++});
-  const avg={Montagem:tpT.Montagem.n?tpT.Montagem.s/tpT.Montagem.n:null,Novo:tpT.Novo.n?tpT.Novo.s/tpT.Novo.n:null,Ajuste:tpT.Ajuste.n?tpT.Ajuste.s/tpT.Ajuste.n:null};
-  const mxA=Math.max(...Object.values(avg).filter(v=>v!=null),0.01);
-  document.getElementById("timebars-tipo").innerHTML=[{n:"Montagem",v:avg.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:avg.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:avg.Ajuste,s:"var(--c-ajuste)"}].map(r=>'<div class="timebar" style="--swatch:'+r.s+'"><span class="timebar__name">'+r.n+'</span><div class="timebar__bar"><div class="timebar__fill" style="width:'+(r.v!=null?pct(r.v,mxA):0)+'%;background:'+r.s+'"></div></div><span class="timebar__val">'+fmtH(r.v)+'</span></div>').join("");
-  const tpM={};cards.filter(c=>c.tempo_horas!=null).forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!tpM[m])tpM[m]={s:0,n:0};tpM[m].s+=c.tempo_horas;tpM[m].n++})});
-  document.getElementById("tbody-tempo").innerHTML=Object.entries(tpM).map(([n,v])=>({n,avg:v.s/v.n,n2:v.n})).sort((a,b)=>b.n2-a.n2).slice(0,6).map(m=>'<tr><td>'+m.n+'</td><td class="num">'+fmtH(m.avg)+'</td><td class="num">'+m.n2+'</td></tr>').join("");
-  document.getElementById("note-complexidade").innerHTML=cxMap["Alta"]>0?"<strong>"+cxMap["Alta"]+"</strong> card"+(cxMap["Alta"]!==1?"s":"")+" de alta complexidade &mdash; onde o cronograma mais sente press&atilde;o.":"Sem dados de complexidade no filtro atual.";
-}
-async function fetchCards(){
-  const ctrl=new AbortController();
-  const tid=setTimeout(()=>ctrl.abort(),8000);
-  try{
-    const r=await fetch(SUPABASE_URL+"/rest/v1/cards?select=*&limit=2000",{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
-    clearTimeout(tid);
-    if(!r.ok)throw new Error("HTTP "+r.status);
-    const d=await r.json();
-    if(!Array.isArray(d)||d.length===0)throw new Error("empty");
-    return d;
-  }catch(e){clearTimeout(tid);throw e}
-}
-async function init(){
-  const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
-  try{
-    ALL=await fetchCards();
-    bn.classList.remove("visible");
-    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
-    const last=dates[dates.length-1];
-    if(last){const d=new Date(last);const mo=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];document.getElementById("topbar-date").textContent=mo[d.getMonth()]+" · "+d.getFullYear();document.getElementById("footer-date").textContent="Atualizado "+d.toLocaleDateString("pt-BR")}
-  }catch(e){
-    console.warn("Supabase indisponível, usando demo:",e.message);
-    ALL=DEMO;bn.classList.add("visible");
-    document.getElementById("sync-status").textContent="Modo Demo";
-    const now=new Date();document.getElementById("topbar-date").textContent=now.toLocaleString("pt-BR",{month:"short",year:"numeric"}).replace(" de "," · ");
-    document.getElementById("footer-date").textContent="Dados de demonstração";
-  }
-  render();
-  ov.style.opacity="0";ov.style.transition="opacity 0.4s";
-  setTimeout(()=>ov.classList.remove("visible"),400);
-  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}})},{threshold:0.08});
-  document.querySelectorAll(".card").forEach(c=>io.observe(c));
-}
-document.querySelectorAll(".chips").forEach(g=>{
-  g.addEventListener("click",e=>{
-    const b=e.target.closest(".chip");if(!b)return;
-    const k=g.dataset.filter==="brand"?"brand":g.dataset.filter==="type"?"type":"source";
-    g.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
-    b.setAttribute("aria-pressed","true");AF[k]=b.dataset.value;render();
-    document.body.animate([{filter:"saturate(1)"},{filter:"saturate(1.08)"},{filter:"saturate(1)"}],{duration:360,easing:"ease-out"});
-  });
-});
-(function(){const KEY="atelier-theme",root=document.documentElement,stored=localStorage.getItem(KEY);if(stored)root.setAttribute("data-theme",stored);const btn=document.getElementById("theme-toggle");if(btn)btn.addEventListener("click",()=>{const next=root.getAttribute("data-theme")==="light"?"dark":"light";root.setAttribute("data-theme",next);localStorage.setItem(KEY,next)})})();
-
-// ── Botão Sincronizar ──────────────────────────────────────────────────────────
-(function(){
-  const btn   = document.getElementById("sync-btn");
-  const label = document.getElementById("sync-label");
-  const icon  = document.getElementById("sync-icon");
-  const status= document.getElementById("sync-status");
-  if(!btn) return;
-
-  let resetTimer = null;
-
-  function setState(state, msg) {
-    clearTimeout(resetTimer);
-    btn.disabled = (state === "loading");
-    btn.className = "sync-btn" + (state !== "idle" ? " sync-btn--" + state : "");
-    label.textContent = msg;
-    if(state !== "idle") {
-      resetTimer = setTimeout(() => setState("idle","Sincronizar"), 5000);
-    }
-  }
-
-  btn.addEventListener("click", async () => {
-    setState("loading","Sincronizando…");
-    icon.style.animationPlayState = "running";
-    try {
-      const res  = await fetch("/.netlify/functions/sync", {method:"POST"});
-      const data = await res.json();
-      if(data.ok) {
-        setState("ok", `✓ ${data.total} cards`);
-        if(status) status.textContent = `Atualizado agora · ${data.total} cards`;
-        // Recarrega dados do Supabase silenciosamente
-        setTimeout(()=>{ fetchCards().then(cards=>{ if(cards.length){ALL=cards;render();} }); }, 800);
-      } else {
-        console.error("[sync]", data.erro);
-        setState("err", "Erro — ver console");
-      }
-    } catch(e) {
-      console.error("[sync]", e);
-      setState("err", "Falhou");
-    }
-  });
-})();
-
-init();
-</script>
-</body>
-</html>
+  const cxMap={"Baixa":0,"MÃ©dia":0,"Alta":0};
+  cards.filter(c=>c.complexidade&&c.complexidade!=="NÃ£o calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"MÃ©dia":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
+  const cxT=cxMap["Baixa"]+cxMap["MÃ©dia"]+cxMap["Alta"];
