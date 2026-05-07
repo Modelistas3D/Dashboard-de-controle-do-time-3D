@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atelier Analytics Â· Quadro 3D</title>
+<title>Atelier Analytics · Quadro 3D</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231F1218'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' fill='%23C99A8A' font-family='Georgia,serif' font-weight='700' font-size='14'%3EAt%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -173,7 +173,7 @@ footer a:hover{color:var(--champagne)}
 @media(max-width:720px){.hbar{grid-template-columns:100px 1fr 48px;gap:var(--sp-3)}.gbar-row{grid-template-columns:1fr}.gbar{grid-template-columns:64px 1fr 30px}.timebar{grid-template-columns:90px 1fr 60px}.topbar__sep{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
 
-/* ââ Pipeline / Fluxo âââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── Pipeline / Fluxo ───────────────────────────────────────────────── */
 .pipeline-tabs{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap}
 .pipeline{display:flex;gap:var(--sp-3);overflow-x:auto;padding-bottom:var(--sp-3);scrollbar-width:thin;scrollbar-color:var(--rose-line) transparent}
 .pipeline::-webkit-scrollbar{height:4px}
@@ -499,7 +499,7 @@ footer a:hover{color:var(--champagne)}
   </div>
 </section>
 
-<!-- ââ B7 Â· Pipeline / Fluxo âââââââââââââââââââââââââââââââââââââââââââââ -->
+<!-- ── B7 · Pipeline / Fluxo ───────────────────────────────────────────── -->
 <section class="section" id="section-pipeline">
   <div class="wrap">
     <div class="section__num">B7 &middot; Fluxo</div>
@@ -527,18 +527,18 @@ footer a:hover{color:var(--champagne)}
 <script>
 const SUPABASE_URL="https://rvwatkeyjnbqnxkwadwo.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2d2F0a2V5am5icW54a3dhZHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTc3NjIsImV4cCI6MjA5MzU5Mzc2Mn0.Wl9S8iNuVVwpiHGXPJTpaNyHtbXzsQcLsDNwkivc8g0";
-const DEMO=[{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},{tipo:"Novo",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Tatiana Lemos",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},{tipo:"Montagem",estilista:"Tatiana Lemos",marca:"Maria FilÃ³",membros:'["PatrÃ­cia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},{tipo:"Novo",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},{tipo:"Montagem",estilista:"Marina Sotto",marca:"GL",membros:'["CÃ­ntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},{tipo:"Novo",estilista:"Marina Sotto",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},{tipo:"Montagem",estilista:"JÃºlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},{tipo:"Ajuste",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},{tipo:"Novo",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},{tipo:"Montagem",estilista:"JÃºlia Andrade",marca:"Outras",membros:'["PatrÃ­cia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Maria FilÃ³",membros:'["CÃ­ntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}];
+const DEMO=[{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},{tipo:"Novo",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},{tipo:"Montagem",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},{tipo:"Novo",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},{tipo:"Montagem",estilista:"Marina Sotto",marca:"GL",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},{tipo:"Novo",estilista:"Marina Sotto",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},{tipo:"Ajuste",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},{tipo:"Novo",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Outras",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Maria Filó",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}];
 const C=301.59,AF={brand:"all",type:"all",source:"all"};
 let ALL=[];
 const pct=(n,t)=>t>0?Math.round(n/t*100):0;
-function fmtH(h){if(h==null)return"â";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
+function fmtH(h){if(h==null)return"—";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
 function mArr(m){if(!m)return[];if(Array.isArray(m))return m;try{return JSON.parse(m)}catch{return[]}}
 function donutSeg(arcs){const t=arcs.reduce((s,a)=>s+a.val,0);let off=0;arcs.forEach(a=>{const el=document.getElementById(a.id);if(!el)return;const d=t>0?C*a.val/t:0;el.setAttribute("stroke-dasharray",d.toFixed(2)+" "+C.toFixed(2));el.setAttribute("stroke-dashoffset",(-off).toFixed(2));off+=d})}
 function bRow(name,val,total,sw){const p=pct(val,total);return'<div class="breakdown__row" style="--swatch:'+sw+'"><div class="breakdown__top"><span class="breakdown__name">'+name+'</span><span class="breakdown__val"><strong>'+val+'</strong>'+p+'%</span></div><div class="breakdown__bar"><div class="breakdown__fill" style="width:'+p+'%"></div></div></div>'}
 function topE(cards,f){const c={};cards.forEach(x=>{c[x[f]]=(c[x[f]]||0)+1});const s=Object.entries(c).sort((a,b)=>b[1]-a[1]);return s.length?{name:s[0][0],count:s[0][1]}:null}
 function filtered(){return ALL.filter(c=>{if(AF.brand!=="all"&&c.marca!==AF.brand)return false;if(AF.type!=="all"&&c.tipo!==AF.type)return false;if(AF.source==="interna"&&c.is_modelista_externo)return false;if(AF.source==="externo"&&!c.is_modelista_externo)return false;return true})}
-const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria FilÃ³":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
-const MORD=["Farm BR","GL","Maria FilÃ³","Outras"];
+const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria Filó":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
+const MORD=["Farm BR","GL","Maria Filó","Outras"];
 function render(){
   const cards=filtered(),N=cards.length;
   const byT={Montagem:0,Novo:0,Ajuste:0};
@@ -558,16 +558,16 @@ function render(){
   const extN=cards.filter(c=>c.is_modelista_externo).length;
   document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+' cards</strong> em produ&ccedil;&atilde;o entre '+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
   document.getElementById("donut-tipo-total").textContent=N;
-  document.getElementById("sub-tipo").textContent="Bloco 1.3 Â· "+N+" cards";
+  document.getElementById("sub-tipo").textContent="Bloco 1.3 · "+N+" cards";
   donutSeg([{id:"d-montagem",val:byT.Montagem},{id:"d-novo",val:byT.Novo},{id:"d-ajuste",val:byT.Ajuste}]);
   document.getElementById("breakdown-tipo").innerHTML=[{n:"Montagem",v:byT.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:byT.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:byT.Ajuste,s:"var(--c-ajuste)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
   const bigT=byT.Montagem>=byT.Novo&&byT.Montagem>=byT.Ajuste?"Montagem":byT.Novo>=byT.Ajuste?"Novo":"Ajuste";
   document.getElementById("note-tipo").innerHTML="<strong>"+bigT+"</strong> domina o quadro &mdash; s&atilde;o <strong>"+pct(byT[bigT],N)+"%</strong> do volume.";
   const byM={};cards.forEach(c=>{byM[c.marca]=(byM[c.marca]||0)+1});
-  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria FilÃ³"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
+  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria Filó"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
   const actM=MORD.filter(m=>byM[m]>0);
   document.getElementById("donut-marca-total").textContent=actM.length;
-  document.getElementById("sub-marca").textContent="Bloco 3.4 Â· "+actM.length+" marcas";
+  document.getElementById("sub-marca").textContent="Bloco 3.4 · "+actM.length+" marcas";
   document.getElementById("breakdown-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>bRow(m,byM[m]||0,N,MCOLS[m])).join("");
   const top2=MORD.filter(m=>byM[m]).sort((a,b)=>(byM[b]||0)-(byM[a]||0)).slice(0,2);
   if(top2.length>=2){const c2=(byM[top2[0]]||0)+(byM[top2[1]]||0);document.getElementById("note-marca").innerHTML="<strong>"+top2[0]+"</strong> e <strong>"+top2[1]+"</strong> juntas fazem <strong>"+pct(c2,N)+"%</strong> do volume."}
@@ -577,8 +577,8 @@ function render(){
   document.getElementById("hbars-estilista").innerHTML=srtE.map(e=>'<div class="hbar"><span class="hbar__label">'+e.n+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(e.M,maxE)+'%;background:var(--c-montagem)" title="Montagem '+e.M+'"></div><div class="hbar__seg" style="width:'+pct(e.N,maxE)+'%;background:var(--c-novo)" title="Novo '+e.N+'"></div><div class="hbar__seg" style="width:'+pct(e.A,maxE)+'%;background:var(--c-ajuste)" title="Ajuste '+e.A+'"></div></div><span class="hbar__val">'+e.t+'</span></div>').join("");
   if(srtE.length>0){const te=srtE[0],mn=[...srtE].sort((a,b)=>b.N-a.N)[0];document.getElementById("note-estilista").innerHTML="<strong>"+te.n+"</strong> conduz o volume com <strong>"+te.t+"</strong> cards."+(mn&&mn.n!==te.n?" <em>"+mn.n+"</em> tem a maior fatia de novos.":"")}
   const maxG=Math.max(...MORD.map(m=>{const mc=cards.filter(c=>c.marca===m);return Math.max(mc.filter(c=>c.tipo==="Montagem").length,mc.filter(c=>c.tipo==="Novo").length,mc.filter(c=>c.tipo==="Ajuste").length)}),1);
-  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards Â· '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
-  document.getElementById("note-marca-tipo").innerHTML="CalendÃ¡rios distintos sob o mesmo ateliÃª.";
+  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards · '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
+  document.getElementById("note-marca-tipo").innerHTML="Calendários distintos sob o mesmo ateliê.";
   const modMap={};cards.forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!modMap[m])modMap[m]={M:0,N:0,A:0,ext:false};if(c.tipo==="Montagem")modMap[m].M++;else if(c.tipo==="Novo")modMap[m].N++;else if(c.tipo==="Ajuste")modMap[m].A++;if(c.is_modelista_externo)modMap[m].ext=true})});
   const srtM=Object.entries(modMap).map(([n,v])=>({n,...v,t:v.M+v.N+v.A})).sort((a,b)=>b.t-a.t);
   document.getElementById("tbody-equipe").innerHTML=srtM.map(m=>'<tr><td>'+m.n+'</td><td>'+(m.ext?'<span class="pill pill--ext">Freelance</span>':'<span class="pill">Interna</span>')+'</td><td class="num">'+m.M+'</td><td class="num num--muted">'+m.N+'</td><td class="num num--muted">'+m.A+'</td><td class="num"><strong>'+m.t+'</strong></td></tr>').join("");
@@ -590,16 +590,16 @@ function render(){
   document.getElementById("breakdown-ext").innerHTML=[{n:"Equipe interna",v:intC.length,s:"var(--rose)"},{n:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
   const extByM={};extC.forEach(c=>{extByM[c.marca]=(extByM[c.marca]||0)+1});
   const maxEM=Math.max(...Object.values(extByM),1);
-  document.getElementById("sub-ext").textContent="Bloco 5.1 Â· "+extN2+" cards terceirizados";
+  document.getElementById("sub-ext").textContent="Bloco 5.1 · "+extN2+" cards terceirizados";
   document.getElementById("hbars-ext-marca").innerHTML=Object.entries(extByM).sort((a,b)=>b[1]-a[1]).map(([m,v])=>'<div class="hbar"><span class="hbar__label">'+m+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(v,maxEM)+'%;background:'+(MCOLS[m]||"var(--rose)")+'"></div></div><span class="hbar__val">'+v+'</span></div>').join("");
   const topEM=Object.entries(extByM).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById("note-externo").innerHTML=topEM?"O externo cobre principalmente <em>"+topEM[0]+"</em> &mdash; <strong>"+topEM[1]+"</strong> cards terceirizados.":extN2>0?"Freelancer ativo.":"Nenhum card externo no filtro.";
-  const cxMap={"Baixa":0,"MÃ©dia":0,"Alta":0};
-  cards.filter(c=>c.complexidade&&c.complexidade!=="NÃ£o calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"MÃ©dia":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
-  const cxT=cxMap["Baixa"]+cxMap["MÃ©dia"]+cxMap["Alta"];
+  const cxMap={"Baixa":0,"Média":0,"Alta":0};
+  cards.filter(c=>c.complexidade&&c.complexidade!=="Não calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"Média":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
+  const cxT=cxMap["Baixa"]+cxMap["Média"]+cxMap["Alta"];
   document.getElementById("donut-cx-total").textContent=cxT;
-  donutSeg([{id:"d-baixa",val:cxMap["Baixa"]},{id:"d-media",val:cxMap["MÃ©dia"]},{id:"d-alta",val:cxMap["Alta"]}]);
-  document.getElementById("complex-rows").innerHTML=[{n:"Baixa",sub:"atÃ© 1h Â· simples",v:cxMap["Baixa"],dot:"var(--sage)"},{n:"MÃ©dia",sub:"atÃ© 2h Â· padrÃ£o",v:cxMap["MÃ©dia"],dot:"var(--champagne)"},{n:"Alta",sub:"2h+ Â· estrutural",v:cxMap["Alta"],dot:"var(--bordeaux)"}].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num">'+r.v+'</span></div>').join("");
+  donutSeg([{id:"d-baixa",val:cxMap["Baixa"]},{id:"d-media",val:cxMap["Média"]},{id:"d-alta",val:cxMap["Alta"]}]);
+  document.getElementById("complex-rows").innerHTML=[{n:"Baixa",sub:"até 1h · simples",v:cxMap["Baixa"],dot:"var(--sage)"},{n:"Média",sub:"até 2h · padrão",v:cxMap["Média"],dot:"var(--champagne)"},{n:"Alta",sub:"2h+ · estrutural",v:cxMap["Alta"],dot:"var(--bordeaux)"}].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num">'+r.v+'</span></div>').join("");
   const tpT={Montagem:{s:0,n:0},Novo:{s:0,n:0},Ajuste:{s:0,n:0}};
   cards.filter(c=>c.tempo_horas!=null&&tpT[c.tipo]).forEach(c=>{tpT[c.tipo].s+=c.tempo_horas;tpT[c.tipo].n++});
   const avg={Montagem:tpT.Montagem.n?tpT.Montagem.s/tpT.Montagem.n:null,Novo:tpT.Novo.n?tpT.Novo.s/tpT.Novo.n:null,Ajuste:tpT.Ajuste.n?tpT.Ajuste.s/tpT.Ajuste.n:null};
@@ -611,9 +611,9 @@ function render(){
   renderPipeline();
 }
 
-// ââ Pipeline / Fluxo ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── Pipeline / Fluxo ──────────────────────────────────────────────────────
 let PT="all"; // pipeline type filter (independent of global AF)
-const DONE_KEYWORDS=["liberado","feito","concluÃ­do","finalizado","pronto","done","entregue"];
+const DONE_KEYWORDS=["liberado","feito","concluído","finalizado","pronto","done","entregue"];
 function isDoneCol(name){return DONE_KEYWORDS.some(k=>name.toLowerCase().includes(k))}
 
 function renderPipeline(){
@@ -648,7 +648,7 @@ function renderPipeline(){
     const items=data.cards.slice(0,30).map(c=>{
       const mems=mArr(c.membros);
       const ext=c.is_modelista_externo;
-      const tags=mems.length?mems.map(m=>'<span class="p-item__tag'+(ext?" p-item__tag--ext":"")+'">'+m+'</span>').join(""):'<span class="p-item__tag" style="opacity:0.5">Sem atribuiÃ§Ã£o</span>';
+      const tags=mems.length?mems.map(m=>'<span class="p-item__tag'+(ext?" p-item__tag--ext":"")+'">'+m+'</span>').join(""):'<span class="p-item__tag" style="opacity:0.5">Sem atribuição</span>';
       const tipoColor=c.tipo==="Montagem"?"var(--c-montagem)":c.tipo==="Novo"?"var(--c-novo)":"var(--c-ajuste)";
       return '<div class="p-item"><span class="p-item__name" title="'+c.nome+'">'+c.nome+'</span><div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin-top:2px"><span class="p-item__tag" style="background:transparent;color:'+tipoColor+';border-color:'+tipoColor+';opacity:0.75">'+c.tipo+'</span>'+tags+'</div></div>';
     }).join("");
@@ -667,7 +667,7 @@ async function fetchCards(){
     return d;
   }catch(e){clearTimeout(tid);throw e}
 }
-// ââ Event listeners âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── Event listeners ───────────────────────────────────────────────────────
 document.querySelectorAll('.chips[data-filter]').forEach(group=>{
   group.querySelectorAll('.chip[data-value]').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -689,7 +689,7 @@ document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
   const isLight=document.documentElement.getAttribute('data-theme')==='light';
   document.documentElement.setAttribute('data-theme',isLight?'dark':'light');
 });
-// ââ Init ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── Init ──────────────────────────────────────────────────────────────────
 (async function init(){
   const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
   try{
