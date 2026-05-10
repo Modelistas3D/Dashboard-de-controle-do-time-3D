@@ -25,12 +25,12 @@ em,.italic{font-style:italic;color:var(--rose)}
 .mono{font-family:var(--font-mono);font-size:var(--fs-2xs);font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--blush-60)}
 .wrap{width:100%;max-width:var(--max-w);margin-inline:auto;padding-inline:var(--gutter);position:relative;z-index:2}
 .topbar{position:sticky;top:0;z-index:40;background:rgba(31,18,24,0.78);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--line)}
-.topbar__inner{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);padding-block:var(--sp-4)}
+.topbar__inner{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);padding-block:var(--sp-4);flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:var(--sp-3)}
 .brand__mark{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--rose-line);background:var(--rose-soft);display:grid;place-items:center;font-family:var(--font-display);font-weight:900;font-size:13px;color:var(--rose);letter-spacing:-0.02em}
 .brand__kicker{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--rose);line-height:1;margin-bottom:3px}
 .brand__name{font-family:var(--font-display);font-size:var(--fs-sm);font-weight:600;color:var(--blush);line-height:1.2}
-.topbar__meta{display:flex;align-items:center;gap:var(--sp-4);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.topbar__meta{display:flex;align-items:center;gap:var(--sp-4);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60);flex-wrap:wrap}
 .topbar__dot{display:inline-flex;align-items:center;gap:var(--sp-2)}
 .topbar__dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 3px rgba(156,179,158,0.18)}
 .topbar__sep{width:1px;height:12px;background:var(--line-strong)}
@@ -62,7 +62,6 @@ html[data-theme=light] .theme-toggle__label::before{content:attr(data-light)}
 .hero__tldr .label{display:block;margin-bottom:var(--sp-2);color:var(--rose);font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.18em;text-transform:uppercase}
 .hero__tldr p{margin:0;color:var(--blush-80)}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3);margin-top:var(--sp-7);padding-top:var(--sp-6);border-top:1px solid var(--line)}
-@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}
 .kpi{padding:var(--sp-5);border-radius:var(--r-lg);border:1px solid var(--line);background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));display:flex;flex-direction:column;gap:var(--sp-3);position:relative;overflow:hidden;transition:border-color var(--dur-med) var(--ease-out)}
 .kpi:hover{border-color:var(--rose-line)}
 .kpi--accent{background:linear-gradient(180deg,rgba(201,154,138,0.06),rgba(201,154,138,0.01));border-color:var(--rose-line)}
@@ -71,13 +70,21 @@ html[data-theme=light] .theme-toggle__label::before{content:attr(data-light)}
 .kpi__num sub{font-size:0.42em;color:var(--rose);vertical-align:super;margin-left:4px;font-weight:400;letter-spacing:0}
 .kpi__sub{font-size:var(--fs-xs);color:var(--blush-60);line-height:1.45}
 .kpi__sub strong{color:var(--blush);font-weight:600}
-.filters{margin-top:var(--sp-7);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(245,237,230,0.015);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-5)}
+.kpi__mini{display:flex;gap:var(--sp-1);margin-top:2px;flex-wrap:wrap}
+.kpi__badge{font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;padding:2px 6px;border-radius:999px;border:1px solid var(--line-strong);color:var(--blush-60);white-space:nowrap}
+.filters{margin-top:var(--sp-7);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(245,237,230,0.015);display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--sp-5)}
 .filters__group{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
 .filters__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose)}
 .chips{display:flex;flex-wrap:wrap;gap:var(--sp-2)}
 .chip{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-80);padding:var(--sp-2) var(--sp-3);border-radius:999px;border:1px solid var(--line-strong);background:transparent;cursor:pointer;transition:all var(--dur-fast) var(--ease-out);min-height:32px;display:inline-flex;align-items:center;gap:var(--sp-2)}
 .chip:hover{border-color:var(--rose-line);color:var(--blush)}
 .chip[aria-pressed=true]{background:var(--rose);color:var(--noir);border-color:var(--rose);font-weight:600}
+.filter-select{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.12em;text-transform:uppercase;color:var(--blush-80);padding:6px 28px 6px 12px;border-radius:999px;border:1px solid var(--line-strong);background-color:transparent;cursor:pointer;transition:all var(--dur-fast) var(--ease-out);min-height:32px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23C99A8A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;color-scheme:dark;max-width:200px}
+.filter-select:focus{outline:none;border-color:var(--rose-line)}
+.filter-select:hover{border-color:var(--rose-line);color:var(--blush)}
+.filter-select option{background:#281820;color:#F5EDE6}
+html[data-theme=light] .filter-select{color-scheme:light}
+html[data-theme=light] .filter-select option{background:#EDE2D8;color:#2A1820}
 .section{padding-block:var(--sp-8)}
 .section+.section{border-top:1px solid var(--line)}
 .section__num{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;color:var(--rose);margin-bottom:var(--sp-3)}
@@ -85,7 +92,6 @@ html[data-theme=light] .theme-toggle__label::before{content:attr(data-light)}
 .section__intro{font-size:var(--fs-lg);color:var(--blush-80);max-width:64ch;margin-bottom:var(--sp-7)}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:var(--sp-5)}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-5)}
-@media(max-width:880px){.grid-2{grid-template-columns:1fr}}
 .card{background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-5) var(--sp-6);transition:border-color var(--dur-med) var(--ease-out);position:relative;opacity:0;transform:translateY(18px)}
 .card.is-in{animation:cardIn var(--dur-med) var(--ease-out) forwards}
 @keyframes cardIn{to{opacity:1;transform:translateY(0)}}
@@ -99,7 +105,6 @@ html[data-theme=light] .theme-toggle__label::before{content:attr(data-light)}
 .legend__swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
 .legend__item strong{color:var(--blush);font-weight:600;margin-left:0.4em;font-family:var(--font-display);letter-spacing:0;text-transform:none;font-size:var(--fs-sm)}
 .donut-wrap{display:grid;grid-template-columns:220px 1fr;gap:var(--sp-6);align-items:center}
-@media(max-width:600px){.donut-wrap{grid-template-columns:1fr;justify-items:center}}
 .donut{width:220px;height:220px;position:relative}
 .donut svg{width:100%;height:100%;transform:rotate(-90deg)}
 .donut circle{fill:none;stroke-width:18;transition:stroke-dashoffset var(--dur-med) var(--ease-out)}
@@ -163,39 +168,73 @@ table.spec tbody tr:hover{background:rgba(201,154,138,0.03)}
 #loading-overlay.visible{display:grid}
 .loading__inner{text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--sp-5)}
 .loading__ring{width:64px;height:64px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--rose);animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 .loading__text{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--blush-60)}
 footer{padding-block:var(--sp-7);border-top:1px solid var(--line);margin-top:var(--sp-8)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:var(--sp-5);justify-content:space-between;align-items:baseline}
 footer .mono{color:var(--blush-40)}
 footer a{color:var(--rose);border-bottom:1px solid var(--rose-line);padding-bottom:2px;transition:color var(--dur-fast);text-decoration:none}
 footer a:hover{color:var(--champagne)}
-@media(max-width:720px){.hbar{grid-template-columns:100px 1fr 48px;gap:var(--sp-3)}.gbar-row{grid-template-columns:1fr}.gbar{grid-template-columns:64px 1fr 30px}.timebar{grid-template-columns:90px 1fr 60px}.topbar__sep{display:none}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
 
-/* ── Pipeline / Fluxo ───────────────────────────────────────────────── */
+/* ── Pipeline / Fluxo ──────────────────────────────────── */
 .pipeline-tabs{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap}
+.stage-overview{display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-5);padding:var(--sp-4) var(--sp-5);background:rgba(245,237,230,0.015);border:1px solid var(--line);border-radius:var(--r-md)}
+.stage-overview__title{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose);margin-bottom:var(--sp-1)}
+.stage-bar{display:grid;grid-template-columns:140px 1fr 40px;gap:var(--sp-3);align-items:center}
+.stage-bar__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.10em;text-transform:uppercase;color:var(--blush-60);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage-bar__track{height:22px;background:rgba(245,237,230,0.04);border-radius:4px;overflow:hidden;display:flex}
+.stage-bar__seg{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.stage-bar__seg+.stage-bar__seg{border-left:1px solid rgba(31,18,24,0.5)}
+.stage-bar__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush);text-align:right;letter-spacing:0.04em}
 .pipeline{display:flex;gap:var(--sp-3);overflow-x:auto;padding-bottom:var(--sp-3);scrollbar-width:thin;scrollbar-color:var(--rose-line) transparent}
 .pipeline::-webkit-scrollbar{height:4px}
 .pipeline::-webkit-scrollbar-thumb{background:var(--rose-line);border-radius:2px}
 .p-col{min-width:210px;max-width:230px;flex-shrink:0;display:flex;flex-direction:column;background:rgba(245,237,230,0.015);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
 .p-col__head{padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line)}
-.p-col__stage{font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-60);margin-bottom:var(--sp-2);line-height:1.3}
+.p-col__stage{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--blush-60);margin-bottom:var(--sp-2);line-height:1.3}
+.p-col__stage em{font-style:normal;color:var(--rose);opacity:0.85}
 .p-col__count-row{display:flex;align-items:baseline;gap:var(--sp-2)}
 .p-col__count{font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:700;color:var(--blush);line-height:1;letter-spacing:-0.02em}
 .p-col__pct{font-family:var(--font-mono);font-size:var(--fs-2xs);color:var(--blush-60)}
 .p-col--done{border-color:rgba(156,179,158,0.28)}
 .p-col--done .p-col__head{background:rgba(156,179,158,0.04)}
-.p-col--done .p-col__stage{color:var(--sage)}
+.p-col--done .p-col__stage em{color:var(--sage)}
 .p-col--done .p-col__count{color:var(--sage)}
+.p-col--review{border-color:rgba(229,201,168,0.28)}
+.p-col--review .p-col__head{background:rgba(229,201,168,0.04)}
+.p-col--review .p-col__stage em{color:var(--champagne)}
+.p-col--review .p-col__count{color:var(--champagne)}
 .p-col__body{padding:var(--sp-2);display:flex;flex-direction:column;gap:var(--sp-2);overflow-y:auto;max-height:380px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
 .p-item{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--line);background:rgba(245,237,230,0.01);display:flex;flex-direction:column;gap:4px}
 .p-item__name{font-size:11px;color:var(--blush-80);line-height:1.35;word-break:break-word}
-.p-item__tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
 .p-item__tag{font-family:var(--font-mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:999px;background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-line);line-height:1.6;white-space:nowrap}
 .p-item__tag--ext{background:rgba(140,49,72,0.10);color:var(--bordeaux);border-color:rgba(140,49,72,0.28)}
-.p-more{padding:var(--sp-2) var(--sp-3);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.12em;color:var(--blush-40);text-align:center}
-.p-empty{padding:var(--sp-5);text-align:center;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;color:var(--blush-40)}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media(max-width:880px){.grid-2{grid-template-columns:1fr}}
+@media(max-width:720px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .hbar{grid-template-columns:100px 1fr 48px;gap:var(--sp-3)}
+  .gbar-row{grid-template-columns:1fr}
+  .gbar{grid-template-columns:64px 1fr 30px}
+  .timebar{grid-template-columns:90px 1fr 60px}
+  .topbar__sep{display:none}
+  .stage-bar{grid-template-columns:100px 1fr 32px;gap:var(--sp-2)}
+  .stage-bar__label{font-size:10px}
+}
+@media(max-width:600px){
+  .donut-wrap{grid-template-columns:1fr;justify-items:center}
+  .filters{gap:var(--sp-4)}
+  .filters__group{width:100%}
+  .filter-select{max-width:100%}
+  .chips{gap:var(--sp-1)}
+  .chip{font-size:10px;padding:4px 10px}
+  h2{font-size:var(--fs-2xl)}
+  .section__intro{font-size:var(--fs-base)}
+  .pipeline-tabs .chip{font-size:10px;padding:4px 10px}
+  .p-col{min-width:180px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -223,7 +262,7 @@ footer a:hover{color:var(--champagne)}
       <span class="topbar__sep"></span>
       <span id="topbar-date">&mdash;</span>
       <span class="topbar__sep"></span>
-      <button class="sync-btn" id="sync-btn" aria-label="Sincronizar dados do Trello" title="Busca os cards mais recentes do Trello e atualiza o banco de dados">
+      <button class="sync-btn" id="sync-btn" aria-label="Sincronizar dados do Trello">
         <svg class="sync-btn__icon" id="sync-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M13.5 2.5A6.5 6.5 0 0 0 2 8"/>
           <path d="M2.5 13.5A6.5 6.5 0 0 0 14 8"/>
@@ -251,7 +290,7 @@ footer a:hover{color:var(--champagne)}
       <span class="hero__meta-item" id="meta-total">&mdash; cards lidos</span>
     </div>
     <h1 class="hero__title">Onde a cole&ccedil;&atilde;o <em>realmente</em> vive.</h1>
-    <p class="hero__lead">Um retrato editorial do quadro 3D &mdash; quem sustenta a montagem, quais marcas pressionam o ateli&ecirc;, e em que pe&ccedil;as a complexidade se concentra.</p>
+    <p class="hero__lead">Um retrato editorial do quadro 3D &mdash; quem sustenta a montagem, quais marcas pressionam o ateliê, e em que pe&ccedil;as a complexidade se concentra.</p>
     <div class="hero__tldr" id="hero-tldr">
       <span class="label">Resumo</span>
       <p>Carregando dados&hellip;</p>
@@ -260,24 +299,28 @@ footer a:hover{color:var(--champagne)}
       <div class="kpi kpi--accent">
         <span class="kpi__label">Total &middot; Cards</span>
         <span class="kpi__num" id="kpi-total">&mdash;</span>
-        <span class="kpi__sub">Escopo at&eacute; <strong>Montagem TQ Liberado</strong>.</span>
+        <span class="kpi__sub">Colunas v&aacute;lidas do quadro 3D.</span>
       </div>
       <div class="kpi">
         <span class="kpi__label">Montagem</span>
         <span class="kpi__num" id="kpi-montagem">&mdash;</span>
         <span class="kpi__sub" id="kpi-montagem-sub">&mdash;</span>
+        <div class="kpi__mini" id="kpi-montagem-mini"></div>
       </div>
       <div class="kpi">
         <span class="kpi__label">Novo</span>
         <span class="kpi__num" id="kpi-novo">&mdash;</span>
         <span class="kpi__sub" id="kpi-novo-sub">&mdash;</span>
+        <div class="kpi__mini" id="kpi-novo-mini"></div>
       </div>
       <div class="kpi">
         <span class="kpi__label">Ajuste</span>
         <span class="kpi__num" id="kpi-ajuste">&mdash;</span>
         <span class="kpi__sub" id="kpi-ajuste-sub">&mdash;</span>
+        <div class="kpi__mini" id="kpi-ajuste-mini"></div>
       </div>
     </div>
+    <!-- Filters -->
     <div class="filters" role="group" aria-label="Filtros do painel">
       <div class="filters__group">
         <span class="filters__label">Marca</span>
@@ -301,10 +344,43 @@ footer a:hover{color:var(--champagne)}
       <div class="filters__group">
         <span class="filters__label">Origem</span>
         <div class="chips" data-filter="source">
-          <button class="chip" aria-pressed="true"  data-value="all">Equipe + Externo</button>
+          <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
           <button class="chip" aria-pressed="false" data-value="interna">Interna</button>
           <button class="chip" aria-pressed="false" data-value="externo">Externo</button>
         </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Etapa</span>
+        <div class="chips" data-filter="etapa">
+          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+          <button class="chip" aria-pressed="false" data-value="A Fazer">A Fazer</button>
+          <button class="chip" aria-pressed="false" data-value="Fazendo">Fazendo</button>
+          <button class="chip" aria-pressed="false" data-value="Em Aprovação">Em Aprov.</button>
+          <button class="chip" aria-pressed="false" data-value="Fazendo Liberação">Lib. Fa&ccedil;.</button>
+          <button class="chip" aria-pressed="false" data-value="Revisão Final">Revis&atilde;o</button>
+          <button class="chip" aria-pressed="false" data-value="Liberado/Feito">Liberado</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Complexidade</span>
+        <div class="chips" data-filter="complexidade">
+          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+          <button class="chip" aria-pressed="false" data-value="Baixa">Baixa</button>
+          <button class="chip" aria-pressed="false" data-value="Média">M&eacute;dia</button>
+          <button class="chip" aria-pressed="false" data-value="Alta">Alta</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Estilista</span>
+        <select class="filter-select" id="sel-estilista" data-filter-sel="estilista">
+          <option value="all">Todas</option>
+        </select>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Membro</span>
+        <select class="filter-select" id="sel-membro" data-filter-sel="membro">
+          <option value="all">Todos</option>
+        </select>
       </div>
     </div>
   </div>
@@ -314,7 +390,7 @@ footer a:hover{color:var(--champagne)}
   <div class="wrap">
     <div class="section__num">B1 &middot; B3 &middot; Distribui&ccedil;&atilde;o</div>
     <h2 class="section__title">Composi&ccedil;&atilde;o do quadro.</h2>
-    <p class="section__intro">A pizza diz o que est&aacute; em produ&ccedil;&atilde;o; as barras dizem onde a press&atilde;o recai. Farm BR n&atilde;o &eacute; s&oacute; a maior marca &mdash; &eacute; tamb&eacute;m a que puxa a fila de novos modelos.</p>
+    <p class="section__intro">A pizza diz o que est&aacute; em produ&ccedil;&atilde;o; as barras dizem onde a press&atilde;o recai.</p>
     <div class="grid-2">
       <div class="card">
         <div class="card__head">
@@ -499,7 +575,7 @@ footer a:hover{color:var(--champagne)}
   </div>
 </section>
 
-<!-- ── B7 · Pipeline / Fluxo ───────────────────────────────────────────── -->
+<!-- ── B7 · Pipeline / Fluxo ─────────────────────────────── -->
 <section class="section" id="section-pipeline">
   <div class="wrap">
     <div class="section__num">B7 &middot; Fluxo</div>
@@ -511,6 +587,7 @@ footer a:hover{color:var(--champagne)}
       <button class="chip" aria-pressed="false" data-pt="Novo">Novo</button>
       <button class="chip" aria-pressed="false" data-pt="Ajuste">Ajuste</button>
     </div>
+    <div class="stage-overview" id="stage-overview"></div>
     <div class="pipeline" id="pipeline"></div>
   </div>
 </section>
@@ -525,194 +602,173 @@ footer a:hover{color:var(--champagne)}
 </footer>
 
 <script>
+// ── Config ─────────────────────────────────────────────────────────────────
 const SUPABASE_URL="https://rvwatkeyjnbqnxkwadwo.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2d2F0a2V5am5icW54a3dhZHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTc3NjIsImV4cCI6MjA5MzU5Mzc2Mn0.Wl9S8iNuVVwpiHGXPJTpaNyHtbXzsQcLsDNwkivc8g0";
-const DEMO=[{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},{tipo:"Montagem",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},{tipo:"Novo",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},{tipo:"Montagem",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},{tipo:"Novo",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},{tipo:"Montagem",estilista:"Marina Sotto",marca:"GL",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},{tipo:"Novo",estilista:"Marina Sotto",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},{tipo:"Ajuste",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},{tipo:"Novo",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},{tipo:"Ajuste",estilista:"Helena Aguiar",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},{tipo:"Montagem",estilista:"Júlia Andrade",marca:"Outras",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},{tipo:"Novo",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},{tipo:"Montagem",estilista:"Camila Rocha",marca:"Maria Filó",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},{tipo:"Ajuste",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}];
-const C=301.59,AF={brand:"all",type:"all",source:"all"};
+
+// ── 19 colunas válidas do Trello ──────────────────────────────────────────
+const VALID_COLUMNS=[
+  "📐Ajuste | A fazer",
+  "📐Ajuste | 2D TQ Liberado",
+  "📐Ajuste | Fazendo",
+  "📐Ajuste | Em aprovação",
+  "📐Ajuste | Fazendo Liberação",
+  "✅ 📐Ajuste | Liberado",
+  "💡Novo | A fazer",
+  "💡Novo | A fazer 2D Liberado",
+  "💡Novo | Fazendo",
+  "💡Novo | Em Aprovação",
+  "💡Novo | Fazendo Liberação",
+  "✅💡Novo | Liberado|Feito",
+  "🚀 Montagem TQ | A fazer (Aguardando liberação de 2D)",
+  "🚀 Montagem TQ | A fazer (2D SOLICITADO)",
+  "🚀 Montagem TQ | A fazer (2D PARA CONVERSÃO)",
+  "🚀 Montagem TQ | A  fazer (2D TQ Liberado)",
+  "🚀 Montagem TQ | Fazendo",
+  "🔍  Montagem TQ | Revisão Final",
+  "✅ 🚀 Montagem TQ Liberado|Feito"
+];
+
+const ETAPA_ORDER=["A Fazer","Fazendo","Em Aprovação","Fazendo Liberação","Revisão Final","Liberado/Feito"];
+const ETAPA_IDX=Object.fromEntries(ETAPA_ORDER.map((e,i)=>[e,i]));
+
+const DEMO=[
+  {tipo:"Montagem",coluna:"🚀 Montagem TQ | Fazendo",nome:"Vestido Linho Farm 001",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},
+  {tipo:"Montagem",coluna:"🚀 Montagem TQ | A fazer (2D SOLICITADO)",nome:"Calça Wide Leg GL 002",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},
+  {tipo:"Novo",coluna:"💡Novo | Fazendo",nome:"Saia Midi Estampada Farm 003",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},
+  {tipo:"Montagem",coluna:"🚀 Montagem TQ | Fazendo",nome:"Blusa Decote GL 004",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},
+  {tipo:"Novo",coluna:"💡Novo | A fazer",nome:"Conjunto Linho GL 005",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},
+  {tipo:"Ajuste",coluna:"📐Ajuste | Em aprovação",nome:"Vestido Mfilό Ajuste 006",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},
+  {tipo:"Montagem",coluna:"✅ 🚀 Montagem TQ Liberado|Feito",nome:"Calça Farm Liberada 007",estilista:"Tatiana Lemos",marca:"Maria Filó",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},
+  {tipo:"Ajuste",coluna:"📐Ajuste | Fazendo",nome:"Blusa Outras Ajuste 008",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},
+  {tipo:"Novo",coluna:"💡Novo | Em Aprovação",nome:"Saia Farm Novo 009",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},
+  {tipo:"Montagem",coluna:"🚀 Montagem TQ | A fazer (Aguardando liberação de 2D)",nome:"Vestido GL Montagem 010",estilista:"Marina Sotto",marca:"GL",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},
+  {tipo:"Novo",coluna:"💡Novo | Fazendo Liberação",nome:"Conjunto Mfilό Novo 011",estilista:"Marina Sotto",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},
+  {tipo:"Montagem",coluna:"🚀 Montagem TQ | Fazendo",nome:"Camisa Farm Montagem 012",estilista:"Júlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},
+  {tipo:"Ajuste",coluna:"📐Ajuste | A fazer",nome:"Calça GL Ajuste 013",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},
+  {tipo:"Montagem",coluna:"🔍  Montagem TQ | Revisão Final",nome:"Vestido Farm Revisão 014",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},
+  {tipo:"Novo",coluna:"💡Novo | A fazer 2D Liberado",nome:"Saia GL Novo 015",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},
+  {tipo:"Ajuste",coluna:"✅ 📐Ajuste | Liberado",nome:"Blusa Mfilό Liberada 016",estilista:"Helena Aguiar",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},
+  {tipo:"Montagem",coluna:"🚀 Montagem TQ | A fazer (2D PARA CONVERSÃO)",nome:"Conjunto Outras Montagem 017",estilista:"Júlia Andrade",marca:"Outras",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},
+  {tipo:"Novo",coluna:"💡Novo | Fazendo",nome:"Camisa GL Novo 018",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},
+  {tipo:"Montagem",coluna:"✅ 🚀 Montagem TQ Liberado|Feito",nome:"Vestido Mfilό Liberado 019",estilista:"Camila Rocha",marca:"Maria Filó",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},
+  {tipo:"Ajuste",coluna:"📐Ajuste | Fazendo Liberação",nome:"Calça Farm Ajuste 020",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}
+];
+
+const C=301.59;
+const AF={brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all"};
 let ALL=[];
+
+// ── Utils ─────────────────────────────────────────────────────────────────
 const pct=(n,t)=>t>0?Math.round(n/t*100):0;
 function fmtH(h){if(h==null)return"—";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
 function mArr(m){if(!m)return[];if(Array.isArray(m))return m;try{return JSON.parse(m)}catch{return[]}}
 function donutSeg(arcs){const t=arcs.reduce((s,a)=>s+a.val,0);let off=0;arcs.forEach(a=>{const el=document.getElementById(a.id);if(!el)return;const d=t>0?C*a.val/t:0;el.setAttribute("stroke-dasharray",d.toFixed(2)+" "+C.toFixed(2));el.setAttribute("stroke-dashoffset",(-off).toFixed(2));off+=d})}
 function bRow(name,val,total,sw){const p=pct(val,total);return'<div class="breakdown__row" style="--swatch:'+sw+'"><div class="breakdown__top"><span class="breakdown__name">'+name+'</span><span class="breakdown__val"><strong>'+val+'</strong>'+p+'%</span></div><div class="breakdown__bar"><div class="breakdown__fill" style="width:'+p+'%"></div></div></div>'}
 function topE(cards,f){const c={};cards.forEach(x=>{c[x[f]]=(c[x[f]]||0)+1});const s=Object.entries(c).sort((a,b)=>b[1]-a[1]);return s.length?{name:s[0][0],count:s[0][1]}:null}
-function filtered(){return ALL.filter(c=>{if(AF.brand!=="all"&&c.marca!==AF.brand)return false;if(AF.type!=="all"&&c.tipo!==AF.type)return false;if(AF.source==="interna"&&c.is_modelista_externo)return false;if(AF.source==="externo"&&!c.is_modelista_externo)return false;return true})}
+
+// ── Etapa extraction ──────────────────────────────────────────────────────
+function getEtapa(coluna){
+  if(!coluna)return"Outro";
+  const c=coluna.toLowerCase();
+  if(c.includes("revisão final")||c.includes("revisao final"))return"Revisão Final";
+  if(c.includes("fazendo liberação")||c.includes("fazendo liberacao"))return"Fazendo Liberação";
+  if(c.includes("em aprovação")||c.includes("em aprovacao"))return"Em Aprovação";
+  if(c.includes("fazendo"))return"Fazendo";
+  if(c.includes("a  fazer")||c.includes("a fazer"))return"A Fazer";
+  if(c.includes("2d tq liberado")||c.includes("a fazer 2d"))return"A Fazer";
+  if(c.includes("liberado")||c.includes("feito")||c.includes("done"))return"Liberado/Feito";
+  return"Outro";
+}
+
+// ── Filters ───────────────────────────────────────────────────────────────
+function filtered(){
+  return ALL.filter(c=>{
+    if(AF.brand!=="all"&&c.marca!==AF.brand)return false;
+    if(AF.type!=="all"&&c.tipo!==AF.type)return false;
+    if(AF.source==="interna"&&c.is_modelista_externo)return false;
+    if(AF.source==="externo"&&!c.is_modelista_externo)return false;
+    if(AF.etapa!=="all"&&getEtapa(c.coluna)!==AF.etapa)return false;
+    if(AF.complexidade!=="all"){
+      const cx=c.complexidade==="Media"?"Média":c.complexidade;
+      if(cx!==AF.complexidade)return false;
+    }
+    if(AF.estilista!=="all"&&c.estilista!==AF.estilista)return false;
+    if(AF.membro!=="all"&&!mArr(c.membros).includes(AF.membro))return false;
+    return true;
+  });
+}
+
+// ── Populate dynamic selects ──────────────────────────────────────────────
+function populateSelects(){
+  const estilistas=[...new Set(ALL.map(c=>c.estilista).filter(e=>e&&e!=="Sem Estilista"))].sort();
+  const membSet=new Set();
+  ALL.forEach(c=>mArr(c.membros).forEach(m=>{if(m)membSet.add(m)}));
+  const membros=[...membSet].sort();
+  const se=document.getElementById("sel-estilista");
+  se.innerHTML='<option value="all">Todas</option>'+estilistas.map(e=>'<option value="'+e+'">'+e+'</option>').join("");
+  const sm=document.getElementById("sel-membro");
+  sm.innerHTML='<option value="all">Todos</option>'+membros.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
+}
+
+// ── KPI mini badges por etapa ─────────────────────────────────────────────
+function etapaBadges(cards){
+  const counts={};
+  ETAPA_ORDER.forEach(e=>counts[e]=0);
+  cards.forEach(c=>{const e=getEtapa(c.coluna);if(counts[e]!==undefined)counts[e]++});
+  return ETAPA_ORDER.filter(e=>counts[e]>0)
+    .map(e=>'<span class="kpi__badge">'+e.replace("Liberado/Feito","Lib.")+'&nbsp;'+counts[e]+'</span>').join("");
+}
+
 const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria Filó":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
 const MORD=["Farm BR","GL","Maria Filó","Outras"];
+
+// ── Render ────────────────────────────────────────────────────────────────
 function render(){
   const cards=filtered(),N=cards.length;
   const byT={Montagem:0,Novo:0,Ajuste:0};
   cards.forEach(c=>{if(byT[c.tipo]!==undefined)byT[c.tipo]++});
+
   document.getElementById("kpi-total").textContent=N;
   document.getElementById("meta-total").textContent=N+" cards lidos";
-  document.getElementById("kpi-montagem").innerHTML=byT.Montagem+"<sub>"+pct(byT.Montagem,N)+"%</sub>";
-  document.getElementById("kpi-novo").innerHTML=byT.Novo+"<sub>"+pct(byT.Novo,N)+"%</sub>";
-  document.getElementById("kpi-ajuste").innerHTML=byT.Ajuste+"<sub>"+pct(byT.Ajuste,N)+"%</sub>";
-  document.getElementById("kpi-montagem-sub").innerHTML="Volume principal &middot; <strong>"+pct(byT.Montagem,N)+"%</strong> do total.";
-  document.getElementById("kpi-novo-sub").innerHTML="Novos modelos &middot; <strong>"+pct(byT.Novo,N)+"%</strong> do escopo.";
-  document.getElementById("kpi-ajuste-sub").innerHTML="Refinamentos &middot; <strong>"+pct(byT.Ajuste,N)+"%</strong> do quadro.";
+  document.getElementById("kpi-montagem").innerHTML=byT.Montagem+'<sub>'+pct(byT.Montagem,N)+'%</sub>';
+  document.getElementById("kpi-novo").innerHTML=byT.Novo+'<sub>'+pct(byT.Novo,N)+'%</sub>';
+  document.getElementById("kpi-ajuste").innerHTML=byT.Ajuste+'<sub>'+pct(byT.Ajuste,N)+'%</sub>';
+  document.getElementById("kpi-montagem-sub").innerHTML='Volume principal &middot; <strong>'+pct(byT.Montagem,N)+'%</strong> do total.';
+  document.getElementById("kpi-novo-sub").innerHTML='Novos modelos &middot; <strong>'+pct(byT.Novo,N)+'%</strong> do escopo.';
+  document.getElementById("kpi-ajuste-sub").innerHTML='Refinamentos &middot; <strong>'+pct(byT.Ajuste,N)+'%</strong> do quadro.';
+  document.getElementById("kpi-montagem-mini").innerHTML=etapaBadges(cards.filter(c=>c.tipo==="Montagem"));
+  document.getElementById("kpi-novo-mini").innerHTML=etapaBadges(cards.filter(c=>c.tipo==="Novo"));
+  document.getElementById("kpi-ajuste-mini").innerHTML=etapaBadges(cards.filter(c=>c.tipo==="Ajuste"));
+
   const marcas=[...new Set(cards.map(c=>c.marca))].filter(Boolean);
   const ests=[...new Set(cards.map(c=>c.estilista))].filter(m=>m&&m!=="Sem Estilista");
   const mods=new Set();cards.forEach(c=>mArr(c.membros).forEach(m=>{if(m)mods.add(m)}));
   const topM=topE(cards,"marca");
   const extN=cards.filter(c=>c.is_modelista_externo).length;
-  document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+' cards</strong> em produ&ccedil;&atilde;o entre '+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
+  document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+' cards</strong> em produção entre '+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
+
   document.getElementById("donut-tipo-total").textContent=N;
-  document.getElementById("sub-tipo").textContent="Bloco 1.3 · "+N+" cards";
+  document.getElementById("sub-tipo").textContent='Bloco 1.3 · '+N+' cards';
   donutSeg([{id:"d-montagem",val:byT.Montagem},{id:"d-novo",val:byT.Novo},{id:"d-ajuste",val:byT.Ajuste}]);
   document.getElementById("breakdown-tipo").innerHTML=[{n:"Montagem",v:byT.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:byT.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:byT.Ajuste,s:"var(--c-ajuste)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
   const bigT=byT.Montagem>=byT.Novo&&byT.Montagem>=byT.Ajuste?"Montagem":byT.Novo>=byT.Ajuste?"Novo":"Ajuste";
-  document.getElementById("note-tipo").innerHTML="<strong>"+bigT+"</strong> domina o quadro &mdash; s&atilde;o <strong>"+pct(byT[bigT],N)+"%</strong> do volume.";
+  document.getElementById("note-tipo").innerHTML="<strong>"+bigT+"</strong> domina o quadro — são <strong>"+pct(byT[bigT],N)+"%</strong> do volume.";
+
   const byM={};cards.forEach(c=>{byM[c.marca]=(byM[c.marca]||0)+1});
   donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria Filó"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
   const actM=MORD.filter(m=>byM[m]>0);
   document.getElementById("donut-marca-total").textContent=actM.length;
-  document.getElementById("sub-marca").textContent="Bloco 3.4 · "+actM.length+" marcas";
+  document.getElementById("sub-marca").textContent='Bloco 3.4 · '+actM.length+' marcas';
   document.getElementById("breakdown-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>bRow(m,byM[m]||0,N,MCOLS[m])).join("");
   const top2=MORD.filter(m=>byM[m]).sort((a,b)=>(byM[b]||0)-(byM[a]||0)).slice(0,2);
   if(top2.length>=2){const c2=(byM[top2[0]]||0)+(byM[top2[1]]||0);document.getElementById("note-marca").innerHTML="<strong>"+top2[0]+"</strong> e <strong>"+top2[1]+"</strong> juntas fazem <strong>"+pct(c2,N)+"%</strong> do volume."}
+
   const byE={};cards.forEach(c=>{const k=c.estilista||"Sem Estilista";if(!byE[k])byE[k]={M:0,N:0,A:0};if(c.tipo==="Montagem")byE[k].M++;else if(c.tipo==="Novo")byE[k].N++;else if(c.tipo==="Ajuste")byE[k].A++});
   const srtE=Object.entries(byE).map(([n,v])=>({n,t:v.M+v.N+v.A,...v})).sort((a,b)=>b.t-a.t);
   const maxE=srtE[0]?.t||1;
   document.getElementById("hbars-estilista").innerHTML=srtE.map(e=>'<div class="hbar"><span class="hbar__label">'+e.n+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(e.M,maxE)+'%;background:var(--c-montagem)" title="Montagem '+e.M+'"></div><div class="hbar__seg" style="width:'+pct(e.N,maxE)+'%;background:var(--c-novo)" title="Novo '+e.N+'"></div><div class="hbar__seg" style="width:'+pct(e.A,maxE)+'%;background:var(--c-ajuste)" title="Ajuste '+e.A+'"></div></div><span class="hbar__val">'+e.t+'</span></div>').join("");
   if(srtE.length>0){const te=srtE[0],mn=[...srtE].sort((a,b)=>b.N-a.N)[0];document.getElementById("note-estilista").innerHTML="<strong>"+te.n+"</strong> conduz o volume com <strong>"+te.t+"</strong> cards."+(mn&&mn.n!==te.n?" <em>"+mn.n+"</em> tem a maior fatia de novos.":"")}
+
   const maxG=Math.max(...MORD.map(m=>{const mc=cards.filter(c=>c.marca===m);return Math.max(mc.filter(c=>c.tipo==="Montagem").length,mc.filter(c=>c.tipo==="Novo").length,mc.filter(c=>c.tipo==="Ajuste").length)}),1);
-  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards · '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
-  document.getElementById("note-marca-tipo").innerHTML="Calendários distintos sob o mesmo ateliê.";
-  const modMap={};cards.forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!modMap[m])modMap[m]={M:0,N:0,A:0,ext:false};if(c.tipo==="Montagem")modMap[m].M++;else if(c.tipo==="Novo")modMap[m].N++;else if(c.tipo==="Ajuste")modMap[m].A++;if(c.is_modelista_externo)modMap[m].ext=true})});
-  const srtM=Object.entries(modMap).map(([n,v])=>({n,...v,t:v.M+v.N+v.A})).sort((a,b)=>b.t-a.t);
-  document.getElementById("tbody-equipe").innerHTML=srtM.map(m=>'<tr><td>'+m.n+'</td><td>'+(m.ext?'<span class="pill pill--ext">Freelance</span>':'<span class="pill">Interna</span>')+'</td><td class="num">'+m.M+'</td><td class="num num--muted">'+m.N+'</td><td class="num num--muted">'+m.A+'</td><td class="num"><strong>'+m.t+'</strong></td></tr>').join("");
-  const topMod=srtM[0],topExt=srtM.find(m=>m.ext);
-  document.getElementById("note-equipe").innerHTML=(topMod?"<strong>"+topMod.n+"</strong> sustenta o maior volume com <strong>"+topMod.t+"</strong> cards.":"")+(topExt?" O <em>Modelista Externo</em> responde por <strong>"+topExt.A+"</strong> ajuste"+(topExt.A!==1?"s":"")+".":" ");
-  const extC=cards.filter(c=>c.is_modelista_externo),intC=cards.filter(c=>!c.is_modelista_externo),extN2=extC.length;
-  document.getElementById("donut-ext-pct").textContent=pct(extN2,N)+"%";
-  donutSeg([{id:"d-interna",val:intC.length},{id:"d-externo",val:extN2}]);
-  document.getElementById("breakdown-ext").innerHTML=[{n:"Equipe interna",v:intC.length,s:"var(--rose)"},{n:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
-  const extByM={};extC.forEach(c=>{extByM[c.marca]=(extByM[c.marca]||0)+1});
-  const maxEM=Math.max(...Object.values(extByM),1);
-  document.getElementById("sub-ext").textContent="Bloco 5.1 · "+extN2+" cards terceirizados";
-  document.getElementById("hbars-ext-marca").innerHTML=Object.entries(extByM).sort((a,b)=>b[1]-a[1]).map(([m,v])=>'<div class="hbar"><span class="hbar__label">'+m+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(v,maxEM)+'%;background:'+(MCOLS[m]||"var(--rose)")+'"></div></div><span class="hbar__val">'+v+'</span></div>').join("");
-  const topEM=Object.entries(extByM).sort((a,b)=>b[1]-a[1])[0];
-  document.getElementById("note-externo").innerHTML=topEM?"O externo cobre principalmente <em>"+topEM[0]+"</em> &mdash; <strong>"+topEM[1]+"</strong> cards terceirizados.":extN2>0?"Freelancer ativo.":"Nenhum card externo no filtro.";
-  const cxMap={"Baixa":0,"Média":0,"Alta":0};
-  cards.filter(c=>c.complexidade&&c.complexidade!=="Não calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"Média":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
-  const cxT=cxMap["Baixa"]+cxMap["Média"]+cxMap["Alta"];
-  document.getElementById("donut-cx-total").textContent=cxT;
-  donutSeg([{id:"d-baixa",val:cxMap["Baixa"]},{id:"d-media",val:cxMap["Média"]},{id:"d-alta",val:cxMap["Alta"]}]);
-  document.getElementById("complex-rows").innerHTML=[{n:"Baixa",sub:"até 1h · simples",v:cxMap["Baixa"],dot:"var(--sage)"},{n:"Média",sub:"até 2h · padrão",v:cxMap["Média"],dot:"var(--champagne)"},{n:"Alta",sub:"2h+ · estrutural",v:cxMap["Alta"],dot:"var(--bordeaux)"}].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num">'+r.v+'</span></div>').join("");
-  const tpT={Montagem:{s:0,n:0},Novo:{s:0,n:0},Ajuste:{s:0,n:0}};
-  cards.filter(c=>c.tempo_horas!=null&&tpT[c.tipo]).forEach(c=>{tpT[c.tipo].s+=c.tempo_horas;tpT[c.tipo].n++});
-  const avg={Montagem:tpT.Montagem.n?tpT.Montagem.s/tpT.Montagem.n:null,Novo:tpT.Novo.n?tpT.Novo.s/tpT.Novo.n:null,Ajuste:tpT.Ajuste.n?tpT.Ajuste.s/tpT.Ajuste.n:null};
-  const mxA=Math.max(...Object.values(avg).filter(v=>v!=null),0.01);
-  document.getElementById("timebars-tipo").innerHTML=[{n:"Montagem",v:avg.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:avg.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:avg.Ajuste,s:"var(--c-ajuste)"}].map(r=>'<div class="timebar" style="--swatch:'+r.s+'"><span class="timebar__name">'+r.n+'</span><div class="timebar__bar"><div class="timebar__fill" style="width:'+(r.v!=null?pct(r.v,mxA):0)+'%;background:'+r.s+'"></div></div><span class="timebar__val">'+fmtH(r.v)+'</span></div>').join("");
-  const tpM={};cards.filter(c=>c.tempo_horas!=null).forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!tpM[m])tpM[m]={s:0,n:0};tpM[m].s+=c.tempo_horas;tpM[m].n++})});
-  document.getElementById("tbody-tempo").innerHTML=Object.entries(tpM).map(([n,v])=>({n,avg:v.s/v.n,n2:v.n})).sort((a,b)=>b.n2-a.n2).slice(0,6).map(m=>'<tr><td>'+m.n+'</td><td class="num">'+fmtH(m.avg)+'</td><td class="num">'+m.n2+'</td></tr>').join("");
-  document.getElementById("note-complexidade").innerHTML=cxMap["Alta"]>0?"<strong>"+cxMap["Alta"]+"</strong> card"+(cxMap["Alta"]!==1?"s":"")+" de alta complexidade &mdash; onde o cronograma mais sente press&atilde;o.":"Sem dados de complexidade no filtro atual.";
-  renderPipeline();
-}
-
-// ── Pipeline / Fluxo ──────────────────────────────────────────────────────
-let PT="all"; // pipeline type filter (independent of global AF)
-const DONE_KEYWORDS=["liberado","feito","concluído","finalizado","pronto","done","entregue"];
-function isDoneCol(name){return DONE_KEYWORDS.some(k=>name.toLowerCase().includes(k))}
-
-function renderPipeline(){
-  const base=filtered();
-  const cards=PT==="all"?base:base.filter(c=>c.tipo===PT);
-  const N=cards.length;
-
-  // group by coluna
-  const byCol={};
-  cards.forEach(c=>{
-    const col=(c.coluna||"Sem coluna").trim();
-    if(!byCol[col])byCol[col]={count:0,cards:[]};
-    byCol[col].count++;
-    byCol[col].cards.push(c);
-  });
-
-  // sort: done columns last, rest by count descending
-  const cols=Object.entries(byCol).sort((a,b)=>{
-    const da=isDoneCol(a[0]),db=isDoneCol(b[0]);
-    if(da!==db)return da?1:-1;
-    return b[1].count-a[1].count;
-  });
-
-  if(!cols.length){
-    document.getElementById("pipeline").innerHTML='<p class="note" style="padding:var(--sp-5)">Nenhum card no filtro atual.</p>';
-    return;
-  }
-
-  document.getElementById("pipeline").innerHTML=cols.map(([col,data])=>{
-    const done=isDoneCol(col);
-    const p=pct(data.count,N);
-    const items=data.cards.slice(0,30).map(c=>{
-      const mems=mArr(c.membros);
-      const ext=c.is_modelista_externo;
-      const tags=mems.length?mems.map(m=>'<span class="p-item__tag'+(ext?" p-item__tag--ext":"")+'">'+m+'</span>').join(""):'<span class="p-item__tag" style="opacity:0.5">Sem atribuição</span>';
-      const tipoColor=c.tipo==="Montagem"?"var(--c-montagem)":c.tipo==="Novo"?"var(--c-novo)":"var(--c-ajuste)";
-      return '<div class="p-item"><span class="p-item__name" title="'+c.nome+'">'+c.nome+'</span><div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin-top:2px"><span class="p-item__tag" style="background:transparent;color:'+tipoColor+';border-color:'+tipoColor+';opacity:0.75">'+c.tipo+'</span>'+tags+'</div></div>';
-    }).join("");
-    const more=data.cards.length>30?'<p style="font-family:var(--font-mono);font-size:9px;color:var(--blush-40);padding:var(--sp-2) var(--sp-3)">+' +(data.cards.length-30)+' mais</p>':"";
-    return '<div class="p-col'+(done?" p-col--done":"")+'"><div class="p-col__head"><div class="p-col__stage">'+col+'</div><div class="p-col__count-row"><span class="p-col__count">'+data.count+'</span><span class="p-col__pct">'+p+'%</span></div></div><div class="p-col__body">'+items+more+'</div></div>';
-  }).join("");
-}
-async function fetchCards(){
-  const ctrl=new AbortController();
-  const tid=setTimeout(()=>ctrl.abort(),8000);
-  try{
-    const r=await fetch(SUPABASE_URL+"/rest/v1/cards?select=*&limit=2000",{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
-    clearTimeout(tid);if(!r.ok)throw new Error("HTTP "+r.status);
-    const d=await r.json();
-    if(!Array.isArray(d)||d.length===0)throw new Error("empty");
-    return d;
-  }catch(e){clearTimeout(tid);throw e}
-}
-// ── Event listeners ───────────────────────────────────────────────────────
-document.querySelectorAll('.chips[data-filter]').forEach(group=>{
-  group.querySelectorAll('.chip[data-value]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const f=group.dataset.filter,v=btn.dataset.value;
-      if(f==="brand")AF.brand=v;else if(f==="type")AF.type=v;else if(f==="source")AF.source=v;
-      group.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
-      render();
-    });
-  });
-});
-document.getElementById("pipeline-tabs")?.querySelectorAll('.chip[data-pt]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    PT=btn.dataset.pt;
-    document.querySelectorAll('#pipeline-tabs .chip').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
-    renderPipeline();
-  });
-});
-document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
-  const isLight=document.documentElement.getAttribute('data-theme')==='light';
-  document.documentElement.setAttribute('data-theme',isLight?'dark':'light');
-});
-// ── Init ──────────────────────────────────────────────────────────────────
-(async function init(){
-  const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
-  try{
-    ALL=await fetchCards();
-    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
-    const last=dates[dates.length-1];
-    if(last){
-      const d=new Date(last);
-      const mo=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-      document.getElementById("footer-date").textContent="Atualizado "+d.toLocaleDateString("pt-BR");
-    }
-  }catch(e){
-    console.warn("Supabase unavailable, using demo:",e.message);
-    ALL=DEMO;
-    bn.classList.add("visible");
-  }
-  ov.style.opacity="0";
-  ov.style.transition="opacity 0.4s";
-  setTimeout(()=>ov.classList.remove("visible"),400);
-  render();
-  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}})},{threshold:0.08});
-  document.querySelectorAll(".card").forEach(c=>io.observe(c));
-})();
-</script>
-</body>
-</html>
+  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards · '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span cla
