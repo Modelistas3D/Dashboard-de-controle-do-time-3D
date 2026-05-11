@@ -949,6 +949,44 @@ document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
   document.documentElement.setAttribute('data-theme',isLight?'dark':'light');
 });
 
+document.getElementById('sync-btn')?.addEventListener('click',async()=>{
+  const btn=document.getElementById('sync-btn');
+  const label=document.getElementById('sync-label');
+  const status=document.getElementById('sync-status');
+  const bn=document.getElementById('demo-banner');
+  btn.disabled=true;
+  btn.classList.remove('sync-btn--ok','sync-btn--err');
+  btn.classList.add('sync-btn--loading');
+  label.textContent='Sincronizando…';
+  try{
+    const raw=await fetchCards();
+    const vcSet=new Set(VALID_COLUMNS.map(v=>v.trim()));
+    ALL=raw.filter(c=>vcSet.has((c.coluna||'').trim()));
+    if(ALL.length===0&&raw.length>0)ALL=raw;
+    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
+    const last=dates[dates.length-1];
+    if(last){
+      const d=new Date(last);
+      document.getElementById('footer-date').textContent='Atualizado '+d.toLocaleDateString('pt-BR');
+      document.getElementById('topbar-date').textContent=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+    }
+    bn.classList.remove('visible');
+    populateSelects();
+    render();
+    btn.classList.remove('sync-btn--loading');
+    btn.classList.add('sync-btn--ok');
+    label.textContent='Sincronizado';
+    status.textContent='Sincronizado · Trello';
+    setTimeout(()=>{btn.classList.remove('sync-btn--ok');label.textContent='Sincronizar';btn.disabled=false;},2500);
+  }catch(e){
+    btn.classList.remove('sync-btn--loading');
+    btn.classList.add('sync-btn--err');
+    label.textContent='Erro — tentar novamente';
+    status.textContent='Falha na sincronização';
+    setTimeout(()=>{btn.classList.remove('sync-btn--err');label.textContent='Sincronizar';btn.disabled=false;},3000);
+  }
+});
+
 // ── Init ──────────────────────────────────────────────────────────────────
 (async function init(){
   const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
