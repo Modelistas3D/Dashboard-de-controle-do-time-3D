@@ -977,3 +977,7 @@ document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
   const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}})},{threshold:0.08});
   document.querySelectorAll(".card").forEach(c=>io.observe(c));
 })();
+
+</script>
+</body>
+</html>
