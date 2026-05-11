@@ -17,13 +17,16 @@
 
 // ─── CONSTANTES ────────────────────────────────────────────────────────────────
 
-const TARGET_COLUMN   = "Montagem TQ Liberado/Feito";
-const COR_ESTILISTA   = "orange";
-const CORES_COLECAO   = ["yellow", "yellow_dark"];
-const COR_INV27       = "green";
-const MARCAS          = ["Farm BR", "GL", "Maria Filó"];
-const NOME_FREELANCER = "Modelista Externo";
-const LOTE            = 100;
+const TARGET_COLUMN      = "Montagem TQ Liberado/Feito";
+const COR_MARCA          = "lime";        // "Marca | 🌺 Farm BR", "Marca | 🌎 Farm GL", etc.
+const COR_COLECAO        = "yellow";      // "Coleção | MR", "Coleção | NEWNESS", etc.
+const COR_ESTILISTA      = "orange";      // "Estilista | Cami", "Estilista | Alice", etc.
+const COR_TIPO           = "pink_light";  // "Modelagem | AJUSTE", "Modelagem | NOVO"
+const COR_COMPLEXIDADE   = "black_light"; // "Complexidade | 🟩 Baixa / 🟨 Média / 🟧 Alta"
+const COR_FREELANCER     = "red_dark";    // "MODELISTA EXTERNO"
+const COR_INV27          = "green";       // "Estação | INV27"
+const NOME_FREELANCER    = "Modelista Externo";
+const LOTE               = 100;
 
 // ─── HELPERS TRELLO ─────────────────────────────────────────────────────────────
 
@@ -85,6 +88,7 @@ async function buscarAcoesMovimentacao(boardId, env) {
   console.log("[sync] Buscando histórico de movimentações...");
   let todas = [];
   let before = null;
+
   const since = new Date(Date.now() - 180 * 24 * 3_600_000).toISOString();
   const MAX_PAGES = 4;
   let pagina = 0;
@@ -92,6 +96,7 @@ async function buscarAcoesMovimentacao(boardId, env) {
   while (pagina < MAX_PAGES) {
     const params = { filter: "updateCard:idList", limit: "1000", since };
     if (before) params.before = before;
+
     const resultados = await trelloGet(`/boards/${boardId}/actions`, params, env);
     if (!resultados.length) break;
     todas = todas.concat(resultados);
@@ -118,16 +123,22 @@ async function buscarAcoesMovimentacao(boardId, env) {
 // ─── DETECÇÃO DE ATRIBUTOS ───────────────────────────────────────────────────────
 
 function detectarTipo(card, coluna = "") {
+  // 1. Etiqueta pink_light "Modelagem | AJUSTE / NOVO" (fonte primária no Trello atual)
+  for (const lbl of (card.labels || [])) {
+    if (lbl.color === COR_TIPO) {
+      const nome = (lbl.name || "").toLowerCase();
+      if (nome.includes("ajuste")) return "Ajuste";
+      if (nome.includes("novo") || nome.includes("nova")) return "Novo";
+    }
+  }
+  // 2. Qualquer etiqueta com palavra-chave de tipo
   for (const lbl of (card.labels || [])) {
     const nome = (lbl.name || "").trim().toLowerCase();
     if (nome.includes("montagem")) return "Montagem";
     if (nome.includes("novo") || nome.includes("nova")) return "Novo";
     if (nome.includes("ajuste")) return "Ajuste";
   }
-  const nomeCard = (card.name || "").toLowerCase();
-  if (nomeCard.includes("montagem")) return "Montagem";
-  if (nomeCard.includes("novo") || nomeCard.includes("nova")) return "Novo";
-  if (nomeCard.includes("ajuste")) return "Ajuste";
+  // 3. Nome da coluna
   const col = coluna.toLowerCase();
   if (col.includes("montagem")) return "Montagem";
   if (col.includes("novo")) return "Novo";
@@ -138,24 +149,36 @@ function detectarTipo(card, coluna = "") {
 function detectarEstilista(card) {
   for (const lbl of (card.labels || [])) {
     if (lbl.color === COR_ESTILISTA) {
-      return (lbl.name || "").trim() || "Sem Nome";
+      const nome = (lbl.name || "").trim().replace(/^Estilista\s*\|\s*/i, "").trim();
+      return nome || "Sem Nome";
     }
   }
   return "Sem Estilista";
 }
 
 function detectarColecaoMarca(card) {
+  let colecao = "Sem Coleção";
+  let marca   = "Outras";
+
   for (const lbl of (card.labels || [])) {
-    if (CORES_COLECAO.includes(lbl.color)) {
+    if (lbl.color === COR_COLECAO && colecao === "Sem Coleção") {
+      colecao = (lbl.name || "").trim() || "Sem Coleção";
+    }
+    if (lbl.color === COR_MARCA) {
       const texto = (lbl.name || "").trim();
-      let marca = "Outras";
-      for (const m of MARCAS) {
-        if (texto.toLowerCase().includes(m.toLowerCase())) { marca = m; break; }
-      }
-      return [texto || "Sem Coleção", marca];
+      const semPrefixo = texto
+        .replace(/^Marca\s*\|\s*/i, "")
+        .replace(/^[^\p{L}]+/u, "")
+        .trim();
+      const sl = semPrefixo.toLowerCase();
+      if      (sl.includes("farm br"))                                             marca = "Farm BR";
+      else if (sl.includes("farm gl") || sl === "gl")                              marca = "GL";
+      else if (sl.includes("maria fil") || sl.includes("filo") || sl.includes("filó")) marca = "Maria Filó";
+      else if (semPrefixo)                                                          marca = semPrefixo;
     }
   }
-  return ["Sem Coleção", "Outras"];
+
+  return [colecao, marca];
 }
 
 function detectarInv27(card) {
@@ -163,6 +186,9 @@ function detectarInv27(card) {
 }
 
 function detectarFreelancer(card) {
+  if ((card.labels || []).some(l => l.color === COR_FREELANCER && (l.name || "").toUpperCase().includes("MODELISTA EXTERNO"))) {
+    return true;
+  }
   return (card.members || []).some(m => {
     const nome = (m.fullName || m.username || "").toLowerCase();
     return nome.includes(NOME_FREELANCER.toLowerCase());
@@ -178,19 +204,30 @@ function listarMembros(card) {
 function calcularTempoMontagem(cardId, acoesPorCard) {
   const acoes = acoesPorCard[cardId] || [];
   if (!acoes.length) return null;
-  let tempoTotal = 0, entradaMontagem = null;
+
+  let tempoTotal  = 0;
+  let entradaMontagem = null;
+
   for (const acao of acoes) {
     const listaAntes  = (acao?.data?.listBefore?.name || "").toLowerCase();
     const listaDepois = (acao?.data?.listAfter?.name  || "").toLowerCase();
     const dataAcao    = new Date(acao.date);
-    const isMontagem  = s => s.includes("montagem") || s.includes("montar");
-    if (isMontagem(listaDepois) && entradaMontagem === null) entradaMontagem = dataAcao;
+
+    const isMontagem = s => s.includes("montagem") || s.includes("montar");
+
+    if (isMontagem(listaDepois) && entradaMontagem === null) {
+      entradaMontagem = dataAcao;
+    }
     if (entradaMontagem && isMontagem(listaAntes)) {
       tempoTotal += (dataAcao - entradaMontagem) / 3_600_000;
       entradaMontagem = null;
     }
   }
-  if (entradaMontagem) tempoTotal += (Date.now() - entradaMontagem.getTime()) / 3_600_000;
+
+  if (entradaMontagem) {
+    tempoTotal += (Date.now() - entradaMontagem.getTime()) / 3_600_000;
+  }
+
   return tempoTotal > 0 ? Math.round(tempoTotal * 100) / 100 : null;
 }
 
@@ -203,11 +240,24 @@ function classificarComplexidade(horas) {
 
 // ─── PROCESSAMENTO ────────────────────────────────────────────────────────────────
 
+function detectarComplexidadeLabel(card) {
+  for (const lbl of (card.labels || [])) {
+    if (lbl.color === COR_COMPLEXIDADE) {
+      const nome = (lbl.name || "").toLowerCase();
+      if (nome.includes("baixa"))                            return "Baixa";
+      if (nome.includes("média") || nome.includes("media")) return "Média";
+      if (nome.includes("alta"))                             return "Alta";
+    }
+  }
+  return null;
+}
+
 function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
   const agora = new Date().toISOString();
   return cardsRaw.map(card => {
     const [colecao, marca] = detectarColecaoMarca(card);
     const tempoHoras = calcularTempoMontagem(card.id, acoesPorCard);
+    const complexidade = detectarComplexidadeLabel(card) ?? classificarComplexidade(tempoHoras);
     return {
       trello_id:            card.id,
       nome:                 card.name || "",
@@ -220,7 +270,7 @@ function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
       is_modelista_externo: detectarFreelancer(card),
       is_inv27:             detectarInv27(card),
       tempo_horas:          tempoHoras,
-      complexidade:         classificarComplexidade(tempoHoras),
+      complexidade,
       data_atividade:       card.dateLastActivity || null,
       extraido_em:          agora,
     };
@@ -237,6 +287,7 @@ async function upsertSupabase(cards, env) {
     "Authorization": `Bearer ${env.SUPABASE_SERVICE_KEY}`,
     "Prefer":        "resolution=merge-duplicates",
   };
+
   let sincronizados = 0;
   for (let i = 0; i < cards.length; i += LOTE) {
     const lote = cards.slice(i, i + LOTE);
@@ -264,43 +315,75 @@ const handler = async (event) => {
     "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json",
   };
-  if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers, body: "" };
+
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 204, headers, body: "" };
+  }
 
   const inicio = Date.now();
+
   const env = {
     TRELLO_API_KEY:       process.env.TRELLO_API_KEY,
     TRELLO_TOKEN:         process.env.TRELLO_TOKEN,
-    TRELLO_BOARD_ID:      process.env.TRELLO_BOARD_ID || "7xdYwZjP",
+    TRELLO_BOARD_ID:      process.env.TRELLO_BOARD_ID      || "7xdYwZjP",
     SUPABASE_URL:         process.env.SUPABASE_URL,
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY,
   };
 
-  const faltando = ["TRELLO_API_KEY", "TRELLO_TOKEN", "SUPABASE_URL", "SUPABASE_SERVICE_KEY"].filter(k => !env[k]);
+  const faltando = ["TRELLO_API_KEY", "TRELLO_TOKEN", "SUPABASE_URL", "SUPABASE_SERVICE_KEY"]
+    .filter(k => !env[k]);
   if (faltando.length) {
     return {
-      statusCode: 500, headers,
-      body: JSON.stringify({ ok: false, erro: `Variáveis não configuradas: ${faltando.join(", ")}`, dica: "Netlify → Site → Environment variables." }),
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        ok: false,
+        erro: `Variáveis de ambiente não configuradas: ${faltando.join(", ")}`,
+        dica: "Acesse Netlify → Site → Environment variables e adicione as chaves necessárias.",
+      }),
     };
   }
 
   try {
     console.log("[sync] Iniciando extração do Trello...");
+
     const colunas    = await buscarColunas(env.TRELLO_BOARD_ID, env);
     const idsColunas = new Set(colunas.map(c => c.id));
     const mapaCols   = Object.fromEntries(colunas.map(c => [c.id, c.name]));
-    const cardsRaw   = await buscarCards(env.TRELLO_BOARD_ID, idsColunas, env);
+
+    const cardsRaw = await buscarCards(env.TRELLO_BOARD_ID, idsColunas, env);
+
     const acoesPorCard = await buscarAcoesMovimentacao(env.TRELLO_BOARD_ID, env);
-    const cards      = processarCards(cardsRaw, mapaCols, acoesPorCard);
-    const total      = await upsertSupabase(cards, env);
-    const duracao    = ((Date.now() - inicio) / 1000).toFixed(1);
+
+    const cards = processarCards(cardsRaw, mapaCols, acoesPorCard);
+
+    const total = await upsertSupabase(cards, env);
+
+    const duracao = ((Date.now() - inicio) / 1000).toFixed(1);
     console.log(`[sync] ✅ ${total} cards sincronizados em ${duracao}s`);
+
     return {
-      statusCode: 200, headers,
-      body: JSON.stringify({ ok: true, total, colunas: colunas.length, duracao_s: parseFloat(duracao), extraido_em: new Date().toISOString() }),
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        ok:         true,
+        total,
+        colunas:    colunas.length,
+        duracao_s:  parseFloat(duracao),
+        extraido_em: new Date().toISOString(),
+      }),
     };
+
   } catch (err) {
     console.error("[sync] Erro:", err);
-    return { statusCode: 500, headers, body: JSON.stringify({ ok: false, erro: err.message }) };
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        ok:   false,
+        erro: err.message,
+      }),
+    };
   }
 };
 
