@@ -912,7 +912,7 @@ async function fetchCards(){
   const ctrl=new AbortController();
   const tid=setTimeout(()=>ctrl.abort(),8000);
   try{
-    const r=await fetch(SUPABASE_URL+"/rest/v1/cards?select=*&limit=2000",{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
+    const r=await fetch(SUPABASE_URL+"/rest/v1/cards?select=*&order=extraido_em.desc&limit=2000",{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
     clearTimeout(tid);if(!r.ok)throw new Error("HTTP "+r.status);
     const d=await r.json();
     if(!Array.isArray(d)||d.length===0)throw new Error("empty");
