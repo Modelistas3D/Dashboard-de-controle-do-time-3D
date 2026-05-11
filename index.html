@@ -959,6 +959,7 @@ document.getElementById('sync-btn')?.addEventListener('click',async()=>{
   btn.classList.add('sync-btn--loading');
   label.textContent='Sincronizando…';
   try{
+    await fetch('/.netlify/functions/sync',{method:'POST'});
     const raw=await fetchCards();
     const vcSet=new Set(VALID_COLUMNS.map(v=>v.trim()));
     ALL=raw.filter(c=>vcSet.has((c.coluna||'').trim()));
