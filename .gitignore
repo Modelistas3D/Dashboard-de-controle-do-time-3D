@@ -1,5 +1,6 @@
 # Credenciais — nunca versionar
 .env
+netlify.env
 
 # Dados gerados pelo extrator
 data.json
