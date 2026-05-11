@@ -3,6 +3,987 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier Analytics Â· Quadro 3D</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231F1218'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' fill='%23C99A8A' font-family='Georgia,serif' font-weight='700' font-size='14'%3EAt%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--noir:#1F1218;--noir-2:#281820;--noir-3:#33202A;--noir-4:#422836;--blush:#F5EDE6;--blush-80:rgba(245,237,230,0.84);--blush-60:rgba(245,237,230,0.60);--blush-40:rgba(245,237,230,0.38);--blush-20:rgba(245,237,230,0.18);--rose:#C99A8A;--rose-soft:rgba(201,154,138,0.14);--rose-line:rgba(201,154,138,0.30);--bordeaux:#8C3148;--champagne:#E5C9A8;--sage:#9CB39E;--noise-opacity:0.22;--noise-blend:overlay;--glow-strength:0.08}
+html[data-theme=light]{--noir:#F5EDE6;--noir-2:#EDE2D8;--noir-3:#E3D3C5;--noir-4:#D8C5B5;--blush:#2A1820;--blush-80:rgba(42,24,32,0.86);--blush-60:rgba(42,24,32,0.62);--blush-40:rgba(42,24,32,0.40);--blush-20:rgba(42,24,32,0.18);--rose:#A6614A;--rose-soft:rgba(166,97,74,0.10);--rose-line:rgba(166,97,74,0.32);--bordeaux:#7A2238;--champagne:#B58657;--sage:#6A8470;--line:rgba(42,24,32,0.10);--line-strong:rgba(42,24,32,0.20);--c-montagem:#A6614A;--c-novo:#B58657;--c-ajuste:#7A2238;--c-farm:#A6614A;--c-gl:#7A2238;--c-mariafilo:#B58657;--c-outras:#6A8470;--noise-opacity:0.05;--noise-blend:multiply;--glow-strength:0.04}
+:root{--c-montagem:#C99A8A;--c-novo:#E5C9A8;--c-ajuste:#8C3148;--c-farm:#C99A8A;--c-gl:#8C3148;--c-mariafilo:#E5C9A8;--c-outras:#9CB39E;--line:rgba(245,237,230,0.08);--line-strong:rgba(245,237,230,0.18);--font-display:'Fraunces',Georgia,serif;--font-body:'Instrument Sans',system-ui,sans-serif;--font-mono:ui-monospace,'JetBrains Mono',monospace;--fs-3xs:0.6875rem;--fs-2xs:0.75rem;--fs-xs:0.8125rem;--fs-sm:0.9375rem;--fs-base:1rem;--fs-lg:1.125rem;--fs-xl:1.3125rem;--fs-2xl:1.6rem;--fs-3xl:2.25rem;--fs-hero:clamp(2.5rem,1.6rem + 4vw,4.5rem);--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:48px;--sp-8:64px;--sp-9:96px;--r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--max-w:1440px;--gutter:clamp(1rem,3vw,2rem);--ease-out:cubic-bezier(0.2,0.8,0.2,1);--dur-fast:180ms;--dur-med:280ms}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--noir);color:var(--blush-80);font-family:var(--font-body);font-size:var(--fs-base);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:var(--noise-opacity);mix-blend-mode:var(--noise-blend);background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.32 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+body::after{content:"";position:fixed;top:-30vh;left:50%;transform:translateX(-50%);width:140vmin;height:140vmin;pointer-events:none;z-index:0;background:radial-gradient(circle at center,rgba(201,154,138,var(--glow-strength)) 0%,rgba(201,154,138,calc(var(--glow-strength)*0.25)) 30%,transparent 60%)}
+h1,h2,h3,h4,h5{margin:0;color:var(--blush);font-family:var(--font-display);font-weight:700;line-height:1.08;letter-spacing:-0.02em}
+h1{font-size:var(--fs-hero);font-weight:900;letter-spacing:-0.03em}
+h2{font-size:var(--fs-3xl)}
+h3{font-size:var(--fs-xl);font-weight:600}
+em,.italic{font-style:italic;color:var(--rose)}
+.mono{font-family:var(--font-mono);font-size:var(--fs-2xs);font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--blush-60)}
+.wrap{width:100%;max-width:var(--max-w);margin-inline:auto;padding-inline:var(--gutter);position:relative;z-index:2}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(31,18,24,0.78);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--line)}
+.topbar__inner{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);padding-block:var(--sp-4);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:var(--sp-3)}
+.brand__mark{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--rose-line);background:var(--rose-soft);display:grid;place-items:center;font-family:var(--font-display);font-weight:900;font-size:13px;color:var(--rose);letter-spacing:-0.02em}
+.brand__kicker{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--rose);line-height:1;margin-bottom:3px}
+.brand__name{font-family:var(--font-display);font-size:var(--fs-sm);font-weight:600;color:var(--blush);line-height:1.2}
+.topbar__meta{display:flex;align-items:center;gap:var(--sp-4);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60);flex-wrap:wrap}
+.topbar__dot{display:inline-flex;align-items:center;gap:var(--sp-2)}
+.topbar__dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 3px rgba(156,179,158,0.18)}
+.topbar__sep{width:1px;height:12px;background:var(--line-strong)}
+.theme-toggle{display:inline-flex;align-items:center;gap:var(--sp-2);background:transparent;border:1px solid var(--line-strong);color:var(--blush);padding:4px 10px 4px 4px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out)}
+.theme-toggle:hover{border-color:var(--rose-line);background:var(--rose-soft)}
+.theme-toggle__track{position:relative;width:30px;height:16px;border-radius:999px;background:var(--rose-soft);border:1px solid var(--rose-line);flex-shrink:0}
+.theme-toggle__thumb{position:absolute;top:1px;left:1px;width:12px;height:12px;border-radius:50%;background:var(--rose);transition:transform var(--dur-med) var(--ease-out)}
+html[data-theme=light] .theme-toggle__thumb{transform:translateX(14px)}
+.theme-toggle__label::before{content:attr(data-dark)}
+html[data-theme=light] .theme-toggle__label::before{content:attr(data-light)}
+.theme-toggle__label{color:var(--blush-80)}
+.sync-btn{display:inline-flex;align-items:center;gap:var(--sp-2);background:var(--rose-soft);border:1px solid var(--rose-line);color:var(--rose);padding:4px 12px 4px 8px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:all var(--dur-fast) var(--ease-out)}
+.sync-btn:hover:not(:disabled){border-color:var(--rose);background:rgba(201,154,138,0.22);color:var(--blush)}
+.sync-btn:disabled{opacity:0.6;cursor:not-allowed}
+.sync-btn__icon{width:14px;height:14px;flex-shrink:0}
+.sync-btn--loading .sync-btn__icon{animation:spin 1s linear infinite}
+.sync-btn--ok{border-color:var(--sage);color:var(--sage);background:rgba(156,179,158,0.10)}
+.sync-btn--err{border-color:var(--bordeaux);color:var(--bordeaux);background:rgba(140,49,72,0.10)}
+@keyframes spin{to{transform:rotate(360deg)}}
+#demo-banner{display:none;background:linear-gradient(90deg,rgba(140,49,72,0.18),rgba(140,49,72,0.06));border-bottom:1px solid rgba(140,49,72,0.4);padding:var(--sp-2) var(--sp-5);text-align:center;font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.16em;color:var(--rose);position:relative;z-index:2}
+#demo-banner.visible{display:block}
+.hero{padding-block:var(--sp-8) var(--sp-7)}
+.hero__meta{display:flex;align-items:center;gap:var(--sp-4);flex-wrap:wrap;margin-bottom:var(--sp-6);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.hero__meta-item{display:inline-flex;align-items:center;gap:var(--sp-2)}
+.hero__meta-item::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--rose)}
+.hero__title{margin-bottom:var(--sp-5);max-width:18ch}
+.hero__lead{font-family:var(--font-display);font-size:var(--fs-xl);font-weight:400;line-height:1.5;color:var(--blush-80);max-width:56ch;margin-bottom:var(--sp-6)}
+.hero__tldr{border-left:2px solid var(--rose);padding-left:var(--sp-4);max-width:64ch}
+.hero__tldr .label{display:block;margin-bottom:var(--sp-2);color:var(--rose);font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.18em;text-transform:uppercase}
+.hero__tldr p{margin:0;color:var(--blush-80)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3);margin-top:var(--sp-7);padding-top:var(--sp-6);border-top:1px solid var(--line)}
+.kpi{padding:var(--sp-5);border-radius:var(--r-lg);border:1px solid var(--line);background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));display:flex;flex-direction:column;gap:var(--sp-3);position:relative;overflow:hidden;transition:border-color var(--dur-med) var(--ease-out)}
+.kpi:hover{border-color:var(--rose-line)}
+.kpi--accent{background:linear-gradient(180deg,rgba(201,154,138,0.06),rgba(201,154,138,0.01));border-color:var(--rose-line)}
+.kpi__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--blush-60)}
+.kpi__num{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:var(--blush);line-height:1;letter-spacing:-0.03em}
+.kpi__num sub{font-size:0.42em;color:var(--rose);vertical-align:super;margin-left:4px;font-weight:400;letter-spacing:0}
+.kpi__sub{font-size:var(--fs-xs);color:var(--blush-60);line-height:1.45}
+.kpi__sub strong{color:var(--blush);font-weight:600}
+.kpi__mini{display:flex;gap:var(--sp-1);margin-top:2px;flex-wrap:wrap}
+.kpi__badge{font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;padding:2px 6px;border-radius:999px;border:1px solid var(--line-strong);color:var(--blush-60);white-space:nowrap}
+.filters{margin-top:var(--sp-7);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(245,237,230,0.015);display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--sp-5)}
+.filters__group{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
+.filters__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--sp-2)}
+.chip{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-80);padding:var(--sp-2) var(--sp-3);border-radius:999px;border:1px solid var(--line-strong);background:transparent;cursor:pointer;transition:all var(--dur-fast) var(--ease-out);min-height:32px;display:inline-flex;align-items:center;gap:var(--sp-2)}
+.chip:hover{border-color:var(--rose-line);color:var(--blush)}
+.chip[aria-pressed=true]{background:var(--rose);color:var(--noir);border-color:var(--rose);font-weight:600}
+.filter-select{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.12em;text-transform:uppercase;color:var(--blush-80);padding:6px 28px 6px 12px;border-radius:999px;border:1px solid var(--line-strong);background-color:transparent;cursor:pointer;transition:all var(--dur-fast) var(--ease-out);min-height:32px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23C99A8A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;color-scheme:dark;max-width:200px}
+.filter-select:focus{outline:none;border-color:var(--rose-line)}
+.filter-select:hover{border-color:var(--rose-line);color:var(--blush)}
+.filter-select option{background:#281820;color:#F5EDE6}
+html[data-theme=light] .filter-select{color-scheme:light}
+html[data-theme=light] .filter-select option{background:#EDE2D8;color:#2A1820}
+.section{padding-block:var(--sp-8)}
+.section+.section{border-top:1px solid var(--line)}
+.section__num{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;color:var(--rose);margin-bottom:var(--sp-3)}
+.section__title{margin-bottom:var(--sp-3)}
+.section__intro{font-size:var(--fs-lg);color:var(--blush-80);max-width:64ch;margin-bottom:var(--sp-7)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:var(--sp-5)}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-5)}
+.card{background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-5) var(--sp-6);transition:border-color var(--dur-med) var(--ease-out);position:relative;opacity:0;transform:translateY(18px)}
+.card.is-in{animation:cardIn var(--dur-med) var(--ease-out) forwards}
+@keyframes cardIn{to{opacity:1;transform:translateY(0)}}
+.card:hover{border-color:var(--line-strong)}
+.card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-5);padding-bottom:var(--sp-4);border-bottom:1px solid var(--line)}
+.card__title{font-family:var(--font-display);font-size:var(--fs-xl);font-weight:600;color:var(--blush);margin:0}
+.card__sub{display:block;margin-top:6px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.card__num{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;color:var(--rose);flex-shrink:0}
+.legend{display:flex;flex-wrap:wrap;gap:var(--sp-4) var(--sp-5);margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px dashed var(--line-strong)}
+.legend__item{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-60)}
+.legend__swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+.legend__item strong{color:var(--blush);font-weight:600;margin-left:0.4em;font-family:var(--font-display);letter-spacing:0;text-transform:none;font-size:var(--fs-sm)}
+.donut-wrap{display:grid;grid-template-columns:220px 1fr;gap:var(--sp-6);align-items:center}
+.donut{width:220px;height:220px;position:relative}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut circle{fill:none;stroke-width:18;transition:stroke-dashoffset var(--dur-med) var(--ease-out)}
+.donut__center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+.donut__total{font-family:var(--font-display);font-size:2.5rem;font-weight:700;color:var(--blush);line-height:1;letter-spacing:-0.03em}
+.donut__label{display:block;margin-top:6px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--blush-60)}
+.breakdown{display:flex;flex-direction:column;gap:var(--sp-4)}
+.breakdown__row{display:flex;flex-direction:column;gap:6px}
+.breakdown__top{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-3)}
+.breakdown__name{font-family:var(--font-display);font-size:var(--fs-base);font-weight:600;color:var(--blush);display:inline-flex;align-items:center;gap:var(--sp-2)}
+.breakdown__name::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--swatch,var(--rose))}
+.breakdown__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush-60);letter-spacing:0.06em}
+.breakdown__val strong{color:var(--blush);font-weight:600;margin-right:6px}
+.breakdown__bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.breakdown__fill{height:100%;background:var(--swatch,var(--rose));transition:width var(--dur-med) var(--ease-out)}
+.hbars{display:flex;flex-direction:column;gap:var(--sp-4)}
+.hbar{display:grid;grid-template-columns:140px 1fr 64px;gap:var(--sp-4);align-items:center}
+.hbar__label{font-family:var(--font-display);font-size:var(--fs-sm);color:var(--blush);font-weight:500;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.hbar__track{position:relative;height:26px;background:rgba(245,237,230,0.04);border-radius:4px;overflow:hidden;display:flex}
+.hbar__seg{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.hbar__seg+.hbar__seg{border-left:1px solid rgba(31,18,24,0.4)}
+.hbar__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush);text-align:right;letter-spacing:0.04em}
+.gbars{display:grid;grid-template-columns:1fr;gap:var(--sp-6);padding-top:var(--sp-3)}
+.gbar-row{display:grid;grid-template-columns:140px 1fr;gap:var(--sp-5);align-items:center}
+.gbar-row__name{display:flex;flex-direction:column;gap:2px}
+.gbar-row__name strong{font-family:var(--font-display);font-size:var(--fs-base);color:var(--blush);font-weight:600}
+.gbar-row__name span{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
+.gbar-row__bars{display:flex;flex-direction:column;gap:4px}
+.gbar{display:grid;grid-template-columns:80px 1fr 36px;gap:var(--sp-3);align-items:center;font-family:var(--font-mono);font-size:var(--fs-3xs)}
+.gbar__type{color:var(--blush-60);letter-spacing:0.14em;text-transform:uppercase}
+.gbar__bar{height:14px;background:rgba(245,237,230,0.05);border-radius:3px;overflow:hidden}
+.gbar__fill{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.gbar__val{color:var(--blush);text-align:right;font-weight:500}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-md);background:rgba(245,237,230,0.015)}
+table.spec{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+table.spec th,table.spec td{padding:var(--sp-3) var(--sp-4);text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+table.spec th{font-family:var(--font-mono);font-size:var(--fs-3xs);font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--rose);background:rgba(201,154,138,0.04)}
+table.spec td.num{font-family:var(--font-mono);color:var(--blush);text-align:right;font-feature-settings:"tnum"}
+table.spec td.num--muted{color:var(--blush-60)}
+table.spec tbody tr:last-child td{border-bottom:none}
+table.spec tbody tr:hover{background:rgba(201,154,138,0.03)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--line-strong);color:var(--blush-80)}
+.pill--ext{color:var(--bordeaux);border-color:rgba(140,49,72,0.4);background:rgba(140,49,72,0.10)}
+.complex-row{display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-3) 0;border-bottom:1px dashed var(--line)}
+.complex-row:last-child{border-bottom:none}
+.complex-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.complex-row__label{flex:1;display:flex;flex-direction:column;gap:2px}
+.complex-row__label strong{font-family:var(--font-display);color:var(--blush);font-weight:600;font-size:var(--fs-base)}
+.complex-row__label span{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-60)}
+.complex-row__num{font-family:var(--font-display);font-size:var(--fs-2xl);color:var(--blush);font-weight:700;letter-spacing:-0.02em}
+.timebars{display:flex;flex-direction:column;gap:var(--sp-4);padding-top:var(--sp-3)}
+.timebar{display:grid;grid-template-columns:110px 1fr 72px;gap:var(--sp-4);align-items:center}
+.timebar__name{font-family:var(--font-display);font-size:var(--fs-sm);font-weight:600;color:var(--blush);display:inline-flex;align-items:center;gap:var(--sp-2)}
+.timebar__name::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--swatch,var(--rose))}
+.timebar__bar{height:22px;border-radius:4px;background:rgba(245,237,230,0.04);overflow:hidden}
+.timebar__fill{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.timebar__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush);text-align:right;letter-spacing:0.04em}
+.note{border-left:2px solid var(--rose);padding:var(--sp-2) 0 var(--sp-2) var(--sp-4);margin-top:var(--sp-5);font-family:var(--font-display);font-style:italic;font-size:var(--fs-base);color:var(--blush-80);line-height:1.55}
+.note strong{color:var(--rose);font-style:normal;font-weight:600}
+#loading-overlay{display:none;position:fixed;inset:0;z-index:100;background:var(--noir);place-items:center}
+#loading-overlay.visible{display:grid}
+.loading__inner{text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--sp-5)}
+.loading__ring{width:64px;height:64px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--rose);animation:spin 0.8s linear infinite}
+.loading__text{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--blush-60)}
+footer{padding-block:var(--sp-7);border-top:1px solid var(--line);margin-top:var(--sp-8)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:var(--sp-5);justify-content:space-between;align-items:baseline}
+footer .mono{color:var(--blush-40)}
+footer a{color:var(--rose);border-bottom:1px solid var(--rose-line);padding-bottom:2px;transition:color var(--dur-fast);text-decoration:none}
+footer a:hover{color:var(--champagne)}
+
+/* ââ Pipeline / Fluxo ââââââââââââââââââââââââââââââââââââ */
+.pipeline-tabs{display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap}
+.stage-overview{display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-5);padding:var(--sp-4) var(--sp-5);background:rgba(245,237,230,0.015);border:1px solid var(--line);border-radius:var(--r-md)}
+.stage-overview__title{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose);margin-bottom:var(--sp-1)}
+.stage-bar{display:grid;grid-template-columns:140px 1fr 40px;gap:var(--sp-3);align-items:center}
+.stage-bar__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.10em;text-transform:uppercase;color:var(--blush-60);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage-bar__track{height:22px;background:rgba(245,237,230,0.04);border-radius:4px;overflow:hidden;display:flex}
+.stage-bar__seg{height:100%;transition:width var(--dur-med) var(--ease-out)}
+.stage-bar__seg+.stage-bar__seg{border-left:1px solid rgba(31,18,24,0.5)}
+.stage-bar__val{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--blush);text-align:right;letter-spacing:0.04em}
+.pipeline{display:flex;gap:var(--sp-3);overflow-x:auto;padding-bottom:var(--sp-3);scrollbar-width:thin;scrollbar-color:var(--rose-line) transparent}
+.pipeline::-webkit-scrollbar{height:4px}
+.pipeline::-webkit-scrollbar-thumb{background:var(--rose-line);border-radius:2px}
+.p-col{min-width:210px;max-width:230px;flex-shrink:0;display:flex;flex-direction:column;background:rgba(245,237,230,0.015);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.p-col__head{padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line)}
+.p-col__stage{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--blush-60);margin-bottom:var(--sp-2);line-height:1.3}
+.p-col__stage em{font-style:normal;color:var(--rose);opacity:0.85}
+.p-col__count-row{display:flex;align-items:baseline;gap:var(--sp-2)}
+.p-col__count{font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:700;color:var(--blush);line-height:1;letter-spacing:-0.02em}
+.p-col__pct{font-family:var(--font-mono);font-size:var(--fs-2xs);color:var(--blush-60)}
+.p-col--done{border-color:rgba(156,179,158,0.28)}
+.p-col--done .p-col__head{background:rgba(156,179,158,0.04)}
+.p-col--done .p-col__stage em{color:var(--sage)}
+.p-col--done .p-col__count{color:var(--sage)}
+.p-col--review{border-color:rgba(229,201,168,0.28)}
+.p-col--review .p-col__head{background:rgba(229,201,168,0.04)}
+.p-col--review .p-col__stage em{color:var(--champagne)}
+.p-col--review .p-col__count{color:var(--champagne)}
+.p-col__body{padding:var(--sp-2);display:flex;flex-direction:column;gap:var(--sp-2);overflow-y:auto;max-height:380px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.p-item{padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--line);background:rgba(245,237,230,0.01);display:flex;flex-direction:column;gap:4px}
+.p-item__name{font-size:11px;color:var(--blush-80);line-height:1.35;word-break:break-word}
+.p-item__tag{font-family:var(--font-mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:999px;background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-line);line-height:1.6;white-space:nowrap}
+.p-item__tag--ext{background:rgba(140,49,72,0.10);color:var(--bordeaux);border-color:rgba(140,49,72,0.28)}
+
+/* ââ Responsive âââââââââââââââââââââââââââââââââââââââââââ */
+@media(max-width:880px){.grid-2{grid-template-columns:1fr}}
+@media(max-width:720px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .hbar{grid-template-columns:100px 1fr 48px;gap:var(--sp-3)}
+  .gbar-row{grid-template-columns:1fr}
+  .gbar{grid-template-columns:64px 1fr 30px}
+  .timebar{grid-template-columns:90px 1fr 60px}
+  .topbar__sep{display:none}
+  .stage-bar{grid-template-columns:100px 1fr 32px;gap:var(--sp-2)}
+  .stage-bar__label{font-size:10px}
+}
+@media(max-width:600px){
+  .donut-wrap{grid-template-columns:1fr;justify-items:center}
+  .filters{gap:var(--sp-4)}
+  .filters__group{width:100%}
+  .filter-select{max-width:100%}
+  .chips{gap:var(--sp-1)}
+  .chip{font-size:10px;padding:4px 10px}
+  h2{font-size:var(--fs-2xl)}
+  .section__intro{font-size:var(--fs-base)}
+  .pipeline-tabs .chip{font-size:10px;padding:4px 10px}
+  .p-col{min-width:180px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div id="loading-overlay" class="visible">
+  <div class="loading__inner">
+    <div class="loading__ring"></div>
+    <span class="loading__text">Carregando dados &middot; Supabase</span>
+  </div>
+</div>
+
+<div id="demo-banner">&#9889; Modo demonstra&ccedil;&atilde;o &mdash; dados de exemplo &middot; conecte o Supabase para dados reais</div>
+
+<header class="topbar">
+  <div class="wrap topbar__inner">
+    <div class="brand">
+      <div class="brand__mark">At</div>
+      <div>
+        <div class="brand__kicker">Atelier &middot; Analytics</div>
+        <div class="brand__name">Quadro 3D &middot; Painel Editorial</div>
+      </div>
+    </div>
+    <div class="topbar__meta">
+      <span class="topbar__dot" id="sync-status">Sincronizado &middot; Trello</span>
+      <span class="topbar__sep"></span>
+      <span id="topbar-date">&mdash;</span>
+      <span class="topbar__sep"></span>
+      <button class="sync-btn" id="sync-btn" aria-label="Sincronizar dados do Trello">
+        <svg class="sync-btn__icon" id="sync-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13.5 2.5A6.5 6.5 0 0 0 2 8"/>
+          <path d="M2.5 13.5A6.5 6.5 0 0 0 14 8"/>
+          <polyline points="2,5 2,2 5,2"/>
+          <polyline points="14,11 14,14 11,14"/>
+        </svg>
+        <span id="sync-label">Sincronizar</span>
+      </button>
+      <span class="topbar__sep"></span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema">
+        <span class="theme-toggle__track"><span class="theme-toggle__thumb"></span></span>
+        <span class="theme-toggle__label" data-dark="Noir" data-light="Blush">Noir</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero__meta">
+      <span class="hero__meta-item">Cole&ccedil;&atilde;o Inv 27</span>
+      <span class="hero__meta-item">Escopo &middot; At&eacute; Montagem TQ Liberado</span>
+      <span class="hero__meta-item" id="meta-total">&mdash; cards lidos</span>
+    </div>
+    <h1 class="hero__title">Onde a cole&ccedil;&atilde;o <em>realmente</em> vive.</h1>
+    <p class="hero__lead">Um retrato editorial do quadro 3D &mdash; quem sustenta a montagem, quais marcas pressionam o ateliÃª, e em que pe&ccedil;as a complexidade se concentra.</p>
+    <div class="hero__tldr" id="hero-tldr">
+      <span class="label">Resumo</span>
+      <p>Carregando dados&hellip;</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi kpi--accent">
+        <span class="kpi__label">Total &middot; Cards</span>
+        <span class="kpi__num" id="kpi-total">&mdash;</span>
+        <span class="kpi__sub">Colunas v&aacute;lidas do quadro 3D.</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi__label">Montagem</span>
+        <span class="kpi__num" id="kpi-montagem">&mdash;</span>
+        <span class="kpi__sub" id="kpi-montagem-sub">&mdash;</span>
+        <div class="kpi__mini" id="kpi-montagem-mini"></div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__label">Novo</span>
+        <span class="kpi__num" id="kpi-novo">&mdash;</span>
+        <span class="kpi__sub" id="kpi-novo-sub">&mdash;</span>
+        <div class="kpi__mini" id="kpi-novo-mini"></div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__label">Ajuste</span>
+        <span class="kpi__num" id="kpi-ajuste">&mdash;</span>
+        <span class="kpi__sub" id="kpi-ajuste-sub">&mdash;</span>
+        <div class="kpi__mini" id="kpi-ajuste-mini"></div>
+      </div>
+    </div>
+    <!-- Filters -->
+    <div class="filters" role="group" aria-label="Filtros do painel">
+      <div class="filters__group">
+        <span class="filters__label">Marca</span>
+        <div class="chips" data-filter="brand">
+          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+          <button class="chip" aria-pressed="false" data-value="Farm BR">Farm BR</button>
+          <button class="chip" aria-pressed="false" data-value="GL">GL</button>
+          <button class="chip" aria-pressed="false" data-value="Maria Fil&#xF3;">Maria Fil&oacute;</button>
+          <button class="chip" aria-pressed="false" data-value="Outras">Outras</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Tipo</span>
+        <div class="chips" data-filter="type">
+          <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
+          <button class="chip" aria-pressed="false" data-value="Montagem">Montagem</button>
+          <button class="chip" aria-pressed="false" data-value="Novo">Novo</button>
+          <button class="chip" aria-pressed="false" data-value="Ajuste">Ajuste</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Origem</span>
+        <div class="chips" data-filter="source">
+          <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
+          <button class="chip" aria-pressed="false" data-value="interna">Interna</button>
+          <button class="chip" aria-pressed="false" data-value="externo">Externo</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Etapa</span>
+        <div class="chips" data-filter="etapa">
+          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+          <button class="chip" aria-pressed="false" data-value="A Fazer">A Fazer</button>
+          <button class="chip" aria-pressed="false" data-value="Fazendo">Fazendo</button>
+          <button class="chip" aria-pressed="false" data-value="Em AprovaÃ§Ã£o">Em Aprov.</button>
+          <button class="chip" aria-pressed="false" data-value="Fazendo LiberaÃ§Ã£o">Lib. Fa&ccedil;.</button>
+          <button class="chip" aria-pressed="false" data-value="RevisÃ£o Final">Revis&atilde;o</button>
+          <button class="chip" aria-pressed="false" data-value="Liberado/Feito">Liberado</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Complexidade</span>
+        <div class="chips" data-filter="complexidade">
+          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+          <button class="chip" aria-pressed="false" data-value="Baixa">Baixa</button>
+          <button class="chip" aria-pressed="false" data-value="MÃ©dia">M&eacute;dia</button>
+          <button class="chip" aria-pressed="false" data-value="Alta">Alta</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Estilista</span>
+        <select class="filter-select" id="sel-estilista" data-filter-sel="estilista">
+          <option value="all">Todas</option>
+        </select>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Membro</span>
+        <select class="filter-select" id="sel-membro" data-filter-sel="membro">
+          <option value="all">Todos</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B1 &middot; B3 &middot; Distribui&ccedil;&atilde;o</div>
+    <h2 class="section__title">Composi&ccedil;&atilde;o do quadro.</h2>
+    <p class="section__intro">A pizza diz o que est&aacute; em produ&ccedil;&atilde;o; as barras dizem onde a press&atilde;o recai.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Distribui&ccedil;&atilde;o geral por tipo</h3><span class="card__sub" id="sub-tipo">Bloco 1.3</span></div>
+          <span class="card__num">Fig. 01</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-montagem" cx="60" cy="60" r="48" stroke="var(--c-montagem)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-novo"     cx="60" cy="60" r="48" stroke="var(--c-novo)"     stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-ajuste"   cx="60" cy="60" r="48" stroke="var(--c-ajuste)"   stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-tipo-total">&mdash;</div><span class="donut__label">Cards &middot; escopo</span></div></div>
+          </div>
+          <div class="breakdown" id="breakdown-tipo"></div>
+        </div>
+        <p class="note" id="note-tipo">&mdash;</p>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Participa&ccedil;&atilde;o por marca</h3><span class="card__sub" id="sub-marca">Bloco 3.4</span></div>
+          <span class="card__num">Fig. 02</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-farm"      cx="60" cy="60" r="48" stroke="var(--c-farm)"      stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-gl"        cx="60" cy="60" r="48" stroke="var(--c-gl)"        stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-mariafilo" cx="60" cy="60" r="48" stroke="var(--c-mariafilo)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-outras"    cx="60" cy="60" r="48" stroke="var(--c-outras)"    stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-marca-total">&mdash;</div><span class="donut__label">Marcas ativas</span></div></div>
+          </div>
+          <div class="breakdown" id="breakdown-marca"></div>
+        </div>
+        <p class="note" id="note-marca">&mdash;</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B2 &middot; Estilistas</div>
+    <h2 class="section__title">Cards por estilista &mdash; empilhado por tipo.</h2>
+    <p class="section__intro">Cada barra &eacute; o volume total da estilista, partido entre montagem, novo e ajuste.</p>
+    <div class="card">
+      <div class="card__head">
+        <div><h3 class="card__title">Volume por estilista</h3><span class="card__sub">Bloco 2.1 &middot; etiqueta laranja</span></div>
+        <span class="card__num">Fig. 03</span>
+      </div>
+      <div class="hbars" id="hbars-estilista"></div>
+      <div class="legend">
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-montagem)"></span>Montagem</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-novo)"></span>Novo</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-ajuste)"></span>Ajuste</span>
+      </div>
+      <p class="note" id="note-estilista">&mdash;</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B3 &middot; Marcas</div>
+    <h2 class="section__title">Marca por tipo &mdash; onde est&aacute; cada esfor&ccedil;o.</h2>
+    <p class="section__intro">Mesma marca, tr&ecirc;s comportamentos. Farm puxa a montagem; GL puxa o novo; Maria Fil&oacute; concentra ajustes.</p>
+    <div class="card">
+      <div class="card__head">
+        <div><h3 class="card__title">Composi&ccedil;&atilde;o por marca</h3><span class="card__sub">Bloco 3.1 &rarr; 3.3 &middot; barras agrupadas</span></div>
+        <span class="card__num">Fig. 04</span>
+      </div>
+      <div class="gbars" id="gbars-marca"></div>
+      <div class="legend">
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-montagem)"></span>Montagem</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-novo)"></span>Novo</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-ajuste)"></span>Ajuste</span>
+      </div>
+      <p class="note" id="note-marca-tipo">&mdash;</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B4 &middot; Equipe</div>
+    <h2 class="section__title">Carga consolidada por modelista.</h2>
+    <p class="section__intro">Vis&atilde;o integrada do bloco 4: quem est&aacute; com mais cards e em que tipo.</p>
+    <div class="card">
+      <div class="card__head">
+        <div><h3 class="card__title">Tabela &middot; Modelistas</h3><span class="card__sub">Bloco 4.4 &middot; Montagem &middot; Novo &middot; Ajuste</span></div>
+        <span class="card__num">Fig. 05</span>
+      </div>
+      <div class="table-wrap">
+        <table class="spec">
+          <thead><tr><th>Modelista</th><th>V&iacute;nculo</th><th style="text-align:right">Montagem</th><th style="text-align:right">Novo</th><th style="text-align:right">Ajuste</th><th style="text-align:right">Total</th></tr></thead>
+          <tbody id="tbody-equipe"></tbody>
+        </table>
+      </div>
+      <p class="note" id="note-equipe">&mdash;</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B5 &middot; Modelista Externo</div>
+    <h2 class="section__title">Equipe interna &times; freelancer.</h2>
+    <p class="section__intro">Quanto da cole&ccedil;&atilde;o sai pela porta? O Modelista Externo &eacute; estrat&eacute;gia &mdash; n&atilde;o acidente.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Origem da execu&ccedil;&atilde;o</h3><span class="card__sub">Bloco 5.2 &middot; interno &times; terceirizado</span></div>
+          <span class="card__num">Fig. 06</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-interna" cx="60" cy="60" r="48" stroke="var(--rose)"     stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-externo" cx="60" cy="60" r="48" stroke="var(--bordeaux)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-ext-pct">&mdash;</div><span class="donut__label">Externo</span></div></div>
+          </div>
+          <div class="breakdown" id="breakdown-ext"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Modelista Externo &middot; onde atua</h3><span class="card__sub" id="sub-ext">Bloco 5.1</span></div>
+          <span class="card__num">Fig. 07</span>
+        </div>
+        <div class="hbars" id="hbars-ext-marca" style="margin-top:8px"></div>
+        <p class="note" id="note-externo">&mdash;</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section__num">B6 &middot; Complexidade &middot; Tempo</div>
+    <h2 class="section__title">A geometria do esfor&ccedil;o.</h2>
+    <p class="section__intro">N&atilde;o basta saber quantas pe&ccedil;as h&aacute; &mdash; &eacute; preciso saber quanto custam em horas.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Distribui&ccedil;&atilde;o de complexidade</h3><span class="card__sub">Bloco 6.5 &middot; baixa &middot; m&eacute;dia &middot; alta</span></div>
+          <span class="card__num">Fig. 08</span>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" stroke="rgba(245,237,230,0.06)"></circle>
+              <circle id="d-baixa" cx="60" cy="60" r="48" stroke="var(--sage)"      stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-media" cx="60" cy="60" r="48" stroke="var(--champagne)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-alta"  cx="60" cy="60" r="48" stroke="var(--bordeaux)"  stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="donut__center"><div><div class="donut__total" id="donut-cx-total">&mdash;</div><span class="donut__label">Cards calculados</span></div></div>
+          </div>
+          <div id="complex-rows"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Tempo m&eacute;dio por tipo</h3><span class="card__sub">Bloco 6.3 &middot; horas &middot; entrada &rarr; sa&iacute;da</span></div>
+          <span class="card__num">Fig. 09</span>
+        </div>
+        <div class="timebars" id="timebars-tipo"></div>
+        <div class="table-wrap" style="margin-top:var(--sp-6)">
+          <table class="spec">
+            <thead><tr><th>Modelista</th><th style="text-align:right">Tempo m&eacute;dio</th><th style="text-align:right">Cards c/ tempo</th></tr></thead>
+            <tbody id="tbody-tempo"></tbody>
+          </table>
+        </div>
+        <p class="note" id="note-complexidade">&mdash;</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ââ B7 Â· Pipeline / Fluxo âââââââââââââââââââââââââââââââ -->
+<section class="section" id="section-pipeline">
+  <div class="wrap">
+    <div class="section__num">B7 &middot; Fluxo</div>
+    <h2 class="section__title">Onde cada pe&ccedil;a est&aacute; no processo.</h2>
+    <p class="section__intro">Cards por etapa &mdash; quantos h&aacute; em cada fase, quem est&aacute; fazendo e em qual coluna do quadro.</p>
+    <div class="pipeline-tabs" id="pipeline-tabs">
+      <button class="chip" aria-pressed="true"  data-pt="all">Todos</button>
+      <button class="chip" aria-pressed="false" data-pt="Montagem">Montagem</button>
+      <button class="chip" aria-pressed="false" data-pt="Novo">Novo</button>
+      <button class="chip" aria-pressed="false" data-pt="Ajuste">Ajuste</button>
+    </div>
+    <div class="stage-overview" id="stage-overview"></div>
+    <div class="pipeline" id="pipeline"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="mono">Atelier Analytics &middot; Quadro 3D &middot; Grupo Soma</span>
+    <span class="mono" id="footer-date">&mdash;</span>
+  </div>
+</footer>
+
+<script>
+// ââ Config âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const SUPABASE_URL="https://rvwatkeyjnbqnxkwadwo.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2d2F0a2V5am5icW54a3dhZHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTc3NjIsImV4cCI6MjA5MzU5Mzc2Mn0.Wl9S8iNuVVwpiHGXPJTpaNyHtbXzsQcLsDNwkivc8g0";
+
+// ââ Colunas vÃ¡lidas do Trello (sincronizadas com os nomes reais do banco) â
+const VALID_COLUMNS=[
+  // Ajuste
+  "ðAjuste | A fazer",
+  "ðAjuste | 2D TQ Liberado",
+  "ðAjuste | Fazendo",
+  "ðAjuste | Em aprovaÃ§Ã£o",
+  "ðAjuste | Fazendo LiberaÃ§Ã£o",
+  "â ðAjuste | Liberado",
+  // Novo
+  "ð¡Novo | A fazer",
+  "ð¡Novo | A fazer 2D Liberado",
+  "ð¡Novo | Fazendo",
+  "ð¡Novo | Em AprovaÃ§Ã£o",
+  "ð¡Novo | Fazendo LiberaÃ§Ã£o",
+  "âð¡Novo | Liberado|Feito",
+  // Montagem TQ
+  "ð Montagem TQ | A fazer (Aguardando liberaÃ§Ã£o de 2D)",
+  "ð Montagem TQ | A fazer (2D SOLICITADO)",
+  "ð Montagem TQ | A fazer (2D PARA CONVERSÃO)",
+  "ð Montagem TQ | A  fazer (2D TQ Liberado)",
+  "ð Montagem TQ | A fazer (2D TQ Liberado)",
+  "ð Montagem TQ | Fazendo",
+  "â ð Montagem TQ Liberado|Feito",
+  // RevisÃ£o TQ (nomes reais conforme banco)
+  "ð RevisÃ£o TQ | A Fazer",
+  "ð RevisÃ£o TQ | A Fazendo",
+  "ð RevisÃ£o TQ |",
+  "â ð RevisÃ£o TQ | Feito",
+  // Variantes legadas (compatibilidade)
+  "ð  Montagem TQ | RevisÃ£o Final",
+];
+
+const ETAPA_ORDER=["A Fazer","Fazendo","Em AprovaÃ§Ã£o","Fazendo LiberaÃ§Ã£o","RevisÃ£o Final","Liberado/Feito"];
+const ETAPA_IDX=Object.fromEntries(ETAPA_ORDER.map((e,i)=>[e,i]));
+
+const DEMO=[
+  {tipo:"Montagem",coluna:"ð Montagem TQ | Fazendo",nome:"Vestido Linho Farm 001",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},
+  {tipo:"Montagem",coluna:"ð Montagem TQ | A fazer (2D SOLICITADO)",nome:"CalÃ§a Wide Leg GL 002",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},
+  {tipo:"Novo",coluna:"ð¡Novo | Fazendo",nome:"Saia Midi Estampada Farm 003",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.5},
+  {tipo:"Montagem",coluna:"ð Montagem TQ | Fazendo",nome:"Blusa Decote GL 004",estilista:"Camila Rocha",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.5},
+  {tipo:"Novo",coluna:"ð¡Novo | A fazer",nome:"Conjunto Linho GL 005",estilista:"Camila Rocha",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},
+  {tipo:"Ajuste",coluna:"ðAjuste | Em aprovaÃ§Ã£o",nome:"Vestido MfilÏ Ajuste 006",estilista:"Tatiana Lemos",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.1},
+  {tipo:"Montagem",coluna:"â ð Montagem TQ Liberado|Feito",nome:"CalÃ§a Farm Liberada 007",estilista:"Tatiana Lemos",marca:"Maria FilÃ³",membros:'["PatrÃ­cia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.8},
+  {tipo:"Ajuste",coluna:"ðAjuste | Fazendo",nome:"Blusa Outras Ajuste 008",estilista:"Helena Aguiar",marca:"Outras",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.9},
+  {tipo:"Novo",coluna:"ð¡Novo | Em AprovaÃ§Ã£o",nome:"Saia Farm Novo 009",estilista:"Helena Aguiar",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.8},
+  {tipo:"Montagem",coluna:"ð Montagem TQ | A fazer (Aguardando liberaÃ§Ã£o de 2D)",nome:"Vestido GL Montagem 010",estilista:"Marina Sotto",marca:"GL",membros:'["CÃ­ntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.6},
+  {tipo:"Novo",coluna:"ð¡Novo | Fazendo LiberaÃ§Ã£o",nome:"Conjunto MfilÏ Novo 011",estilista:"Marina Sotto",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:2.2},
+  {tipo:"Montagem",coluna:"ð Montagem TQ | Fazendo",nome:"Camisa Farm Montagem 012",estilista:"JÃºlia Andrade",marca:"Farm BR",membros:'["Felipe Tanaka","Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.4},
+  {tipo:"Ajuste",coluna:"ðAjuste | A fazer",nome:"CalÃ§a GL Ajuste 013",estilista:"Beatriz Vidal",marca:"GL",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.5},
+  {tipo:"Montagem",coluna:"ð  Montagem TQ | RevisÃ£o Final",nome:"Vestido Farm RevisÃ£o 014",estilista:"Camila Rocha",marca:"Farm BR",membros:'["Mauro Bianchi"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.6},
+  {tipo:"Novo",coluna:"ð¡Novo | A fazer 2D Liberado",nome:"Saia GL Novo 015",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},
+  {tipo:"Ajuste",coluna:"â ðAjuste | Liberado",nome:"Blusa MfilÏ Liberada 016",estilista:"Helena Aguiar",marca:"Maria FilÃ³",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},
+  {tipo:"Montagem",coluna:"ð Montagem TQ | A fazer (2D PARA CONVERSÃO)",nome:"Conjunto Outras Montagem 017",estilista:"JÃºlia Andrade",marca:"Outras",membros:'["PatrÃ­cia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},
+  {tipo:"Novo",coluna:"ð¡Novo | Fazendo",nome:"Camisa GL Novo 018",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},
+  {tipo:"Montagem",coluna:"â ð Montagem TQ Liberado|Feito",nome:"Vestido MfilÏ Liberado 019",estilista:"Camila Rocha",marca:"Maria FilÃ³",membros:'["CÃ­ntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},
+  {tipo:"Ajuste",coluna:"ðAjuste | Fazendo LiberaÃ§Ã£o",nome:"CalÃ§a Farm Ajuste 020",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}
+];
+
+const C=301.59;
+const AF={brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all"};
+let ALL=[];
+
+// ââ Utils âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const pct=(n,t)=>t>0?Math.round(n/t*100):0;
+function fmtH(h){if(h==null)return"â";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
+function mArr(m){if(!m)return[];if(Array.isArray(m))return m;try{return JSON.parse(m)}catch{return[]}}
+function donutSeg(arcs){const t=arcs.reduce((s,a)=>s+a.val,0);let off=0;arcs.forEach(a=>{const el=document.getElementById(a.id);if(!el)return;const d=t>0?C*a.val/t:0;el.setAttribute("stroke-dasharray",d.toFixed(2)+" "+C.toFixed(2));el.setAttribute("stroke-dashoffset",(-off).toFixed(2));off+=d})}
+function bRow(name,val,total,sw){const p=pct(val,total);return'<div class="breakdown__row" style="--swatch:'+sw+'"><div class="breakdown__top"><span class="breakdown__name">'+name+'</span><span class="breakdown__val"><strong>'+val+'</strong>'+p+'%</span></div><div class="breakdown__bar"><div class="breakdown__fill" style="width:'+p+'%"></div></div></div>'}
+function topE(cards,f){const c={};cards.forEach(x=>{c[x[f]]=(c[x[f]]||0)+1});const s=Object.entries(c).sort((a,b)=>b[1]-a[1]);return s.length?{name:s[0][0],count:s[0][1]}:null}
+
+// ââ Etapa extraction ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function getEtapa(coluna){
+  if(!coluna)return"Outro";
+  const c=coluna.toLowerCase();
+  // RevisÃ£o TQ â trata antes de "fazendo" genÃ©rico
+  if(c.includes("revisÃ£o tq")||c.includes("revisao tq")){
+    if(c.includes("feito"))return"Liberado/Feito";
+    return"RevisÃ£o Final";
+  }
+  if(c.includes("revisÃ£o final")||c.includes("revisao final"))return"RevisÃ£o Final";
+  if(c.includes("fazendo liberaÃ§Ã£o")||c.includes("fazendo liberacao"))return"Fazendo LiberaÃ§Ã£o";
+  if(c.includes("em aprovaÃ§Ã£o")||c.includes("em aprovacao"))return"Em AprovaÃ§Ã£o";
+  if(c.includes("fazendo"))return"Fazendo";
+  if(c.includes("a  fazer")||c.includes("a fazer"))return"A Fazer";
+  if(c.includes("2d tq liberado")||c.includes("a fazer 2d"))return"A Fazer";
+  if(c.includes("liberado")||c.includes("feito")||c.includes("done"))return"Liberado/Feito";
+  return"Outro";
+}
+
+// ââ Filters âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function filtered(){
+  return ALL.filter(c=>{
+    if(AF.brand!=="all"&&c.marca!==AF.brand)return false;
+    if(AF.type!=="all"&&c.tipo!==AF.type)return false;
+    if(AF.source==="interna"&&c.is_modelista_externo)return false;
+    if(AF.source==="externo"&&!c.is_modelista_externo)return false;
+    if(AF.etapa!=="all"&&getEtapa(c.coluna)!==AF.etapa)return false;
+    if(AF.complexidade!=="all"){
+      const cx=c.complexidade==="Media"?"MÃ©dia":c.complexidade;
+      if(cx!==AF.complexidade)return false;
+    }
+    if(AF.estilista!=="all"&&c.estilista!==AF.estilista)return false;
+    if(AF.membro!=="all"&&!mArr(c.membros).includes(AF.membro))return false;
+    return true;
+  });
+}
+
+// ââ Populate dynamic selects ââââââââââââââââââââââââââââââââââââââââââââââ
+function populateSelects(){
+  const estilistas=[...new Set(ALL.map(c=>c.estilista).filter(e=>e&&e!=="Sem Estilista"))].sort();
+  const membSet=new Set();
+  ALL.forEach(c=>mArr(c.membros).forEach(m=>{if(m)membSet.add(m)}));
+  const membros=[...membSet].sort();
+  const se=document.getElementById("sel-estilista");
+  se.innerHTML='<option value="all">Todas</option>'+estilistas.map(e=>'<option value="'+e+'">'+e+'</option>').join("");
+  const sm=document.getElementById("sel-membro");
+  sm.innerHTML='<option value="all">Todos</option>'+membros.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
+}
+
+// ââ KPI mini badges por etapa âââââââââââââââââââââââââââââââââââââââââââââ
+function etapaBadges(cards){
+  const counts={};
+  ETAPA_ORDER.forEach(e=>counts[e]=0);
+  cards.forEach(c=>{const e=getEtapa(c.coluna);if(counts[e]!==undefined)counts[e]++});
+  return ETAPA_ORDER.filter(e=>counts[e]>0)
+    .map(e=>'<span class="kpi__badge">'+e.replace("Liberado/Feito","Lib.")+'&nbsp;'+counts[e]+'</span>').join("");
+}
+
+const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria FilÃ³":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
+const MORD=["Farm BR","GL","Maria FilÃ³","Outras"];
+
+// ââ Render ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function render(){
+  const cards=filtered(),N=cards.length;
+  const byT={Montagem:0,Novo:0,Ajuste:0};
+  cards.forEach(c=>{if(byT[c.tipo]!==undefined)byT[c.tipo]++});
+
+  document.getElementById("kpi-total").textContent=N;
+  document.getElementById("meta-total").textContent=N+" cards lidos";
+  document.getElementById("kpi-montagem").innerHTML=byT.Montagem+'<sub>'+pct(byT.Montagem,N)+'%</sub>';
+  document.getElementById("kpi-novo").innerHTML=byT.Novo+'<sub>'+pct(byT.Novo,N)+'%</sub>';
+  document.getElementById("kpi-ajuste").innerHTML=byT.Ajuste+'<sub>'+pct(byT.Ajuste,N)+'%</sub>';
+  document.getElementById("kpi-montagem-sub").innerHTML='Volume principal &middot; <strong>'+pct(byT.Montagem,N)+'%</strong> do total.';
+  document.getElementById("kpi-novo-sub").innerHTML='Novos modelos &middot; <strong>'+pct(byT.Novo,N)+'%</strong> do escopo.';
+  document.getElementById("kpi-ajuste-sub").innerHTML='Refinamentos &middot; <strong>'+pct(byT.Ajuste,N)+'%</strong> do quadro.';
+  document.getElementById("kpi-montagem-mini").innerHTML=etapaBadges(cards.filter(c=>c.tipo==="Montagem"));
+  document.getElementById("kpi-novo-mini").innerHTML=etapaBadges(cards.filter(c=>c.tipo==="Novo"));
+  document.getElementById("kpi-ajuste-mini").innerHTML=etapaBadges(cards.filter(c=>c.tipo==="Ajuste"));
+
+  const marcas=[...new Set(cards.map(c=>c.marca))].filter(Boolean);
+  const ests=[...new Set(cards.map(c=>c.estilista))].filter(m=>m&&m!=="Sem Estilista");
+  const mods=new Set();cards.forEach(c=>mArr(c.membros).forEach(m=>{if(m)mods.add(m)}));
+  const topM=topE(cards,"marca");
+  const extN=cards.filter(c=>c.is_modelista_externo).length;
+  document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+' cards</strong> em produÃ§Ã£o entre '+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
+
+  document.getElementById("donut-tipo-total").textContent=N;
+  document.getElementById("sub-tipo").textContent='Bloco 1.3 Â· '+N+' cards';
+  donutSeg([{id:"d-montagem",val:byT.Montagem},{id:"d-novo",val:byT.Novo},{id:"d-ajuste",val:byT.Ajuste}]);
+  document.getElementById("breakdown-tipo").innerHTML=[{n:"Montagem",v:byT.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:byT.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:byT.Ajuste,s:"var(--c-ajuste)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
+  const bigT=byT.Montagem>=byT.Novo&&byT.Montagem>=byT.Ajuste?"Montagem":byT.Novo>=byT.Ajuste?"Novo":"Ajuste";
+  document.getElementById("note-tipo").innerHTML="<strong>"+bigT+"</strong> domina o quadro â sÃ£o <strong>"+pct(byT[bigT],N)+"%</strong> do volume.";
+
+  const byM={};cards.forEach(c=>{byM[c.marca]=(byM[c.marca]||0)+1});
+  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria FilÃ³"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
+  const actM=MORD.filter(m=>byM[m]>0);
+  document.getElementById("donut-marca-total").textContent=actM.length;
+  document.getElementById("sub-marca").textContent='Bloco 3.4 Â· '+actM.length+' marcas';
+  document.getElementById("breakdown-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>bRow(m,byM[m]||0,N,MCOLS[m])).join("");
+  const top2=MORD.filter(m=>byM[m]).sort((a,b)=>(byM[b]||0)-(byM[a]||0)).slice(0,2);
+  if(top2.length>=2){const c2=(byM[top2[0]]||0)+(byM[top2[1]]||0);document.getElementById("note-marca").innerHTML="<strong>"+top2[0]+"</strong> e <strong>"+top2[1]+"</strong> juntas fazem <strong>"+pct(c2,N)+"%</strong> do volume."}
+
+  const byE={};cards.forEach(c=>{const k=c.estilista||"Sem Estilista";if(!byE[k])byE[k]={M:0,N:0,A:0};if(c.tipo==="Montagem")byE[k].M++;else if(c.tipo==="Novo")byE[k].N++;else if(c.tipo==="Ajuste")byE[k].A++});
+  const srtE=Object.entries(byE).map(([n,v])=>({n,t:v.M+v.N+v.A,...v})).sort((a,b)=>b.t-a.t);
+  const maxE=srtE[0]?.t||1;
+  document.getElementById("hbars-estilista").innerHTML=srtE.map(e=>'<div class="hbar"><span class="hbar__label">'+e.n+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(e.M,maxE)+'%;background:var(--c-montagem)" title="Montagem '+e.M+'"></div><div class="hbar__seg" style="width:'+pct(e.N,maxE)+'%;background:var(--c-novo)" title="Novo '+e.N+'"></div><div class="hbar__seg" style="width:'+pct(e.A,maxE)+'%;background:var(--c-ajuste)" title="Ajuste '+e.A+'"></div></div><span class="hbar__val">'+e.t+'</span></div>').join("");
+  if(srtE.length>0){const te=srtE[0],mn=[...srtE].sort((a,b)=>b.N-a.N)[0];document.getElementById("note-estilista").innerHTML="<strong>"+te.n+"</strong> conduz o volume com <strong>"+te.t+"</strong> cards."+(mn&&mn.n!==te.n?" <em>"+mn.n+"</em> tem a maior fatia de novos.":"")}
+
+  const maxG=Math.max(...MORD.map(m=>{const mc=cards.filter(c=>c.marca===m);return Math.max(mc.filter(c=>c.tipo==="Montagem").length,mc.filter(c=>c.tipo==="Novo").length,mc.filter(c=>c.tipo==="Ajuste").length)}),1);
+  document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>c.tipo==="Montagem").length,mN=mc.filter(c=>c.tipo==="Novo").length,mA=mc.filter(c=>c.tipo==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards Â· '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
+  document.getElementById("note-marca-tipo").innerHTML="CalendÃ¡rios distintos sob o mesmo ateliÃª.";
+
+  const modMap={};cards.forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!modMap[m])modMap[m]={M:0,N:0,A:0,ext:false};if(c.tipo==="Montagem")modMap[m].M++;else if(c.tipo==="Novo")modMap[m].N++;else if(c.tipo==="Ajuste")modMap[m].A++;if(c.is_modelista_externo)modMap[m].ext=true})});
+  const srtM=Object.entries(modMap).map(([n,v])=>({n,...v,t:v.M+v.N+v.A})).sort((a,b)=>b.t-a.t);
+  document.getElementById("tbody-equipe").innerHTML=srtM.map(m=>'<tr><td>'+m.n+'</td><td>'+(m.ext?'<span class="pill pill--ext">Freelance</span>':'<span class="pill">Interna</span>')+'</td><td class="num">'+m.M+'</td><td class="num num--muted">'+m.N+'</td><td class="num num--muted">'+m.A+'</td><td class="num"><strong>'+m.t+'</strong></td></tr>').join("");
+  const topMod=srtM[0],topExt=srtM.find(m=>m.ext);
+  document.getElementById("note-equipe").innerHTML=(topMod?"<strong>"+topMod.n+"</strong> sustenta o maior volume com <strong>"+topMod.t+"</strong> cards.":"")+(topExt?" O <em>Modelista Externo</em> responde por <strong>"+topExt.A+"</strong> ajuste"+(topExt.A!==1?"s":"")+".":" ");
+
+  const extC=cards.filter(c=>c.is_modelista_externo),intC=cards.filter(c=>!c.is_modelista_externo),extN2=extC.length;
+  document.getElementById("donut-ext-pct").textContent=pct(extN2,N)+"%";
+  donutSeg([{id:"d-interna",val:intC.length},{id:"d-externo",val:extN2}]);
+  document.getElementById("breakdown-ext").innerHTML=[{n:"Equipe interna",v:intC.length,s:"var(--rose)"},{n:"Modelista Externo",v:extN2,s:"var(--bordeaux)"}].map(r=>bRow(r.n,r.v,N,r.s)).join("");
+  const extByM={};extC.forEach(c=>{extByM[c.marca]=(extByM[c.marca]||0)+1});
+  const maxEM=Math.max(...Object.values(extByM),1);
+  document.getElementById("sub-ext").textContent='Bloco 5.1 Â· '+extN2+' cards terceirizados';
+  document.getElementById("hbars-ext-marca").innerHTML=Object.entries(extByM).sort((a,b)=>b[1]-a[1]).map(([m,v])=>'<div class="hbar"><span class="hbar__label">'+m+'</span><div class="hbar__track"><div class="hbar__seg" style="width:'+pct(v,maxEM)+'%;background:'+(MCOLS[m]||"var(--rose)")+'"></div></div><span class="hbar__val">'+v+'</span></div>').join("");
+  const topEM=Object.entries(extByM).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById("note-externo").innerHTML=topEM?"O externo cobre principalmente <em>"+topEM[0]+"</em> â <strong>"+topEM[1]+"</strong> cards terceirizados.":extN2>0?"Freelancer ativo.":"Nenhum card externo no filtro.";
+
+  const cxMap={"Baixa":0,"MÃ©dia":0,"Alta":0};
+  cards.filter(c=>c.complexidade&&c.complexidade!=="NÃ£o calculado"&&c.complexidade!=="Nao calculado").forEach(c=>{const k=c.complexidade==="Media"?"MÃ©dia":c.complexidade;if(cxMap[k]!==undefined)cxMap[k]++});
+  const cxT=cxMap["Baixa"]+cxMap["MÃ©dia"]+cxMap["Alta"];
+  document.getElementById("donut-cx-total").textContent=cxT;
+  donutSeg([{id:"d-baixa",val:cxMap["Baixa"]},{id:"d-media",val:cxMap["MÃ©dia"]},{id:"d-alta",val:cxMap["Alta"]}]);
+  document.getElementById("complex-rows").innerHTML=[{n:"Baixa",sub:"atÃ© 1h Â· simples",v:cxMap["Baixa"],dot:"var(--sage)"},{n:"MÃ©dia",sub:"atÃ© 2h Â· padrÃ£o",v:cxMap["MÃ©dia"],dot:"var(--champagne)"},{n:"Alta",sub:"2h+ Â· estrutural",v:cxMap["Alta"],dot:"var(--bordeaux)"}].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num">'+r.v+'</span></div>').join("");
+
+  const tpT={Montagem:{s:0,n:0},Novo:{s:0,n:0},Ajuste:{s:0,n:0}};
+  cards.filter(c=>c.tempo_horas!=null&&tpT[c.tipo]).forEach(c=>{tpT[c.tipo].s+=c.tempo_horas;tpT[c.tipo].n++});
+  const avg={Montagem:tpT.Montagem.n?tpT.Montagem.s/tpT.Montagem.n:null,Novo:tpT.Novo.n?tpT.Novo.s/tpT.Novo.n:null,Ajuste:tpT.Ajuste.n?tpT.Ajuste.s/tpT.Ajuste.n:null};
+  const mxA=Math.max(...Object.values(avg).filter(v=>v!=null),0.01);
+  document.getElementById("timebars-tipo").innerHTML=[{n:"Montagem",v:avg.Montagem,s:"var(--c-montagem)"},{n:"Novo",v:avg.Novo,s:"var(--c-novo)"},{n:"Ajuste",v:avg.Ajuste,s:"var(--c-ajuste)"}].map(r=>'<div class="timebar" style="--swatch:'+r.s+'"><span class="timebar__name">'+r.n+'</span><div class="timebar__bar"><div class="timebar__fill" style="width:'+(r.v!=null?pct(r.v,mxA):0)+'%;background:'+r.s+'"></div></div><span class="timebar__val">'+fmtH(r.v)+'</span></div>').join("");
+  const tpM={};cards.filter(c=>c.tempo_horas!=null).forEach(c=>{mArr(c.membros).forEach(m=>{if(!m)return;if(!tpM[m])tpM[m]={s:0,n:0};tpM[m].s+=c.tempo_horas;tpM[m].n++})});
+  document.getElementById("tbody-tempo").innerHTML=Object.entries(tpM).map(([n,v])=>({n,avg:v.s/v.n,n2:v.n})).sort((a,b)=>b.n2-a.n2).slice(0,6).map(m=>'<tr><td>'+m.n+'</td><td class="num">'+fmtH(m.avg)+'</td><td class="num">'+m.n2+'</td></tr>').join("");
+  document.getElementById("note-complexidade").innerHTML=cxMap["Alta"]>0?"<strong>"+cxMap["Alta"]+"</strong> card"+(cxMap["Alta"]!==1?"s":"")+" de alta complexidade â onde o cronograma mais sente pressÃ£o.":"Sem dados de complexidade no filtro atual.";
+
+  renderPipeline();
+}
+
+// ââ Pipeline / Fluxo ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+let PT="all";
+
+function renderPipeline(){
+  const base=filtered();
+  const cards=PT==="all"?base:base.filter(c=>c.tipo===PT);
+  const N=cards.length;
+
+  if(!N){
+    document.getElementById("stage-overview").innerHTML="";
+    document.getElementById("pipeline").innerHTML='<p class="note" style="padding:var(--sp-5)">Nenhum card no filtro atual.</p>';
+    return;
+  }
+
+  // Stage overview
+  const byEtapa={};
+  ETAPA_ORDER.forEach(e=>byEtapa[e]={total:0,Montagem:0,Novo:0,Ajuste:0});
+  cards.forEach(c=>{
+    const e=getEtapa(c.coluna);
+    if(!byEtapa[e])byEtapa[e]={total:0,Montagem:0,Novo:0,Ajuste:0};
+    byEtapa[e].total++;
+    if(byEtapa[e][c.tipo]!==undefined)byEtapa[e][c.tipo]++;
+  });
+
+  const etapaColors={"A Fazer":"var(--blush-40)","Fazendo":"var(--champagne)","Em AprovaÃ§Ã£o":"var(--rose)","Fazendo LiberaÃ§Ã£o":"var(--bordeaux)","RevisÃ£o Final":"var(--champagne)","Liberado/Feito":"var(--sage)"};
+
+  const rows=ETAPA_ORDER.map(e=>{
+    const d=byEtapa[e];
+    if(!d||d.total===0)return"";
+    if(PT==="all"){
+      return'<div class="stage-bar"><span class="stage-bar__label">'+e+'</span><div class="stage-bar__track">'+
+        (d.Montagem?'<div class="stage-bar__seg" style="width:'+pct(d.Montagem,N)+'%;background:var(--c-montagem)" title="Montagem '+d.Montagem+'"></div>':'')+
+        (d.Novo?'<div class="stage-bar__seg" style="width:'+pct(d.Novo,N)+'%;background:var(--c-novo)" title="Novo '+d.Novo+'"></div>':'')+
+        (d.Ajuste?'<div class="stage-bar__seg" style="width:'+pct(d.Ajuste,N)+'%;background:var(--c-ajuste)" title="Ajuste '+d.Ajuste+'"></div>':'')+
+        '</div><span class="stage-bar__val">'+d.total+'</span></div>';
+    }
+    return'<div class="stage-bar"><span class="stage-bar__label">'+e+'</span><div class="stage-bar__track"><div class="stage-bar__seg" style="width:'+pct(d.total,N)+'%;background:'+(etapaColors[e]||"var(--rose)")+'"></div></div><span class="stage-bar__val">'+d.total+'</span></div>';
+  }).filter(Boolean).join("");
+
+  const leg=PT==="all"?'<div style="display:flex;gap:var(--sp-4);flex-wrap:wrap;margin-top:var(--sp-3)">'+["Montagem","Novo","Ajuste"].map(t=>'<span style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.10em;display:inline-flex;align-items:center;gap:5px;color:var(--blush-60)"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-'+t.toLowerCase()+');display:inline-block"></span>'+t+'</span>').join("")+'</div>':"";
+
+  document.getElementById("stage-overview").innerHTML=
+    '<div class="stage-overview__title">DistribuiÃ§Ã£o por etapa &middot; '+N+' cards</div>'+rows+leg;
+
+  // Column cards
+  const byCol={};
+  cards.forEach(c=>{
+    const col=(c.coluna||"Sem coluna").trim();
+    if(!byCol[col])byCol[col]={count:0,cards:[],etapa:getEtapa(c.coluna)};
+    byCol[col].count++;
+    byCol[col].cards.push(c);
+  });
+
+  const cols=Object.entries(byCol).sort((a,b)=>{
+    const ia=ETAPA_IDX[a[1].etapa]??99,ib=ETAPA_IDX[b[1].etapa]??99;
+    if(ia!==ib)return ia-ib;
+    return b[1].count-a[1].count;
+  });
+
+  function cleanColName(col){
+    return col.replace(/^[^\w\s]*\s*/,"").replace(/^(Ajuste|Novo|Montagem TQ)\s*\|\s*/i,"").replace(/^ð|^ð¡|^ð|^ð|^â/g,"").trim()||col;
+  }
+
+  document.getElementById("pipeline").innerHTML=cols.map(([col,data])=>{
+    const isDone=data.etapa==="Liberado/Feito";
+    const isReview=data.etapa==="RevisÃ£o Final";
+    const p=pct(data.count,N);
+    const items=data.cards.slice(0,30).map(c=>{
+      const mems=mArr(c.membros);
+      const ext=c.is_modelista_externo;
+      const tags=mems.length?mems.map(m=>'<span class="p-item__tag'+(ext?" p-item__tag--ext":"")+'">'+m+'</span>').join(""):'<span class="p-item__tag" style="opacity:0.5">Sem atribuiÃ§Ã£o</span>';
+      const tc=c.tipo==="Montagem"?"var(--c-montagem)":c.tipo==="Novo"?"var(--c-novo)":"var(--c-ajuste)";
+      const nm=c.nome||c.estilista||"â";
+      return'<div class="p-item"><span class="p-item__name" title="'+nm+'">'+nm+'</span><div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin-top:2px"><span class="p-item__tag" style="background:transparent;color:'+tc+';border-color:'+tc+';opacity:0.75">'+c.tipo+'</span>'+tags+'</div></div>';
+    }).join("");
+    const more=data.cards.length>30?'<p style="font-family:var(--font-mono);font-size:9px;color:var(--blush-40);padding:var(--sp-2) var(--sp-3)">+'+(data.cards.length-30)+' mais</p>':"";
+    const cls="p-col"+(isDone?" p-col--done":isReview?" p-col--review":"");
+    return'<div class="'+cls+'"><div class="p-col__head"><div class="p-col__stage"><em>'+data.etapa+'</em> Â· '+cleanColName(col)+'</div><div class="p-col__count-row"><span class="p-col__count">'+data.count+'</span><span class="p-col__pct">'+p+'%</span></div></div><div class="p-col__body">'+items+more+'</div></div>';
+  }).join("");
+}
+
+// ââ Fetch âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+async function fetchCards(){
+  const ctrl=new AbortController();
+  const tid=setTimeout(()=>ctrl.abort(),8000);
+  try{
+    const r=await fetch(SUPABASE_URL+"/rest/v1/cards?select=*&limit=2000",{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
+    clearTimeout(tid);if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||d.length===0)throw new Error("empty");
+    return d;
+  }catch(e){clearTimeout(tid);throw e}
+}
+
+// ââ Event listeners âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+document.querySelectorAll('.chips[data-filter]').forEach(group=>{
+  group.querySelectorAll('.chip[data-value]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const f=group.dataset.filter,v=btn.dataset.value;
+      AF[f]=v;
+      group.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
+      render();
+    });
+  });
+});
+
+document.querySelectorAll('select[data-filter-sel]').forEach(sel=>{
+  sel.addEventListener('change',()=>{AF[sel.dataset.filterSel]=sel.value;render();});
+});
+
+document.getElementById("pipeline-tabs")?.querySelectorAll('.chip[data-pt]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    PT=btn.dataset.pt;
+    document.querySelectorAll('#pipeline-tabs .chip').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
+    renderPipeline();
+  });
+});
+
+document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  document.documentElement.setAttribute('data-theme',isLight?'dark':'light');
+});
+
+// ââ Init ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+(async function init(){
+  const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
+  try{
+    const raw=await fetchCards();
+    const vcSet=new Set(VALID_COLUMNS.map(v=>v.trim()));
+    ALL=raw.filter(c=>vcSet.has((c.coluna||"").trim()));
+    if(ALL.length===0&&raw.length>0)ALL=raw; // fallback: accept all if no column matches
+    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
+    const last=dates[dates.length-1];
+    if(last){
+      const d=new Date(last);
+      document.getElementById("footer-date").textContent="Atualizado "+d.toLocaleDateString("pt-BR");
+      document.getElementById("topbar-date").textContent=d.toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});
+    }
+  }catch(e){
+    console.warn("Supabase unavailable, using demo:",e.message);
+    ALL=DEMO;
+    bn.classList.add("visible");
+  }
+  ov.style.opacity="0";
+  ov.style.transition="opacity 0.4s";
+  setTimeout(()=>ov.classList.remove("visible"),400);
+  populateSelects();
+  render();
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}})},{threshold:0.08});
+  document.querySelectorAll(".card").forEach(c=>io.observe(c));
+})();
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Atelier Analytics · Quadro 3D</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231F1218'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' fill='%23C99A8A' font-family='Georgia,serif' font-weight='700' font-size='14'%3EAt%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
