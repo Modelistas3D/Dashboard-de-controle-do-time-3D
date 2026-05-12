@@ -34,20 +34,34 @@ em,.italic{font-style:italic;color:var(--rose)}
 .topbar__dot{display:inline-flex;align-items:center;gap:var(--sp-2)}
 .topbar__dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 3px rgba(156,179,158,0.18)}
 .topbar__sep{width:1px;height:12px;background:var(--line-strong)}
-.theme-toggle{display:inline-flex;align-items:center;gap:var(--sp-2);background:transparent;border:1px solid var(--line-strong);color:var(--blush);padding:4px 6px 4px 6px;border-radius:999px;cursor:pointer;transition:border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out)}
-.theme-toggle:hover{border-color:var(--rose-line);background:var(--rose-soft)}
-.theme-toggle__track{position:relative;width:30px;height:16px;border-radius:999px;background:var(--rose-soft);border:1px solid var(--rose-line);flex-shrink:0}
-.theme-toggle__thumb{position:absolute;top:1px;left:1px;width:12px;height:12px;border-radius:50%;background:var(--rose);transition:transform var(--dur-med) var(--ease-out)}
-html[data-theme=light] .theme-toggle__thumb{transform:translateX(14px)}
-.theme-toggle__moon,.theme-toggle__sun{font-size:11px;line-height:1;transition:opacity var(--dur-fast) var(--ease-out)}
-.theme-toggle__moon{opacity:1}.theme-toggle__sun{opacity:0.35}
-html[data-theme=light] .theme-toggle__moon{opacity:0.35}html[data-theme=light] .theme-toggle__sun{opacity:1}
+.theme-toggle{position:relative;width:30px;height:30px;border-radius:50%;background:var(--rose-soft);border:1px solid var(--rose-line);cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out)}
+.theme-toggle:hover{border-color:var(--rose);background:rgba(201,154,138,0.22);box-shadow:0 0 0 3px rgba(201,154,138,0.12)}
+.theme-toggle__icon{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;line-height:1;transition:opacity var(--dur-med) var(--ease-out),transform var(--dur-med) var(--ease-out)}
+.theme-toggle__moon{opacity:1;transform:scale(1) rotate(0deg)}
+.theme-toggle__sun{opacity:0;transform:scale(0.6) rotate(60deg)}
+html[data-theme=light] .theme-toggle__moon{opacity:0;transform:scale(0.6) rotate(-60deg)}
+html[data-theme=light] .theme-toggle__sun{opacity:1;transform:scale(1) rotate(0deg)}
 .sync-btn{display:inline-flex;align-items:center;gap:var(--sp-2);background:var(--rose-soft);border:1px solid var(--rose-line);color:var(--rose);padding:4px 12px 4px 8px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:all var(--dur-fast) var(--ease-out)}
 .sync-btn:hover:not(:disabled){border-color:var(--rose);background:rgba(201,154,138,0.22);color:var(--blush)}
 .sync-btn:disabled{opacity:0.6;cursor:not-allowed}
 .sync-btn__icon{width:14px;height:14px;flex-shrink:0}
 .sync-btn--loading .sync-btn__icon{animation:spin 1s linear infinite}
 .sync-btn--ok{border-color:var(--sage);color:var(--sage);background:rgba(156,179,158,0.10)}
+.print-btn{position:relative;width:30px;height:30px;border-radius:50%;background:var(--rose-soft);border:1px solid var(--rose-line);cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out)}
+.print-btn:hover{border-color:var(--rose);background:rgba(201,154,138,0.22);box-shadow:0 0 0 3px rgba(201,154,138,0.12)}
+.print-btn svg{width:14px;height:14px;stroke:var(--rose);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur-fast) var(--ease-out)}
+.print-btn:hover svg{stroke:var(--blush)}
+@media print{
+  .topbar,.filter-bar,#sync-btn,.print-btn,.theme-toggle,.topbar__sep{display:none!important}
+  body{background:#fff!important;color:#1a1a1a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body::before,body::after{display:none!important}
+  .wrap{max-width:100%!important;padding-inline:1.5rem!important}
+  .kpi-grid,.charts-row{break-inside:avoid;page-break-inside:avoid}
+  .card{background:#f7f3f0!important;border:1px solid #ddd!important;box-shadow:none!important}
+  h1,h2,h3{color:#1a1a1a!important}
+  .hero{padding-block:1.5rem!important}
+  @page{size:A4 portrait;margin:15mm 12mm}
+}
 .sync-btn--err{border-color:var(--bordeaux);color:var(--bordeaux);background:rgba(140,49,72,0.10)}
 @keyframes spin{to{transform:rotate(360deg)}}
 #demo-banner{display:none;background:linear-gradient(90deg,rgba(140,49,72,0.18),rgba(140,49,72,0.06));border-bottom:1px solid rgba(140,49,72,0.4);padding:var(--sp-2) var(--sp-5);text-align:center;font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.16em;color:var(--rose);position:relative;z-index:2}
@@ -272,10 +286,13 @@ footer a:hover{color:var(--champagne)}
         <span id="sync-label">Sincronizar</span>
       </button>
       <span class="topbar__sep"></span>
+      <button class="print-btn" id="print-btn" aria-label="Imprimir como PDF" title="Imprimir como PDF">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 9V2h12v7"/><rect x="6" y="14" width="12" height="8"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><circle cx="18" cy="11.5" r="0.5" fill="currentColor"/></svg>
+      </button>
+      <span class="topbar__sep"></span>
       <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema" title="Alternar tema">
-        <span class="theme-toggle__moon">🌙</span>
-        <span class="theme-toggle__track"><span class="theme-toggle__thumb"></span></span>
-        <span class="theme-toggle__sun">☀️</span>
+        <span class="theme-toggle__icon theme-toggle__moon">🌙</span>
+        <span class="theme-toggle__icon theme-toggle__sun">☀️</span>
       </button>
     </div>
   </div>
@@ -947,6 +964,10 @@ document.getElementById("pipeline-tabs")?.querySelectorAll('.chip[data-pt]').for
 document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
   const isLight=document.documentElement.getAttribute('data-theme')==='light';
   document.documentElement.setAttribute('data-theme',isLight?'dark':'light');
+});
+
+document.getElementById('print-btn')?.addEventListener('click',()=>{
+  window.print();
 });
 
 document.getElementById('sync-btn')?.addEventListener('click',async()=>{
