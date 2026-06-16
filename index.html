@@ -1025,6 +1025,8 @@ async function init(){
     render();
   }catch(e){
     console.error('init error',e);
+  }finally{
+    document.getElementById('loading-overlay')?.classList.remove('visible');
   }
 }
 init();
