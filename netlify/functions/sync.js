@@ -58,6 +58,7 @@ async function buscarColunas(boardId, env) {
 
   for (const col of todas) {
     escopo.push(col);
+    // Comparação normalizada: ignora emojis, | vs /, maiúsculas
     if (normCol(col.name).includes(targetNorm) || normCol(col.name).includes("montagem tq liberado")) {
       encontrou = true;
       break;
@@ -89,8 +90,9 @@ async function buscarAcoesMovimentacao(boardId, env) {
   let todas = [];
   let before = null;
 
+  // Limita a 6 meses para não exceder o timeout da Netlify Function
   const since = new Date(Date.now() - 180 * 24 * 3_600_000).toISOString();
-  const MAX_PAGES = 4;
+  const MAX_PAGES = 4; // máx 4.000 ações
   let pagina = 0;
 
   while (pagina < MAX_PAGES) {
@@ -113,6 +115,7 @@ async function buscarAcoesMovimentacao(boardId, env) {
       porCard[cardId].push(a);
     }
   }
+  // Ordenar por data crescente
   for (const id of Object.keys(porCard)) {
     porCard[id].sort((a, b) => new Date(a.date) - new Date(b.date));
   }
@@ -138,7 +141,7 @@ function detectarTipo(card, coluna = "") {
     if (nome.includes("novo") || nome.includes("nova")) return "Novo";
     if (nome.includes("ajuste")) return "Ajuste";
   }
-  // 3. Nome da coluna
+  // 3. Nome da coluna (ex: "🚀 Montagem TQ | Fazendo" → Montagem)
   const col = coluna.toLowerCase();
   if (col.includes("montagem")) return "Montagem";
   if (col.includes("novo")) return "Novo";
@@ -149,6 +152,7 @@ function detectarTipo(card, coluna = "") {
 function detectarEstilista(card) {
   for (const lbl of (card.labels || [])) {
     if (lbl.color === COR_ESTILISTA) {
+      // Remove prefixo "Estilista | " se presente
       const nome = (lbl.name || "").trim().replace(/^Estilista\s*\|\s*/i, "").trim();
       return nome || "Sem Nome";
     }
@@ -161,20 +165,24 @@ function detectarColecaoMarca(card) {
   let marca   = "Outras";
 
   for (const lbl of (card.labels || [])) {
-    if (lbl.color === COR_COLECAO && colecao === "Sem Coleção") {
+    // Coleção: etiqueta amarela "Coleção | MR", "Coleção | NEWNESS", etc.
+    if (lbl.color === COR_COLECAO && !colecao.includes("|")) {
       colecao = (lbl.name || "").trim() || "Sem Coleção";
     }
+    // Marca: etiqueta lime "Marca | 🌺 Farm BR", "Marca | 🌎 Farm GL", etc.
     if (lbl.color === COR_MARCA) {
       const texto = (lbl.name || "").trim();
+      // Remove prefixo "Marca | " e strip de emojis/símbolos iniciais
       const semPrefixo = texto
         .replace(/^Marca\s*\|\s*/i, "")
         .replace(/^[^\p{L}]+/u, "")
         .trim();
+      // Normaliza para os valores usados nos chips do dashboard
       const sl = semPrefixo.toLowerCase();
-      if      (sl.includes("farm br"))                                             marca = "Farm BR";
-      else if (sl.includes("farm gl") || sl === "gl")                              marca = "GL";
+      if      (sl.includes("farm br"))                      marca = "Farm BR";
+      else if (sl.includes("farm gl") || sl === "gl")       marca = "GL";
       else if (sl.includes("maria fil") || sl.includes("filo") || sl.includes("filó")) marca = "Maria Filó";
-      else if (semPrefixo)                                                          marca = semPrefixo;
+      else if (semPrefixo)                                   marca = semPrefixo;
     }
   }
 
@@ -186,9 +194,11 @@ function detectarInv27(card) {
 }
 
 function detectarFreelancer(card) {
+  // 1. Etiqueta red_dark "MODELISTA EXTERNO" (fonte primária no Trello atual)
   if ((card.labels || []).some(l => l.color === COR_FREELANCER && (l.name || "").toUpperCase().includes("MODELISTA EXTERNO"))) {
     return true;
   }
+  // 2. Fallback: membro com nome "Modelista Externo"
   return (card.members || []).some(m => {
     const nome = (m.fullName || m.username || "").toLowerCase();
     return nome.includes(NOME_FREELANCER.toLowerCase());
@@ -244,12 +254,12 @@ function detectarComplexidadeLabel(card) {
   for (const lbl of (card.labels || [])) {
     if (lbl.color === COR_COMPLEXIDADE) {
       const nome = (lbl.name || "").toLowerCase();
-      if (nome.includes("baixa"))                            return "Baixa";
+      if (nome.includes("baixa"))                          return "Baixa";
       if (nome.includes("média") || nome.includes("media")) return "Média";
-      if (nome.includes("alta"))                             return "Alta";
+      if (nome.includes("alta"))                           return "Alta";
     }
   }
-  return null;
+  return null; // sem etiqueta explícita → cair no cálculo por tempo
 }
 
 function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
@@ -257,6 +267,7 @@ function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
   return cardsRaw.map(card => {
     const [colecao, marca] = detectarColecaoMarca(card);
     const tempoHoras = calcularTempoMontagem(card.id, acoesPorCard);
+    // Usa etiqueta de complexidade se disponível; senão calcula pelo tempo
     const complexidade = detectarComplexidadeLabel(card) ?? classificarComplexidade(tempoHoras);
     return {
       trello_id:            card.id,
@@ -306,9 +317,66 @@ async function upsertSupabase(cards, env) {
   return sincronizados;
 }
 
+// ─── LIMPEZA DE OBSOLETOS ────────────────────────────────────────────────────────
+// Remove do Supabase cards que não estão mais no escopo atual do Trello.
+// Isso evita acúmulo de registros antigos após múltiplos syncs.
+
+async function limparObsoletos(idsAtivos, env) {
+  if (!idsAtivos.length) return 0;
+
+  // Supabase REST: DELETE WHERE trello_id NOT IN (id1, id2, ...)
+  // Enviamos os IDs no body via RPC-style para evitar URL muito longa.
+  // Alternativa segura: buscar todos os IDs do banco e deletar os que não estão na lista.
+  const headers = {
+    "apikey":        env.SUPABASE_SERVICE_KEY,
+    "Authorization": `Bearer ${env.SUPABASE_SERVICE_KEY}`,
+    "Content-Type":  "application/json",
+    "Prefer":        "return=minimal",
+  };
+
+  // 1. Busca todos os trello_id atualmente no banco
+  const selectRes = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/cards?select=trello_id`,
+    { headers }
+  );
+  if (!selectRes.ok) {
+    console.warn(`[sync] Limpeza: falha ao buscar IDs do banco — ${selectRes.status}`);
+    return 0;
+  }
+  const todos = await selectRes.json();
+  const ativosSet = new Set(idsAtivos);
+  const obsoletos = todos.map(r => r.trello_id).filter(id => !ativosSet.has(id));
+
+  if (!obsoletos.length) {
+    console.log("[sync] Limpeza: nenhum registro obsoleto encontrado.");
+    return 0;
+  }
+
+  // 2. Deleta em lotes de 100 (URL segura)
+  let deletados = 0;
+  for (let i = 0; i < obsoletos.length; i += 100) {
+    const lote = obsoletos.slice(i, i + 100);
+    const ids  = lote.map(id => `"${id}"`).join(",");
+    const delRes = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/cards?trello_id=in.(${ids})`,
+      { method: "DELETE", headers }
+    );
+    if (!delRes.ok) {
+      const texto = await delRes.text();
+      console.warn(`[sync] Limpeza: erro ao deletar lote — ${delRes.status}: ${texto}`);
+    } else {
+      deletados += lote.length;
+    }
+  }
+
+  console.log(`[sync] Limpeza: ${deletados} registros obsoletos removidos do Supabase.`);
+  return deletados;
+}
+
 // ─── HANDLER PRINCIPAL ────────────────────────────────────────────────────────────
 
 const handler = async (event) => {
+  // CORS — permite chamadas do frontend no mesmo domínio Netlify
   const headers = {
     "Access-Control-Allow-Origin":  "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -322,6 +390,7 @@ const handler = async (event) => {
 
   const inicio = Date.now();
 
+  // Lê variáveis de ambiente
   const env = {
     TRELLO_API_KEY:       process.env.TRELLO_API_KEY,
     TRELLO_TOKEN:         process.env.TRELLO_TOKEN,
@@ -330,6 +399,7 @@ const handler = async (event) => {
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY,
   };
 
+  // Validação
   const faltando = ["TRELLO_API_KEY", "TRELLO_TOKEN", "SUPABASE_URL", "SUPABASE_SERVICE_KEY"]
     .filter(k => !env[k]);
   if (faltando.length) {
@@ -347,29 +417,39 @@ const handler = async (event) => {
   try {
     console.log("[sync] Iniciando extração do Trello...");
 
+    // 1. Colunas no escopo
     const colunas    = await buscarColunas(env.TRELLO_BOARD_ID, env);
     const idsColunas = new Set(colunas.map(c => c.id));
     const mapaCols   = Object.fromEntries(colunas.map(c => [c.id, c.name]));
 
+    // 2. Cards
     const cardsRaw = await buscarCards(env.TRELLO_BOARD_ID, idsColunas, env);
 
+    // 3. Histórico de movimentações (para calcular tempo de montagem)
     const acoesPorCard = await buscarAcoesMovimentacao(env.TRELLO_BOARD_ID, env);
 
+    // 4. Processar
     const cards = processarCards(cardsRaw, mapaCols, acoesPorCard);
 
+    // 5. Upsert no Supabase
     const total = await upsertSupabase(cards, env);
 
+    // 6. Remove registros obsoletos (cards que saíram do escopo desde o último sync)
+    const idsAtivos = cards.map(c => c.trello_id);
+    const deletados = await limparObsoletos(idsAtivos, env);
+
     const duracao = ((Date.now() - inicio) / 1000).toFixed(1);
-    console.log(`[sync] ✅ ${total} cards sincronizados em ${duracao}s`);
+    console.log(`[sync] ✅ ${total} cards sincronizados, ${deletados} obsoletos removidos em ${duracao}s`);
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        ok:         true,
+        ok:          true,
         total,
-        colunas:    colunas.length,
-        duracao_s:  parseFloat(duracao),
+        deletados,
+        colunas:     colunas.length,
+        duracao_s:   parseFloat(duracao),
         extraido_em: new Date().toISOString(),
       }),
     };
