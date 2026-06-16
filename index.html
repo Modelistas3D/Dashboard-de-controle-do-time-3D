@@ -147,7 +147,7 @@ html[data-theme=light] .filter-select option{background:#EDE2D8;color:#2A1820}
 .gbar-row__name strong{font-family:var(--font-display);font-size:var(--fs-base);color:var(--blush);font-weight:600}
 .gbar-row__name span{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60)}
 .gbar-row__bars{display:flex;flex-direction:column;gap:4px}
-.gbar{display:grid;grid-template-columns;80px 1fr 36px;gap:var(--sp-3);align-items:center;font-family:var(--font-mono);font-size:var(--fs-3xs)}
+.gbar{display:grid;grid-template-columns:80px 1fr 36px;gap:var(--sp-3);align-items:center;font-family:var(--font-mono);font-size:var(--fs-3xs)}
 .gbar__type{color:var(--blush-60);letter-spacing:0.14em;text-transform:uppercase}
 .gbar__bar{height:14px;background:rgba(245,237,230,0.05);border-radius:3px;overflow:hidden}
 .gbar__fill{height:100%;transition:width var(--dur-med) var(--ease-out)}
@@ -248,7 +248,7 @@ footer a:hover{color:var(--champagne)}
   .p-col{min-width:180px}
   .kpis{grid-template-columns:repeat(2,1fr)}
 }
-@media(prefers-reduced-motion:reduce){*,*::before,+::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -365,7 +365,7 @@ footer a:hover{color:var(--champagne)}
           <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
           <button class="chip" aria-pressed="false" data-value="interna">Interna</button>
           <button class="chip" aria-pressed="false" data-value="externo">Externo</button>
-    0   </div>
+        </div>
       </div>
       <div class="filters__group">
         <span class="filters__label">Etapa</span>
@@ -380,7 +380,7 @@ footer a:hover{color:var(--champagne)}
         </div>
       </div>
       <div class="filters__group">
-    0   <span class="filters__label">Complexidade</span>
+        <span class="filters__label">Complexidade</span>
         <div class="chips" data-filter="complexidade">
           <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
           <button class="chip" aria-pressed="false" data-value="Baixa">Baixa</button>
@@ -398,6 +398,20 @@ footer a:hover{color:var(--champagne)}
         <span class="filters__label">Membro</span>
         <select class="filter-select" id="sel-membro" data-filter-sel="membro">
           <option value="all">Todos</option>
+        </select>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Esta&ccedil;&atilde;o</span>
+        <div class="chips" data-filter="estacao">
+          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+          <button class="chip" aria-pressed="false" data-value="inv27">INV27</button>
+          <button class="chip" aria-pressed="false" data-value="outros">Outras</button>
+        </div>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Cole&ccedil;&atilde;o</span>
+        <select class="filter-select" id="sel-colecao" data-filter-sel="colecao">
+          <option value="all">Todas</option>
         </select>
       </div>
     </div>
@@ -431,7 +445,7 @@ footer a:hover{color:var(--champagne)}
       </div>
       <div class="card">
         <div class="card__head">
-      2   <div><h3 class="card__title">Participa&ccedil;&atilde;o por marca</h3><span class="card__sub" id="sub-marca">Bloco 3.4</span></div>
+          <div><h3 class="card__title">Participa&ccedil;&atilde;o por marca</h3><span class="card__sub" id="sub-marca">Bloco 3.4</span></div>
           <span class="card__num">Fig. 02</span>
         </div>
         <div class="donut-wrap">
@@ -445,7 +459,7 @@ footer a:hover{color:var(--champagne)}
             </svg>
             <div class="donut__center"><div><div class="donut__total" id="donut-marca-total">&mdash;</div><span class="donut__label">Marcas ativas</span></div></div>
           </div>
- 2        <div class="breakdown" id="breakdown-marca"></div>
+          <div class="breakdown" id="breakdown-marca"></div>
         </div>
         <p class="note" id="note-marca">&mdash;</p>
       </div>
@@ -487,11 +501,11 @@ footer a:hover{color:var(--champagne)}
       <div class="gbars" id="gbars-marca"></div>
       <div class="legend">
         <span class="legend__item"><span class="legend__swatch" style="background:var(--c-montagem)"></span>Montagem</span>
-      2 <span class="legend__item"><span class="legend__swatch" style="background:var(--c-novo)"></span>Novo</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-novo)"></span>Novo</span>
         <span class="legend__item"><span class="legend__swatch" style="background:var(--c-ajuste)"></span>Ajuste</span>
       </div>
       <p class="note" id="note-marca-tipo">&mdash;</p>
-  2 </div>
+    </div>
   </div>
 </section>
 
@@ -576,7 +590,7 @@ footer a:hover{color:var(--champagne)}
         </div>
       </div>
       <div class="card">
-  2     <div class="card__head">
+        <div class="card__head">
           <div><h3 class="card__title">Tempo m&eacute;dio por tipo</h3><span class="card__sub">Bloco 6.3 &middot; horas &middot; entrada &rarr; sa&iacute;da</span></div>
           <span class="card__num">Fig. 09</span>
         </div>
@@ -624,7 +638,7 @@ footer a:hover{color:var(--champagne)}
 const SUPABASE_URL="https://rvwatkeyjnbqnxkwadwo.supabase.co";
 const SUPABASE_KEY="sb_publishable_wuR2UOClBffksfdKWjb6kg_nyJj6OUR";
 
-// ── Colunas válidas do Trello (sincronizadas com os nomes reais do banco) ─
+// ── Colunas válidas do Trello — 19 colunas exatas do Quadro 3D ─
 const VALID_COLUMNS=[
   // Ajuste
   "📐Ajuste | A fazer",
@@ -644,17 +658,10 @@ const VALID_COLUMNS=[
   "🚀 Montagem TQ | A fazer (Aguardando liberação de 2D)",
   "🚀 Montagem TQ | A fazer (2D SOLICITADO)",
   "🚀 Montagem TQ | A fazer (2D PARA CONVERSÃO)",
-  "🚀 Montagem TQ | A  fazer (2D TQ Liberado)",
   "🚀 Montagem TQ | A fazer (2D TQ Liberado)",
   "🚀 Montagem TQ | Fazendo",
+  "🔍 Montagem TQ | Revisão Final",
   "✅ 🚀 Montagem TQ Liberado|Feito",
-  // Revisão TQ (nomes reais conforme banco)
-  "🔍 Revisão TQ | A Fazer",
-  "🔍 Revisão TQ | A Fazendo",
-  "🔍 Revisão TQ |",
-  "✅ 🔍 Revisão TQ | Feito",
-  // Variantes legadas (compatibilidade)
-  "🔍  Montagem TQ | Revisão Final",
 ];
 
 const ETAPA_ORDER=["A Fazer","Fazendo","Em Aprovação","Fazendo Liberação","Revisão Final","Liberado/Feito"];
@@ -678,13 +685,13 @@ const DEMO=[
   {tipo:"Novo",coluna:"💡Novo | A fazer 2D Liberado",nome:"Saia GL Novo 015",estilista:"Tatiana Lemos",marca:"GL",membros:'["Aline Verissimo"]',is_modelista_externo:false,complexidade:"Alta",tempo_horas:2.3},
   {tipo:"Ajuste",coluna:"✅ 📐Ajuste | Liberado",nome:"Blusa Mfilό Liberada 016",estilista:"Helena Aguiar",marca:"Maria Filó",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Alta",tempo_horas:3.4},
   {tipo:"Montagem",coluna:"🚀 Montagem TQ | A fazer (2D PARA CONVERSÃO)",nome:"Conjunto Outras Montagem 017",estilista:"Júlia Andrade",marca:"Outras",membros:'["Patrícia Ramos"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},
-  {tipo:"Novo",coluna:"💡Novo | A fazer",nome:"Camisa GL Novo 118",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},
+  {tipo:"Novo",coluna:"💡Novo | Fazendo",nome:"Camisa GL Novo 018",estilista:"Beatriz Vidal",marca:"GL",membros:'["Bruno Aoki"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.7},
   {tipo:"Montagem",coluna:"✅ 🚀 Montagem TQ Liberado|Feito",nome:"Vestido Mfilό Liberado 019",estilista:"Camila Rocha",marca:"Maria Filó",membros:'["Cíntia Marques"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.9},
   {tipo:"Ajuste",coluna:"📐Ajuste | Fazendo Liberação",nome:"Calça Farm Ajuste 020",estilista:"Marina Sotto",marca:"Farm BR",membros:'["Modelista Externo"]',is_modelista_externo:true,complexidade:"Media",tempo_horas:1.8}
 ];
 
 const C=301.59;
-const AF={brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all"};
+const AF={brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all",estacao:"all",colecao:"all"};
 let ALL=[];
 
 // ── Utils ─────────────────────────────────────────────────────────────────
@@ -728,6 +735,9 @@ function filtered(){
     }
     if(AF.estilista!=="all"&&c.estilista!==AF.estilista)return false;
     if(AF.membro!=="all"&&!mArr(c.membros).includes(AF.membro))return false;
+    if(AF.estacao==="inv27"&&!c.is_inv27)return false;
+    if(AF.estacao==="outros"&&c.is_inv27)return false;
+    if(AF.colecao!=="all"&&c.colecao!==AF.colecao)return false;
     return true;
   });
 }
@@ -742,6 +752,9 @@ function populateSelects(){
   se.innerHTML='<option value="all">Todas</option>'+estilistas.map(e=>'<option value="'+e+'">'+e+'</option>').join("");
   const sm=document.getElementById("sel-membro");
   sm.innerHTML='<option value="all">Todos</option>'+membros.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
+  const colecoes=[...new Set(ALL.map(c=>c.colecao).filter(v=>v&&v!=="Sem Coleção"))].sort();
+  const sc=document.getElementById("sel-colecao");
+  if(sc)sc.innerHTML='<option value="all">Todas</option>'+colecoes.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
 }
 
 // ── KPI mini badges por etapa ─────────────────────────────────────────────
@@ -966,78 +979,59 @@ document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
   document.documentElement.setAttribute('data-theme',isLight?'dark':'light');
 });
 
-document.getElementById('print-btn')?.addEventListener('click',()=>{
-  window.print();
-});
-
 document.getElementById('sync-btn')?.addEventListener('click',async()=>{
   const btn=document.getElementById('sync-btn');
-  const label=document.getElementById('sync-label');
-  const status=document.getElementById('sync-status');
-  const bn=document.getElementById('demo-banner');
+  const lbl=document.getElementById('sync-label');
+  if(btn.disabled)return;
   btn.disabled=true;
-  btn.classList.remove('sync-btn--ok','sync-btn--err');
   btn.classList.add('sync-btn--loading');
-  label.textContent='Sincronizando…';
+  if(lbl)lbl.textContent='Sincronizando…';
   try{
     await fetch('/.netlify/functions/sync',{method:'POST'});
     const raw=await fetchCards();
     const vcSet=new Set(VALID_COLUMNS.map(v=>v.trim()));
     ALL=raw.filter(c=>vcSet.has((c.coluna||'').trim()));
     if(ALL.length===0&&raw.length>0)ALL=raw;
-    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
-    const last=dates[dates.length-1];
-    if(last){
-      const d=new Date(last);
-      document.getElementById('footer-date').textContent='Atualizado '+d.toLocaleDateString('pt-BR');
-      document.getElementById('topbar-date').textContent=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
-    }
-    bn.classList.remove('visible');
     populateSelects();
     render();
     btn.classList.remove('sync-btn--loading');
     btn.classList.add('sync-btn--ok');
-    label.textContent='Sincronizado';
-    status.textContent='Sincronizado · Trello';
-    setTimeout(()=>{btn.classList.remove('sync-btn--ok');label.textContent='Sincronizar';btn.disabled=false;},2500);
+    if(lbl)lbl.textContent='Sincronizado';
+    setTimeout(()=>{
+      btn.classList.remove('sync-btn--ok');
+      if(lbl)lbl.textContent='Sincronizar';
+      btn.disabled=false;
+    },3000);
   }catch(e){
+    console.error('sync error',e);
     btn.classList.remove('sync-btn--loading');
     btn.classList.add('sync-btn--err');
-    label.textContent='Erro — tentar novamente';
-    status.textContent='Falha na sincronização';
-    setTimeout(()=>{btn.classList.remove('sync-btn--err');label.textContent='Sincronizar';btn.disabled=false;},3000);
+    if(lbl)lbl.textContent='Erro';
+    setTimeout(()=>{
+      btn.classList.remove('sync-btn--err');
+      if(lbl)lbl.textContent='Sincronizar';
+      btn.disabled=false;
+    },3000);
   }
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────
-(async function init(){
-  const ov=document.getElementById("loading-overlay"),bn=document.getElementById("demo-banner");
+async function init(){
   try{
     const raw=await fetchCards();
     const vcSet=new Set(VALID_COLUMNS.map(v=>v.trim()));
-    ALL=raw.filter(c=>vcSet.has((c.coluna||"").trim()));
-    if(ALL.length===0&&raw.length>0)ALL=raw; // fallback: accept all if no column matches
-    const dates=ALL.map(c=>c.extraido_em||c.data_atividade).filter(Boolean).sort();
-    const last=dates[dates.length-1];
-    if(last){
-      const d=new Date(last);
-      document.getElementById("footer-date").textContent="Atualizado "+d.toLocaleDateString("pt-BR");
-      document.getElementById("topbar-date").textContent=d.toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});
-    }
+    ALL=raw.filter(c=>vcSet.has((c.coluna||'').trim()));
+    if(ALL.length===0&&raw.length>0)ALL=raw;
+    populateSelects();
+    render();
   }catch(e){
-    console.warn("Supabase unavailable, using demo:",e.message);
-    ALL=DEMO;
-    bn.classList.add("visible");
+    console.error('init error',e);
   }
-  ov.style.opacity="0";
-  ov.style.transition="opacity 0.4s";
-  setTimeout(()=>ov.classList.remove("visible"),400);
-  populateSelects();
-  render();
-  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}})},{threshold:0.08});
-  document.querySelectorAll(".card").forEach(c=>io.observe(c));
-})();
+}
+init();
 
+document.getElementById('print-btn')?.addEventListener('click',()=>{
+  window.print();
+});
 </script>
 </body>
 </html>
