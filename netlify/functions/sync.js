@@ -163,11 +163,15 @@ function detectarEstilista(card) {
 function detectarColecaoMarca(card) {
   let colecao = "Sem Coleção";
   let marca   = "Outras";
+  let colecaoSet = false;
 
   for (const lbl of (card.labels || [])) {
     // Coleção: etiqueta amarela "Coleção | MR", "Coleção | NEWNESS", etc.
-    if (lbl.color === COR_COLECAO && !colecao.includes("|")) {
-      colecao = (lbl.name || "").trim() || "Sem Coleção";
+    // Remove o prefixo "Coleção | " para guardar só o nome limpo (ex: "MR").
+    if (lbl.color === COR_COLECAO && !colecaoSet) {
+      const nome = (lbl.name || "").trim().replace(/^Cole[cç][aã]o\s*\|\s*/i, "").trim();
+      colecao = nome || "Sem Coleção";
+      colecaoSet = true;
     }
     // Marca: etiqueta lime "Marca | 🌺 Farm BR", "Marca | 🌎 Farm GL", etc.
     if (lbl.color === COR_MARCA) {
@@ -191,6 +195,19 @@ function detectarColecaoMarca(card) {
 
 function detectarInv27(card) {
   return (card.labels || []).some(l => l.color === COR_INV27);
+}
+
+// Estação: etiqueta verde "Estação | AI26", "Estação | INV27", "ESTAÇÃO | HS27", etc.
+// Hoje TODAS as estações usam a cor verde — não só a INV27 — então capturamos
+// o código completo (ex: "AI26", "INV27", "VER28") em vez de um booleano.
+function detectarEstacao(card) {
+  for (const lbl of (card.labels || [])) {
+    if (lbl.color === COR_INV27) {
+      const nome = (lbl.name || "").trim().replace(/^Esta[cç][aã]o\s*\|\s*/i, "").trim();
+      return nome || "Sem Estação";
+    }
+  }
+  return "Sem Estação";
 }
 
 function detectarFreelancer(card) {
@@ -280,6 +297,7 @@ function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
       membros:              JSON.stringify(listarMembros(card)),
       is_modelista_externo: detectarFreelancer(card),
       is_inv27:             detectarInv27(card),
+      estacao:              detectarEstacao(card),
       tempo_horas:          tempoHoras,
       complexidade,
       data_atividade:       card.dateLastActivity || null,
@@ -439,7 +457,7 @@ const handler = async (event) => {
     const deletados = await limparObsoletos(idsAtivos, env);
 
     const duracao = ((Date.now() - inicio) / 1000).toFixed(1);
-    console.log(`[sync] ✅ ${total} cards sincronizados, ${deletados} obsoletos removidos em ${duracao}s`);
+    console.log(`[sync] ${total} cards sincronizados, ${deletados} obsoletos removidos em ${duracao}s`);
 
     return {
       statusCode: 200,
