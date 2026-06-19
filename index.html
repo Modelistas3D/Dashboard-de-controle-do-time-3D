@@ -659,6 +659,10 @@ const VALID_COLUMNS=[
   "🔍 Montagem TQ | Revisão Final",
   "✅ 🚀 Montagem TQ Liberado|Feito",
 ];
+// Normaliza espaços (inclusive duplos) para evitar que pequenas inconsistências
+// de digitação no nome da coluna do Trello (ex.: "A  fazer" com espaço duplo)
+// façam cards caírem fora do escopo válido.
+function normColuna(s){return(s||'').replace(/\s+/g," ").trim();}
 
 const ETAPA_ORDER=["A Fazer","Fazendo","Em Aprovação","Fazendo Liberação","Revisão Final","Liberado/Feito"];
 const ETAPA_IDX=Object.fromEntries(ETAPA_ORDER.map((e,i)=>[e,i]));
@@ -987,8 +991,8 @@ document.getElementById('sync-btn')?.addEventListener('click',async()=>{
   try{
     await fetch('/.netlify/functions/sync',{method:'POST'});
     const raw=await fetchCards();
-    const vcSet=new Set(VALID_COLUMNS.map(v=>v.trim()));
-    ALL=raw.filter(c=>vcSet.has((c.coluna||'').trim()));
+    const vcSet=new Set(VALID_COLUMNS.map(normColuna));
+    ALL=raw.filter(c=>vcSet.has(normColuna(c.coluna)));
     if(ALL.length===0&&raw.length>0)ALL=raw;
     populateSelects();
     render();
@@ -1016,8 +1020,8 @@ document.getElementById('sync-btn')?.addEventListener('click',async()=>{
 async function init(){
   try{
     const raw=await fetchCards();
-    const vcSet=new Set(VALID_COLUMNS.map(v=>v.trim()));
-    ALL=raw.filter(c=>vcSet.has((c.coluna||'').trim()));
+    const vcSet=new Set(VALID_COLUMNS.map(normColuna));
+    ALL=raw.filter(c=>vcSet.has(normColuna(c.coluna)));
     if(ALL.length===0&&raw.length>0)ALL=raw;
     populateSelects();
     render();
