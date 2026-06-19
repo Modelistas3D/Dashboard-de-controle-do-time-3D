@@ -106,9 +106,7 @@ html[data-theme=light] .filter-select option{background:#EDE2D8;color:#2A1820}
 .section__intro{font-size:var(--fs-lg);color:var(--blush-80);max-width:64ch;margin-bottom:var(--sp-7)}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:var(--sp-5)}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-5)}
-.card{background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-5) var(--sp-6);transition:border-color var(--dur-med) var(--ease-out);position:relative;opacity:0;transform:translateY(18px)}
-.card.is-in{animation:cardIn var(--dur-med) var(--ease-out) forwards}
-@keyframes cardIn{to{opacity:1;transform:translateY(0)}}
+.card{background:linear-gradient(180deg,rgba(245,237,230,0.025),rgba(245,237,230,0.005));border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-5) var(--sp-6);transition:border-color var(--dur-med) var(--ease-out);position:relative}
 .card:hover{border-color:var(--line-strong)}
 .card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-5);padding-bottom:var(--sp-4);border-bottom:1px solid var(--line)}
 .card__title{font-family:var(--font-display);font-size:var(--fs-xl);font-weight:600;color:var(--blush);margin:0}
@@ -248,7 +246,7 @@ footer a:hover{color:var(--champagne)}
   .p-col{min-width:180px}
   .kpis{grid-template-columns:repeat(2,1fr)}
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -259,7 +257,6 @@ footer a:hover{color:var(--champagne)}
     <span class="loading__text">Carregando dados &middot; Supabase</span>
   </div>
 </div>
-
 <div id="demo-banner">&#9889; Modo demonstra&ccedil;&atilde;o &mdash; dados de exemplo &middot; conecte o Supabase para dados reais</div>
 
 <header class="topbar">
@@ -402,11 +399,9 @@ footer a:hover{color:var(--champagne)}
       </div>
       <div class="filters__group">
         <span class="filters__label">Esta&ccedil;&atilde;o</span>
-        <div class="chips" data-filter="estacao">
-          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
-          <button class="chip" aria-pressed="false" data-value="inv27">INV27</button>
-          <button class="chip" aria-pressed="false" data-value="outros">Outras</button>
-        </div>
+        <select class="filter-select" id="sel-estacao" data-filter-sel="estacao">
+          <option value="all">Todas</option>
+        </select>
       </div>
       <div class="filters__group">
         <span class="filters__label">Cole&ccedil;&atilde;o</span>
@@ -735,8 +730,7 @@ function filtered(){
     }
     if(AF.estilista!=="all"&&c.estilista!==AF.estilista)return false;
     if(AF.membro!=="all"&&!mArr(c.membros).includes(AF.membro))return false;
-    if(AF.estacao==="inv27"&&!c.is_inv27)return false;
-    if(AF.estacao==="outros"&&c.is_inv27)return false;
+    if(AF.estacao!=="all"&&c.estacao!==AF.estacao)return false;
     if(AF.colecao!=="all"&&c.colecao!==AF.colecao)return false;
     return true;
   });
@@ -755,6 +749,9 @@ function populateSelects(){
   const colecoes=[...new Set(ALL.map(c=>c.colecao).filter(v=>v&&v!=="Sem Coleção"))].sort();
   const sc=document.getElementById("sel-colecao");
   if(sc)sc.innerHTML='<option value="all">Todas</option>'+colecoes.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
+  const estacoes=[...new Set(ALL.map(c=>c.estacao).filter(v=>v&&v!=="Sem Estação"))].sort();
+  const sa=document.getElementById("sel-estacao");
+  if(sa)sa.innerHTML='<option value="all">Todas</option>'+estacoes.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
 }
 
 // ── KPI mini badges por etapa ─────────────────────────────────────────────
