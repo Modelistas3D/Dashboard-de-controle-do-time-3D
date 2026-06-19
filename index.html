@@ -257,6 +257,7 @@ footer a:hover{color:var(--champagne)}
     <span class="loading__text">Carregando dados &middot; Supabase</span>
   </div>
 </div>
+
 <div id="demo-banner">&#9889; Modo demonstra&ccedil;&atilde;o &mdash; dados de exemplo &middot; conecte o Supabase para dados reais</div>
 
 <header class="topbar">
@@ -662,6 +663,12 @@ const VALID_COLUMNS=[
 const ETAPA_ORDER=["A Fazer","Fazendo","Em Aprovação","Fazendo Liberação","Revisão Final","Liberado/Feito"];
 const ETAPA_IDX=Object.fromEntries(ETAPA_ORDER.map((e,i)=>[e,i]));
 
+// Listas fixas — refletem todas as labels/membros do quadro Trello, mesmo sem cards ativos no momento.
+const ESTACOES_FIXAS=["AI26","AI27","AI28","AI29","AV26","AV27","AV28","AV29","FALL 26","FALL 27","HS26","HS27","INV26","INV27","INV28","INV29","OLD","RST27","SS27","VER26","VER27","VER28","VER29"];
+const COLECOES_FIXAS=["Antrhopologie","EEI/PA","ENG","ESSENTIAL MALHA","Frank","MR","NEWNESS","S.O.S","TECIDO PLANO","TQ NACIONAL"];
+const ESTILISTAS_FIXAS=["Alice","Aline","Allê","Bella","Cami","Carina","Carol Barra","Dani Mello","Gabi Autran","Gabriel","Irene Gripp","Ju Zanin","Letícia Oliveira","Marcela","Maria Clara Rimes","Matheus Costa","Nathaly","Rob","Thaysa"];
+const MEMBROS_FIXOS=["Caroline Maia de Castro Camilo","Fernanda Vaz","Luana Sales","Modelistas 3D","SOMA LABS 3D","Tainara Mendes Martins","Thays Costa"];
+
 const DEMO=[
   {tipo:"Montagem",coluna:"🚀 Montagem TQ | Fazendo",nome:"Vestido Linho Farm 001",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Renata Sales"]',is_modelista_externo:false,complexidade:"Media",tempo_horas:1.8},
   {tipo:"Montagem",coluna:"🚀 Montagem TQ | A fazer (2D SOLICITADO)",nome:"Calça Wide Leg GL 002",estilista:"Beatriz Vidal",marca:"Farm BR",membros:'["Diogo Pacheco"]',is_modelista_externo:false,complexidade:"Baixa",tempo_horas:0.7},
@@ -738,20 +745,14 @@ function filtered(){
 
 // ── Populate dynamic selects ──────────────────────────────────────────────
 function populateSelects(){
-  const estilistas=[...new Set(ALL.map(c=>c.estilista).filter(e=>e&&e!=="Sem Estilista"))].sort();
-  const membSet=new Set();
-  ALL.forEach(c=>mArr(c.membros).forEach(m=>{if(m)membSet.add(m)}));
-  const membros=[...membSet].sort();
   const se=document.getElementById("sel-estilista");
-  se.innerHTML='<option value="all">Todas</option>'+estilistas.map(e=>'<option value="'+e+'">'+e+'</option>').join("");
+  se.innerHTML='<option value="all">Todas</option>'+ESTILISTAS_FIXAS.map(e=>'<option value="'+e+'">'+e+'</option>').join("");
   const sm=document.getElementById("sel-membro");
-  sm.innerHTML='<option value="all">Todos</option>'+membros.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
-  const colecoes=[...new Set(ALL.map(c=>c.colecao).filter(v=>v&&v!=="Sem Coleção"))].sort();
+  sm.innerHTML='<option value="all">Todos</option>'+MEMBROS_FIXOS.map(m=>'<option value="'+m+'">'+m+'</option>').join("");
   const sc=document.getElementById("sel-colecao");
-  if(sc)sc.innerHTML='<option value="all">Todas</option>'+colecoes.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
-  const estacoes=[...new Set(ALL.map(c=>c.estacao).filter(v=>v&&v!=="Sem Estação"))].sort();
+  if(sc)sc.innerHTML='<option value="all">Todas</option>'+COLECOES_FIXAS.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
   const sa=document.getElementById("sel-estacao");
-  if(sa)sa.innerHTML='<option value="all">Todas</option>'+estacoes.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
+  if(sa)sa.innerHTML='<option value="all">Todas</option>'+ESTACOES_FIXAS.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
 }
 
 // ── KPI mini badges por etapa ─────────────────────────────────────────────
