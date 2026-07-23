@@ -603,6 +603,32 @@ footer a:hover{color:var(--champagne)}
   </div>
 </section>
 
+<!-- ── B8 · Retrabalho ───────────────────────────────────── -->
+<section class="section" id="section-retrabalho">
+  <div class="wrap">
+    <div class="section__num">B8 &middot; Retrabalho</div>
+    <h2 class="section__title">Onde a refa&ccedil;&atilde;o se concentra.</h2>
+    <p class="section__intro">Retrabalho de molde e de arte por card &mdash; distribui&ccedil;&atilde;o por n&iacute;vel (1&ndash;6).</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Retrabalho de molde</h3><span class="card__sub">etiqueta &middot; n&iacute;vel 1&ndash;6</span></div>
+          <span class="card__num" id="retrab-molde-media">&mdash;</span>
+        </div>
+        <div class="breakdown" id="retrab-molde"></div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Retrabalho de arte</h3><span class="card__sub">etiqueta &middot; n&iacute;vel 1&ndash;6</span></div>
+          <span class="card__num" id="retrab-arte-media">&mdash;</span>
+        </div>
+        <div class="breakdown" id="retrab-arte"></div>
+      </div>
+    </div>
+    <p class="note" id="retrab-nota">&mdash;</p>
+  </div>
+</section>
+
 <!-- ── B7 · Pipeline / Fluxo ─────────────────────────────── -->
 <section class="section" id="section-pipeline">
   <div class="wrap">
@@ -855,7 +881,27 @@ function render(){
   document.getElementById("tbody-tempo").innerHTML=Object.entries(tpM).map(([n,v])=>({n,avg:v.s/v.n,n2:v.n})).sort((a,b)=>b.n2-a.n2).slice(0,6).map(m=>'<tr><td>'+m.n+'</td><td class="num">'+fmtH(m.avg)+'</td><td class="num">'+m.n2+'</td></tr>').join("");
   document.getElementById("note-complexidade").innerHTML=cxMap["Alta"]>0?"<strong>"+cxMap["Alta"]+"</strong> card"+(cxMap["Alta"]!==1?"s":"")+" de alta complexidade — onde o cronograma mais sente pressão.":"Sem dados de complexidade no filtro atual.";
 
+  renderRetrabalho();
   renderPipeline();
+}
+
+// ── Retrabalho (molde / arte por etiqueta) ────────────────────────────────
+function renderRetrabalho(){
+  const cards=filtered();
+  const comMolde=cards.filter(c=>c.retrabalho_molde>0);
+  const comArte=cards.filter(c=>c.retrabalho_arte>0);
+  const mediaMolde=comMolde.length?comMolde.reduce((s,c)=>s+c.retrabalho_molde,0)/comMolde.length:0;
+  const mediaArte=comArte.length?comArte.reduce((s,c)=>s+c.retrabalho_arte,0)/comArte.length:0;
+  const distrib=campo=>{const d={};for(let i=1;i<=6;i++)d[i]=0;cards.forEach(c=>{const v=c[campo];if(v>=1&&v<=6)d[v]++});return d;};
+  const dM=distrib("retrabalho_molde"),dA=distrib("retrabalho_arte");
+  const maxM=Math.max(...Object.values(dM),1),maxA=Math.max(...Object.values(dA),1);
+  const barras=(d,max)=>Object.entries(d).map(([n,v])=>'<div class="breakdown__row" style="--swatch:var(--bordeaux)"><div class="breakdown__top"><span class="breakdown__name">Nível '+n+'</span><span class="breakdown__val"><strong>'+v+'</strong>card'+(v!==1?'s':'')+'</span></div><div class="breakdown__bar"><div class="breakdown__fill" style="width:'+pct(v,max)+'%"></div></div></div>').join("");
+  const set=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html;};
+  set("retrab-molde",barras(dM,maxM));
+  set("retrab-arte",barras(dA,maxA));
+  const kM=document.getElementById("retrab-molde-media");if(kM)kM.textContent=mediaMolde?"méd "+mediaMolde.toFixed(1):"—";
+  const kA=document.getElementById("retrab-arte-media");if(kA)kA.textContent=mediaArte?"méd "+mediaArte.toFixed(1):"—";
+  set("retrab-nota","<strong>"+comMolde.length+"</strong> card"+(comMolde.length!==1?"s":"")+" com retrabalho de molde · <strong>"+comArte.length+"</strong> com retrabalho de arte no filtro atual.");
 }
 
 // ── Pipeline / Fluxo ──────────────────────────────────────────────────────
