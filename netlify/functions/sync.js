@@ -75,7 +75,7 @@ async function buscarColunas(boardId, env) {
 
 async function buscarCards(boardId, idsColunas, env) {
   const todos = await trelloGet(`/boards/${boardId}/cards`, {
-    fields:        "id,name,idList,labels,dateLastActivity,due,dueComplete",
+    fields:        "id,name,idList,labels,dateLastActivity,due,dueComplete,desc",
     members:       "true",
     member_fields: "fullName,username",
     filter:        "open",
@@ -222,6 +222,36 @@ function detectarFreelancer(card) {
   });
 }
 
+// ─── PARSER DE TEMPO (descrição do card) ──────────────────────────────────
+// Lê a linha HH:MM logo abaixo de "SOMA TOTAL DO TEMPO DE TRABALHO".
+// Ancora na palavra-chave (não no emoji, que pode vir corrompido da API).
+// Retorna null quando não há tempo preenchido — o card fica de fora das médias.
+function parseTempoDescricao(desc) {
+  if (!desc) return null;
+  const idx = desc.toUpperCase().indexOf("TEMPO DE TRABALHO");
+  if (idx === -1) return null;
+  const m = desc.slice(idx).match(/(\d{1,2})\s*[:hH]\s*(\d{2})/); // "02:30" ou "2h30"
+  if (!m) return null;
+  const horas = parseInt(m[1], 10), minutos = parseInt(m[2], 10);
+  if (isNaN(horas) || isNaN(minutos)) return null;
+  const total = horas + minutos / 60;
+  return total > 0 ? Math.round(total * 100) / 100 : null;
+}
+
+// ─── DETECÇÃO DE RETRABALHO (etiquetas) ───────────────────────────────────
+// Etiquetas "retrabalho molde | 3" e "retrabalho arte | 2".
+// Casa pelo NOME (não pela cor), lê o número após o "|".
+function detectarRetrabalho(card, palavra) { // palavra: "molde" ou "arte"
+  for (const lbl of (card.labels || [])) {
+    const nome = (lbl.name || "").toLowerCase();
+    if (nome.includes("retrabalho") && nome.includes(palavra)) {
+      const n = parseInt((nome.split("|")[1] || "").trim(), 10);
+      if (!isNaN(n)) return n;
+    }
+  }
+  return 0; // sem etiqueta = sem retrabalho (0 é valor real, não dado faltando)
+}
+
 function listarMembros(card) {
   return (card.members || []).map(m => m.fullName || m.username || "Desconhecido");
 }
@@ -283,7 +313,9 @@ function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
   const agora = new Date().toISOString();
   return cardsRaw.map(card => {
     const [colecao, marca] = detectarColecaoMarca(card);
-    const tempoHoras = calcularTempoMontagem(card.id, acoesPorCard);
+    // Tempo: fonte única = valor digitado na descrição. Sem fallback:
+    // card sem a linha de tempo fica null e é excluído das médias.
+    const tempoHoras = parseTempoDescricao(card.desc);
     // Usa etiqueta de complexidade se disponível; senão calcula pelo tempo
     const complexidade = detectarComplexidadeLabel(card) ?? classificarComplexidade(tempoHoras);
     return {
@@ -299,6 +331,8 @@ function processarCards(cardsRaw, mapaColunas, acoesPorCard) {
       is_inv27:             detectarInv27(card),
       estacao:              detectarEstacao(card),
       tempo_horas:          tempoHoras,
+      retrabalho_molde:     detectarRetrabalho(card, "molde"),
+      retrabalho_arte:      detectarRetrabalho(card, "arte"),
       complexidade,
       data_atividade:       card.dateLastActivity || null,
       extraido_em:          agora,
@@ -443,16 +477,14 @@ const handler = async (event) => {
     // 2. Cards
     const cardsRaw = await buscarCards(env.TRELLO_BOARD_ID, idsColunas, env);
 
-    // 3. Histórico de movimentações (para calcular tempo de montagem)
-    const acoesPorCard = await buscarAcoesMovimentacao(env.TRELLO_BOARD_ID, env);
+    // 3. Processar (o tempo agora vem da descrição do card — não buscamos mais
+    //    o histórico de movimentações, o que deixa o sync bem mais rápido)
+    const cards = processarCards(cardsRaw, mapaCols, {});
 
-    // 4. Processar
-    const cards = processarCards(cardsRaw, mapaCols, acoesPorCard);
-
-    // 5. Upsert no Supabase
+    // 4. Upsert no Supabase
     const total = await upsertSupabase(cards, env);
 
-    // 6. Remove registros obsoletos (cards que saíram do escopo desde o último sync)
+    // 5. Remove registros obsoletos (cards que saíram do escopo desde o último sync)
     const idsAtivos = cards.map(c => c.trello_id);
     const deletados = await limparObsoletos(idsAtivos, env);
 
