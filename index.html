@@ -10,8 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--noir:#1F1218;--noir-2:#281820;--noir-3:#33202A;--noir-4:#422836;--blush:#F5EDE6;--blush-80:rgba(245,237,230,0.84);--blush-60:rgba(245,237,230,0.60);--blush-40:rgba(245,237,230,0.38);--blush-20:rgba(245,237,230,0.18);--rose:#C99A8A;--rose-soft:rgba(201,154,138,0.14);--rose-line:rgba(201,154,138,0.30);--bordeaux:#8C3148;--champagne:#E5C9A8;--sage:#9CB39E;--noise-opacity:0.22;--noise-blend:overlay;--glow-strength:0.08}
-html[data-theme=light]{--noir:#F5EDE6;--noir-2:#EDE2D8;--noir-3:#E3D3C5;--noir-4:#D8C5B5;--blush:#2A1820;--blush-80:rgba(42,24,32,0.86);--blush-60:rgba(42,24,32,0.62);--blush-40:rgba(42,24,32,0.40);--blush-20:rgba(42,24,32,0.18);--rose:#A6614A;--rose-soft:rgba(166,97,74,0.10);--rose-line:rgba(166,97,74,0.32);--bordeaux:#7A2238;--champagne:#B58657;--sage:#6A8470;--line:rgba(42,24,32,0.10);--line-strong:rgba(42,24,32,0.20);--c-montagem:#A6614A;--c-novo:#B58657;--c-ajuste:#7A2238;--c-farm:#A6614A;--c-gl:#7A2238;--c-mariafilo:#B58657;--c-outras:#6A8470;--noise-opacity:0.05;--noise-blend:multiply;--glow-strength:0.04}
-:root{--c-montagem:#C99A8A;--c-novo:#E5C9A8;--c-ajuste:#8C3148;--c-farm:#C99A8A;--c-gl:#8C3148;--c-mariafilo:#E5C9A8;--c-outras:#9CB39E;--line:rgba(245,237,230,0.08);--line-strong:rgba(245,237,230,0.18);--font-display:'Fraunces',Georgia,serif;--font-body:'Instrument Sans',system-ui,sans-serif;--font-mono:ui-monospace,'JetBrains Mono',monospace;--fs-3xs:0.6875rem;--fs-2xs:0.75rem;--fs-xs:0.8125rem;--fs-sm:0.9375rem;--fs-base:1rem;--fs-lg:1.125rem;--fs-xl:1.3125rem;--fs-2xl:1.6rem;--fs-3xl:2.25rem;--fs-hero:clamp(2.5rem,1.6rem + 4vw,4.5rem);--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:48px;--sp-8:64px;--sp-9:96px;--r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--max-w:1440px;--gutter:clamp(1rem,3vw,2rem);--ease-out:cubic-bezier(0.2,0.8,0.2,1);--dur-fast:180ms;--dur-med:280ms}
+html[data-theme=light]{--noir:#F5EDE6;--noir-2:#EDE2D8;--noir-3:#E3D3C5;--noir-4:#D8C5B5;--blush:#2A1820;--blush-80:rgba(42,24,32,0.86);--blush-60:rgba(42,24,32,0.62);--blush-40:rgba(42,24,32,0.40);--blush-20:rgba(42,24,32,0.18);--rose:#A6614A;--rose-soft:rgba(166,97,74,0.10);--rose-line:rgba(166,97,74,0.32);--bordeaux:#7A2238;--champagne:#B58657;--sage:#6A8470;--line:rgba(42,24,32,0.10);--line-strong:rgba(42,24,32,0.20);--c-montagem:#A6614A;--c-novo:#B58657;--c-ajuste:#7A2238;--c-farm:#A6614A;--c-gl:#7A2238;--c-mariafilo:#B58657;--c-outras:#6A8470;--c-animale:#5A6E96;--noise-opacity:0.05;--noise-blend:multiply;--glow-strength:0.04}
+:root{--c-montagem:#C99A8A;--c-novo:#E5C9A8;--c-ajuste:#8C3148;--c-farm:#C99A8A;--c-gl:#8C3148;--c-mariafilo:#E5C9A8;--c-outras:#9CB39E;--c-animale:#8DA0C0;--line:rgba(245,237,230,0.08);--line-strong:rgba(245,237,230,0.18);--font-display:'Fraunces',Georgia,serif;--font-body:'Instrument Sans',system-ui,sans-serif;--font-mono:ui-monospace,'JetBrains Mono',monospace;--fs-3xs:0.6875rem;--fs-2xs:0.75rem;--fs-xs:0.8125rem;--fs-sm:0.9375rem;--fs-base:1rem;--fs-lg:1.125rem;--fs-xl:1.3125rem;--fs-2xl:1.6rem;--fs-3xl:2.25rem;--fs-hero:clamp(2.5rem,1.6rem + 4vw,4.5rem);--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:48px;--sp-8:64px;--sp-9:96px;--r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--max-w:1440px;--gutter:clamp(1rem,3vw,2rem);--ease-out:cubic-bezier(0.2,0.8,0.2,1);--dur-fast:180ms;--dur-med:280ms}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--noir);color:var(--blush-80);font-family:var(--font-body);font-size:var(--fs-base);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -345,6 +345,7 @@ footer a:hover{color:var(--champagne)}
           <button class="chip" aria-pressed="false" data-value="Farm BR">Farm BR</button>
           <button class="chip" aria-pressed="false" data-value="GL">GL</button>
           <button class="chip" aria-pressed="false" data-value="Maria Fil&#xF3;">Maria Fil&oacute;</button>
+          <button class="chip" aria-pressed="false" data-value="Animale Jeans">Animale Jeans</button>
           <button class="chip" aria-pressed="false" data-value="Outras">Outras</button>
         </div>
       </div>
@@ -451,6 +452,7 @@ footer a:hover{color:var(--champagne)}
               <circle id="d-farm"      cx="60" cy="60" r="48" stroke="var(--c-farm)"      stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
               <circle id="d-gl"        cx="60" cy="60" r="48" stroke="var(--c-gl)"        stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
               <circle id="d-mariafilo" cx="60" cy="60" r="48" stroke="var(--c-mariafilo)" stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
+              <circle id="d-animale"   cx="60" cy="60" r="48" stroke="var(--c-animale)"   stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
               <circle id="d-outras"    cx="60" cy="60" r="48" stroke="var(--c-outras)"    stroke-dasharray="0 302" stroke-dashoffset="0"></circle>
             </svg>
             <div class="donut__center"><div><div class="donut__total" id="donut-marca-total">&mdash;</div><span class="donut__label">Marcas ativas</span></div></div>
@@ -820,8 +822,8 @@ function etapaBadges(cards){
     .map(e=>'<span class="kpi__badge">'+e.replace("Liberado/Feito","Lib.")+'&nbsp;'+counts[e]+'</span>').join("");
 }
 
-const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria Filó":"var(--c-mariafilo)","Outras":"var(--c-outras)"};
-const MORD=["Farm BR","GL","Maria Filó","Outras"];
+const MCOLS={"Farm BR":"var(--c-farm)","GL":"var(--c-gl)","Maria Filó":"var(--c-mariafilo)","Animale Jeans":"var(--c-animale)","Outras":"var(--c-outras)"};
+const MORD=["Farm BR","GL","Maria Filó","Animale Jeans","Outras"];
 
 // ── Render ────────────────────────────────────────────────────────────────
 function render(){
@@ -856,7 +858,7 @@ function render(){
   document.getElementById("note-tipo").innerHTML="<strong>"+bigT+"</strong> domina o quadro — são <strong>"+pct(byT[bigT],N)+"%</strong> do volume.";
 
   const byM={};cards.forEach(c=>{byM[c.marca]=(byM[c.marca]||0)+1});
-  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria Filó"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
+  donutSeg([{id:"d-farm",val:byM["Farm BR"]||0},{id:"d-gl",val:byM["GL"]||0},{id:"d-mariafilo",val:byM["Maria Filó"]||0},{id:"d-animale",val:byM["Animale Jeans"]||0},{id:"d-outras",val:byM["Outras"]||0}]);
   const actM=MORD.filter(m=>byM[m]>0);
   document.getElementById("donut-marca-total").textContent=actM.length;
   document.getElementById("sub-marca").textContent='Bloco 3.4 · '+actM.length+' marcas';
