@@ -727,6 +727,7 @@ footer a:hover{color:var(--champagne)}
         <select class="filter-select" id="cmp-b"></select>
       </div>
     </div>
+    <div id="cmp-contexto" style="margin-top:var(--sp-4);display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center"></div>
     <div class="grid-2" style="margin-top:var(--sp-6)">
       <div class="card">
         <div class="card__head">
@@ -1126,6 +1127,20 @@ function cmpMetrics(cards){
   };
 }
 
+// Resume os filtros ativos que valem como contexto (exclui o campo em comparação)
+function contextoAtivo(dim){
+  const skip=CMP_AFKEY[dim];
+  const out=[{label:"Escopo",value:AF.escopo==="tudo"?"Produção + Acervo":"Produção"}];
+  [["brand","Marca"],["type","Tipo"],["source","Origem"],["etapa","Etapa"],["complexidade","Complexidade"],["estilista","Estilista"],["membro","Membro"],["estacao","Estação"],["colecao","Coleção"]]
+    .forEach(([k,label])=>{
+      if(k===skip)return;
+      const v=AF[k];
+      if(!v||v==="all")return;
+      out.push({label,value:cmpDisp(v)});
+    });
+  return out;
+}
+
 function popCmpValores(){
   const dim=document.getElementById("cmp-dim").value;
   const ops=opcoesDim(dim);
@@ -1151,42 +1166,45 @@ function renderComparar(){
   const setB=base.filter(c=>matchDim(c,dim,b));
   const mA=cmpMetrics(setA),mB=cmpMetrics(setB);
 
-  // Gráfico espelhado (contagens): A à esquerda, B à direita
-  const espelho=[{k:"N",n:"Total"},{k:"Montagem",n:"Montagem"},{k:"Novo",n:"Novo"},{k:"Ajuste",n:"Ajuste"},{k:"Acervo",n:"Acervo"}];
-  document.getElementById("cmp-mirror").innerHTML=espelho.map(m=>{
-    const va=mA[m.k],vb=mB[m.k],mx=Math.max(va,vb,1);
-    return '<div style="display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;gap:var(--sp-2);margin:10px 0">'+
+  // Contexto ativo (quais filtros estão valendo para os dois lados)
+  document.getElementById("cmp-contexto").innerHTML=
+    '<span class="mono" style="color:var(--rose)">Contexto:</span> '+
+    contextoAtivo(dim).map(x=>'<span class="kpi__badge">'+x.label+': <strong style="color:var(--blush)">'+x.value+'</strong></span>').join("");
+
+  // Métricas comparáveis (peças + tempo + retrabalho) — usadas no espelho e na tabela
+  const METR=[
+    {n:"Total de peças",   get:m=>m.N,      kind:"num"},
+    {n:"Tempo médio / peça",get:m=>m.mediaH, kind:"time"},
+    {n:"Tempo total",      get:m=>m.totalH, kind:"time"},
+    {n:"Retrabalho molde", get:m=>m.rmolde, kind:"num"},
+    {n:"Retrabalho arte",  get:m=>m.rarte,  kind:"num"},
+  ];
+  const fmtMetr=(v,kind)=>kind==="time"?fmtH(v):(v==null?0:v);
+
+  // Gráfico espelhado: A à esquerda (rosa), B à direita (champagne); escala por linha
+  document.getElementById("cmp-mirror").innerHTML=METR.map(m=>{
+    const va=m.get(mA)||0, vb=m.get(mB)||0, mx=Math.max(va,vb,0.0001);
+    return '<div style="display:grid;grid-template-columns:1fr 160px 1fr;align-items:center;gap:var(--sp-2);margin:10px 0">'+
       '<div style="display:flex;justify-content:flex-end;height:18px"><div style="width:'+pct(va,mx)+'%;background:var(--rose);height:100%;border-radius:3px 0 0 3px"></div></div>'+
-      '<div style="text-align:center"><div style="font-family:var(--font-display);color:var(--blush);font-size:var(--fs-sm)">'+m.n+'</div><div style="font-family:var(--font-mono);font-size:var(--fs-3xs);color:var(--blush-60);letter-spacing:0.06em">'+va+' &middot; '+vb+'</div></div>'+
+      '<div style="text-align:center"><div style="font-family:var(--font-display);color:var(--blush);font-size:var(--fs-sm)">'+m.n+'</div><div style="font-family:var(--font-mono);font-size:var(--fs-3xs);color:var(--blush-60);letter-spacing:0.06em">'+fmtMetr(m.get(mA),m.kind)+' &middot; '+fmtMetr(m.get(mB),m.kind)+'</div></div>'+
       '<div style="display:flex;justify-content:flex-start;height:18px"><div style="width:'+pct(vb,mx)+'%;background:var(--champagne);height:100%;border-radius:0 3px 3px 0"></div></div>'+
       '</div>';
   }).join("");
 
   // Tabela: métrica × A × B × Δ
-  const rows=[
-    {n:"Total de cards",a:mA.N,b:mB.N,t:"num"},
-    {n:"Montagem",a:mA.Montagem,b:mB.Montagem,t:"num"},
-    {n:"Novo",a:mA.Novo,b:mB.Novo,t:"num"},
-    {n:"Ajuste",a:mA.Ajuste,b:mB.Ajuste,t:"num"},
-    {n:"Acervo",a:mA.Acervo,b:mB.Acervo,t:"num"},
-    {n:"Tempo médio / peça",a:mA.mediaH,b:mB.mediaH,t:"time"},
-    {n:"Tempo total",a:mA.totalH,b:mB.totalH,t:"time"},
-    {n:"Retrabalho molde",a:mA.rmolde,b:mB.rmolde,t:"num"},
-    {n:"Retrabalho arte",a:mA.rarte,b:mB.rarte,t:"num"},
-    {n:"Modelista Externo",a:mA.ext,b:mB.ext,t:"num"},
-  ];
-  document.getElementById("cmp-tbody").innerHTML=rows.map(r=>{
+  document.getElementById("cmp-tbody").innerHTML=METR.map(m=>{
+    const ra=m.get(mA), rb=m.get(mB);
     let av,bv,dv,diff;
-    if(r.t==="time"){
-      av=fmtH(r.a);bv=fmtH(r.b);
-      diff=(r.b||0)-(r.a||0);
+    if(m.kind==="time"){
+      av=fmtH(ra);bv=fmtH(rb);
+      diff=(rb||0)-(ra||0);
       dv=(diff>0?"+":diff<0?"−":"")+fmtH(Math.abs(diff));
     }else{
-      av=r.a;bv=r.b;diff=r.b-r.a;
+      av=(ra==null?0:ra);bv=(rb==null?0:rb);diff=bv-av;
       dv=(diff>0?"+":"")+diff;
     }
     const cor=diff>0?"var(--sage)":diff<0?"var(--bordeaux)":"var(--blush-60)";
-    return '<tr><td>'+r.n+'</td><td class="num">'+av+'</td><td class="num">'+bv+'</td><td class="num" style="color:'+cor+'">'+dv+'</td></tr>';
+    return '<tr><td>'+m.n+'</td><td class="num">'+av+'</td><td class="num">'+bv+'</td><td class="num" style="color:'+cor+'">'+dv+'</td></tr>';
   }).join("");
 
   // Legendas / textos
