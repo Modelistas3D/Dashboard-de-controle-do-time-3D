@@ -430,6 +430,13 @@ footer a:hover{color:var(--champagne)}
   </div>
 </section>
 
+<div class="wrap" style="padding-top:var(--sp-6)">
+  <div class="pipeline-tabs" id="main-tabs">
+    <button class="chip" aria-pressed="true"  data-tab="painel">Painel</button>
+    <button class="chip" aria-pressed="false" data-tab="comparar">Comparar</button>
+  </div>
+</div>
+
 <section class="section">
   <div class="wrap">
     <div class="section__num">B1 &middot; B3 &middot; Distribui&ccedil;&atilde;o</div>
@@ -690,6 +697,65 @@ footer a:hover{color:var(--champagne)}
   </div>
 </section>
 
+<!-- ── Comparar (aba) ────────────────────────────────────── -->
+<section class="section" id="section-comparar" style="display:none">
+  <div class="wrap">
+    <div class="section__num">Comparar</div>
+    <h2 class="section__title">Compara&ccedil;&atilde;o lado a lado.</h2>
+    <p class="section__intro">Escolha um campo e dois valores. Os filtros do topo valem como <em>contexto fixo</em> para os dois lados &mdash; s&oacute; o campo escolhido varia entre A e B.</p>
+    <div class="filters" style="margin-top:0">
+      <div class="filters__group">
+        <span class="filters__label">Comparar por</span>
+        <select class="filter-select" id="cmp-dim">
+          <option value="estacao">Esta&ccedil;&atilde;o</option>
+          <option value="marca">Marca</option>
+          <option value="colecao">Cole&ccedil;&atilde;o</option>
+          <option value="tipo">Tipo</option>
+          <option value="estilista">Estilista</option>
+          <option value="membro">Membro</option>
+          <option value="complexidade">Complexidade</option>
+          <option value="etapa">Etapa</option>
+          <option value="origem">Origem</option>
+        </select>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Valor A</span>
+        <select class="filter-select" id="cmp-a"></select>
+      </div>
+      <div class="filters__group">
+        <span class="filters__label">Valor B</span>
+        <select class="filter-select" id="cmp-b"></select>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:var(--sp-6)">
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Compara&ccedil;&atilde;o visual</h3><span class="card__sub" id="cmp-vis-sub">A &times; B</span></div>
+          <span class="card__num">Fig. 11</span>
+        </div>
+        <div id="cmp-mirror" style="padding-top:var(--sp-3)"></div>
+        <div class="legend">
+          <span class="legend__item"><span class="legend__swatch" style="background:var(--rose)"></span><span id="cmp-leg-a">A</span></span>
+          <span class="legend__item"><span class="legend__swatch" style="background:var(--champagne)"></span><span id="cmp-leg-b">B</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head">
+          <div><h3 class="card__title">Tabela comparativa</h3><span class="card__sub">valores e diferen&ccedil;a (B &minus; A)</span></div>
+          <span class="card__num">Fig. 12</span>
+        </div>
+        <div class="table-wrap">
+          <table class="spec">
+            <thead><tr><th>M&eacute;trica</th><th style="text-align:right" id="cmp-th-a">A</th><th style="text-align:right" id="cmp-th-b">B</th><th style="text-align:right">&Delta;</th></tr></thead>
+            <tbody id="cmp-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="note" id="cmp-nota">&mdash;</p>
+  </div>
+</section>
+
 </main>
 
 <footer>
@@ -778,6 +844,7 @@ const DEMO=[
 
 const C=301.59;
 const AF={escopo:"producao",brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all",estacao:"all",colecao:"all"};
+let TAB="painel";
 let ALL=[];
 
 // ── Utils ─────────────────────────────────────────────────────────────────
@@ -950,6 +1017,7 @@ function render(){
   renderRetrabalho();
   renderTempoColecao();
   renderPipeline();
+  if(TAB==="comparar")renderComparar();
 }
 
 // ── Retrabalho (soma de refações por molde / arte) ────────────────────────
@@ -1010,6 +1078,140 @@ function renderTempoColecao(){
   setTxt("sub-tempo-col",ents.length+" cole&ccedil;&otilde;es · "+fmtH(totalHoras)+" no total");
   const topCol=ents[0];
   set("note-tempo-colecao",topCol?"<strong>"+topCol[0]+"</strong> concentra o maior tempo acumulado — <strong>"+fmtH(topCol[1])+"</strong>.":"Sem dados de tempo no filtro atual.");
+}
+
+// ── Comparação A × B (aba Comparar) ───────────────────────────────────────
+const CMP_AFKEY={estacao:"estacao",marca:"brand",colecao:"colecao",tipo:"type",estilista:"estilista",membro:"membro",complexidade:"complexidade",etapa:"etapa",origem:"source"};
+const CMP_NOME={estacao:"estação",marca:"marca",colecao:"coleção",tipo:"tipo",estilista:"estilista",membro:"membro",complexidade:"complexidade",etapa:"etapa",origem:"origem"};
+const cmpDisp=v=>v==="interna"?"Interna":v==="externo"?"Externo":v;
+
+function opcoesDim(dim){
+  if(dim==="tipo")return ["Montagem","Novo","Ajuste","Acervo"];
+  if(dim==="marca")return MORD.slice();
+  if(dim==="origem")return ["interna","externo"];
+  if(dim==="complexidade")return ["Baixa","Média","Alta"];
+  if(dim==="etapa")return ETAPA_ORDER.slice();
+  if(dim==="estacao")return ESTACOES_FIXAS.slice();
+  if(dim==="colecao")return COLECOES_FIXAS.slice();
+  if(dim==="estilista")return ESTILISTAS_FIXAS.slice();
+  if(dim==="membro")return MEMBROS_FIXOS.slice();
+  return [];
+}
+
+function matchDim(c,dim,val){
+  if(dim==="membro")return mArr(c.membros).includes(val);
+  if(dim==="origem")return (c.is_modelista_externo?"externo":"interna")===val;
+  if(dim==="tipo")return catTipo(c)===val;
+  if(dim==="complexidade"){const cx=c.complexidade==="Media"?"Média":c.complexidade;return cx===val;}
+  if(dim==="etapa")return getEtapa(c.coluna)===val;
+  if(dim==="marca")return c.marca===val;
+  if(dim==="colecao")return c.colecao===val;
+  if(dim==="estilista")return c.estilista===val;
+  if(dim==="estacao")return c.estacao===val;
+  return false;
+}
+
+function cmpMetrics(cards){
+  const byC={Montagem:0,Novo:0,Ajuste:0,Acervo:0};
+  cards.forEach(c=>{const k=catTipo(c);if(byC[k]!==undefined)byC[k]++});
+  const comTempo=cards.filter(c=>c.tempo_horas!=null);
+  const totalH=comTempo.reduce((s,c)=>s+c.tempo_horas,0);
+  const mediaH=comTempo.length?totalH/comTempo.length:null;
+  return {
+    N:cards.length,...byC,
+    totalH,mediaH,
+    rmolde:cards.reduce((s,c)=>s+(c.retrabalho_molde||0),0),
+    rarte: cards.reduce((s,c)=>s+(c.retrabalho_arte ||0),0),
+    ext:   cards.filter(c=>c.is_modelista_externo).length,
+  };
+}
+
+function popCmpValores(){
+  const dim=document.getElementById("cmp-dim").value;
+  const ops=opcoesDim(dim);
+  const html=ops.map(v=>'<option value="'+v+'">'+cmpDisp(v)+'</option>').join("");
+  const sa=document.getElementById("cmp-a"),sb=document.getElementById("cmp-b");
+  sa.innerHTML=html;sb.innerHTML=html;
+  if(dim==="estacao"){sa.value=ops.includes("INV28")?"INV28":ops[0];sb.value=ops.includes("VER28")?"VER28":(ops[1]||ops[0]);}
+  else{sa.value=ops[0]||"";sb.value=ops[1]||ops[0]||"";}
+}
+
+function renderComparar(){
+  const dim=document.getElementById("cmp-dim").value;
+  const a=document.getElementById("cmp-a").value;
+  const b=document.getElementById("cmp-b").value;
+
+  // Base = filtros ativos como contexto, MAS ignorando o campo em comparação
+  const afKey=CMP_AFKEY[dim];
+  const saved=AF[afKey];AF[afKey]="all";
+  const base=filtered();
+  AF[afKey]=saved;
+
+  const setA=base.filter(c=>matchDim(c,dim,a));
+  const setB=base.filter(c=>matchDim(c,dim,b));
+  const mA=cmpMetrics(setA),mB=cmpMetrics(setB);
+
+  // Gráfico espelhado (contagens): A à esquerda, B à direita
+  const espelho=[{k:"N",n:"Total"},{k:"Montagem",n:"Montagem"},{k:"Novo",n:"Novo"},{k:"Ajuste",n:"Ajuste"},{k:"Acervo",n:"Acervo"}];
+  document.getElementById("cmp-mirror").innerHTML=espelho.map(m=>{
+    const va=mA[m.k],vb=mB[m.k],mx=Math.max(va,vb,1);
+    return '<div style="display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;gap:var(--sp-2);margin:10px 0">'+
+      '<div style="display:flex;justify-content:flex-end;height:18px"><div style="width:'+pct(va,mx)+'%;background:var(--rose);height:100%;border-radius:3px 0 0 3px"></div></div>'+
+      '<div style="text-align:center"><div style="font-family:var(--font-display);color:var(--blush);font-size:var(--fs-sm)">'+m.n+'</div><div style="font-family:var(--font-mono);font-size:var(--fs-3xs);color:var(--blush-60);letter-spacing:0.06em">'+va+' &middot; '+vb+'</div></div>'+
+      '<div style="display:flex;justify-content:flex-start;height:18px"><div style="width:'+pct(vb,mx)+'%;background:var(--champagne);height:100%;border-radius:0 3px 3px 0"></div></div>'+
+      '</div>';
+  }).join("");
+
+  // Tabela: métrica × A × B × Δ
+  const rows=[
+    {n:"Total de cards",a:mA.N,b:mB.N,t:"num"},
+    {n:"Montagem",a:mA.Montagem,b:mB.Montagem,t:"num"},
+    {n:"Novo",a:mA.Novo,b:mB.Novo,t:"num"},
+    {n:"Ajuste",a:mA.Ajuste,b:mB.Ajuste,t:"num"},
+    {n:"Acervo",a:mA.Acervo,b:mB.Acervo,t:"num"},
+    {n:"Tempo médio / peça",a:mA.mediaH,b:mB.mediaH,t:"time"},
+    {n:"Tempo total",a:mA.totalH,b:mB.totalH,t:"time"},
+    {n:"Retrabalho molde",a:mA.rmolde,b:mB.rmolde,t:"num"},
+    {n:"Retrabalho arte",a:mA.rarte,b:mB.rarte,t:"num"},
+    {n:"Modelista Externo",a:mA.ext,b:mB.ext,t:"num"},
+  ];
+  document.getElementById("cmp-tbody").innerHTML=rows.map(r=>{
+    let av,bv,dv,diff;
+    if(r.t==="time"){
+      av=fmtH(r.a);bv=fmtH(r.b);
+      diff=(r.b||0)-(r.a||0);
+      dv=(diff>0?"+":diff<0?"−":"")+fmtH(Math.abs(diff));
+    }else{
+      av=r.a;bv=r.b;diff=r.b-r.a;
+      dv=(diff>0?"+":"")+diff;
+    }
+    const cor=diff>0?"var(--sage)":diff<0?"var(--bordeaux)":"var(--blush-60)";
+    return '<tr><td>'+r.n+'</td><td class="num">'+av+'</td><td class="num">'+bv+'</td><td class="num" style="color:'+cor+'">'+dv+'</td></tr>';
+  }).join("");
+
+  // Legendas / textos
+  document.getElementById("cmp-leg-a").textContent=cmpDisp(a)||"A";
+  document.getElementById("cmp-leg-b").textContent=cmpDisp(b)||"B";
+  document.getElementById("cmp-th-a").textContent=cmpDisp(a)||"A";
+  document.getElementById("cmp-th-b").textContent=cmpDisp(b)||"B";
+  document.getElementById("cmp-vis-sub").textContent=cmpDisp(a)+" × "+cmpDisp(b);
+  if(a===b){
+    document.getElementById("cmp-nota").innerHTML="Escolha <strong>dois valores diferentes</strong> de "+CMP_NOME[dim]+" para comparar.";
+  }else{
+    document.getElementById("cmp-nota").innerHTML="Comparando <strong>"+cmpDisp(a)+"</strong> ("+mA.N+" cards) e <strong>"+cmpDisp(b)+"</strong> ("+mB.N+" cards) por "+CMP_NOME[dim]+", dentro do contexto de filtros ativo.";
+  }
+}
+
+function setTab(t){
+  TAB=t;
+  document.querySelectorAll("#main-tabs .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tab===t?"true":"false"));
+  const comp=document.getElementById("section-comparar");
+  document.querySelectorAll("main .section").forEach(s=>{
+    if(s.id==="section-comparar")return;
+    s.style.display=(t==="painel")?"":"none";
+  });
+  if(comp)comp.style.display=(t==="comparar")?"":"none";
+  if(t==="comparar")renderComparar();
 }
 
 // ── Pipeline / Fluxo ──────────────────────────────────────────────────────
@@ -1141,6 +1343,16 @@ document.getElementById("pipeline-tabs")?.querySelectorAll('.chip[data-pt]').for
     renderPipeline();
   });
 });
+
+// Abas Painel / Comparar
+document.querySelectorAll('#main-tabs .chip').forEach(btn=>{
+  btn.addEventListener('click',()=>setTab(btn.dataset.tab));
+});
+// Controles da comparação
+document.getElementById('cmp-dim')?.addEventListener('change',()=>{popCmpValores();renderComparar();});
+document.getElementById('cmp-a')?.addEventListener('change',renderComparar);
+document.getElementById('cmp-b')?.addEventListener('change',renderComparar);
+popCmpValores(); // popula os valores A/B iniciais
 
 document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
   const isLight=document.documentElement.getAttribute('data-theme')==='light';
