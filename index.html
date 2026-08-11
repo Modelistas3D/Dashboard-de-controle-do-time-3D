@@ -86,6 +86,7 @@ html[data-theme=light] .theme-toggle__sun{opacity:1;transform:scale(1) rotate(0d
 .kpi__sub strong{color:var(--blush);font-weight:600}
 .kpi__mini{display:flex;gap:var(--sp-1);margin-top:2px;flex-wrap:wrap}
 .kpi__badge{font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;padding:2px 6px;border-radius:999px;border:1px solid var(--line-strong);color:var(--blush-60);white-space:nowrap}
+.cmp-badge{font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.10em;padding:6px 12px;border-radius:999px;border:1px solid var(--rose-line);background:var(--rose-soft);color:var(--blush-60);white-space:nowrap}
 .filters{margin-top:var(--sp-7);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(245,237,230,0.015);display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--sp-5)}
 .filters__group{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
 .filters__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose)}
@@ -727,7 +728,7 @@ footer a:hover{color:var(--champagne)}
         <select class="filter-select" id="cmp-b"></select>
       </div>
     </div>
-    <div id="cmp-contexto" style="margin-top:var(--sp-4);display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center"></div>
+    <div id="cmp-contexto" style="margin-top:var(--sp-4);display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center"></div>
     <div class="grid-2" style="margin-top:var(--sp-6)">
       <div class="card">
         <div class="card__head">
@@ -1168,8 +1169,8 @@ function renderComparar(){
 
   // Contexto ativo (quais filtros estão valendo para os dois lados)
   document.getElementById("cmp-contexto").innerHTML=
-    '<span class="mono" style="color:var(--rose)">Contexto:</span> '+
-    contextoAtivo(dim).map(x=>'<span class="kpi__badge">'+x.label+': <strong style="color:var(--blush)">'+x.value+'</strong></span>').join("");
+    '<span class="mono" style="color:var(--rose);font-size:var(--fs-2xs)">Contexto:</span> '+
+    contextoAtivo(dim).map(x=>'<span class="cmp-badge">'+x.label+': <strong style="color:var(--blush)">'+x.value+'</strong></span>').join("");
 
   // Métricas comparáveis (peças + tempo + retrabalho) — usadas no espelho e na tabela
   const METR=[
