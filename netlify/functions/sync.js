@@ -26,7 +26,7 @@ const COR_COMPLEXIDADE   = "black_light"; // "Complexidade | 🟩 Baixa / 🟨 M
 const COR_FREELANCER     = "red_dark";    // "MODELISTA EXTERNO"
 const COR_INV27          = "green";       // "Estação | INV27"
 const NOME_FREELANCER    = "Modelista Externo";
-const LOTE               = 100;
+const LOTE               = 500;  // lote maior = menos requisições no upsert (importante com o acervo)
 
 // ─── HELPERS TRELLO ─────────────────────────────────────────────────────────────
 
@@ -69,7 +69,18 @@ async function buscarColunas(boardId, env) {
     console.warn(`[sync] Coluna '${TARGET_COLUMN}' não encontrada — usando todas as ${todas.length} colunas.`);
     return todas;
   }
-  console.log(`[sync] ${escopo.length} colunas no escopo (até '${escopo[escopo.length-1].name}')`);
+
+  // Além do escopo de produção (até a coluna alvo), incluímos também as colunas
+  // de ACERVO GERAL — mesmo que venham depois no quadro. O dashboard decide,
+  // via filtro "Produção / Produção + Acervo", se mostra ou não esses cards.
+  const jaNoEscopo = new Set(escopo.map(c => c.id));
+  const acervo = todas.filter(c => normCol(c.name).includes("acervo") && !jaNoEscopo.has(c.id));
+  if (acervo.length) {
+    escopo.push(...acervo);
+    console.log(`[sync] +${acervo.length} coluna(s) de acervo incluída(s): ${acervo.map(c => c.name).join(", ")}`);
+  }
+
+  console.log(`[sync] ${escopo.length} colunas no escopo`);
   return escopo;
 }
 
