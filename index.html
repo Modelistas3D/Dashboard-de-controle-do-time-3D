@@ -11,7 +11,7 @@
 <style>
 :root{--noir:#1F1218;--noir-2:#281820;--noir-3:#33202A;--noir-4:#422836;--blush:#F5EDE6;--blush-80:rgba(245,237,230,0.84);--blush-60:rgba(245,237,230,0.60);--blush-40:rgba(245,237,230,0.38);--blush-20:rgba(245,237,230,0.18);--rose:#C99A8A;--rose-soft:rgba(201,154,138,0.14);--rose-line:rgba(201,154,138,0.30);--bordeaux:#8C3148;--champagne:#E5C9A8;--sage:#9CB39E;--noise-opacity:0.22;--noise-blend:overlay;--glow-strength:0.08}
 html[data-theme=light]{--noir:#F5EDE6;--noir-2:#EDE2D8;--noir-3:#E3D3C5;--noir-4:#D8C5B5;--blush:#2A1820;--blush-80:rgba(42,24,32,0.86);--blush-60:rgba(42,24,32,0.62);--blush-40:rgba(42,24,32,0.40);--blush-20:rgba(42,24,32,0.18);--rose:#A6614A;--rose-soft:rgba(166,97,74,0.10);--rose-line:rgba(166,97,74,0.32);--bordeaux:#7A2238;--champagne:#B58657;--sage:#6A8470;--line:rgba(42,24,32,0.10);--line-strong:rgba(42,24,32,0.20);--c-montagem:#A6614A;--c-novo:#B58657;--c-ajuste:#7A2238;--c-farm:#A6614A;--c-gl:#7A2238;--c-mariafilo:#B58657;--c-outras:#6A8470;--c-animale:#5A6E96;--c-acervo:#8C7F88;--noise-opacity:0.05;--noise-blend:multiply;--glow-strength:0.04}
-:root{--c-montagem:#C99A8A;--c-novo:#E5C9A8;--c-ajuste:#8C3148;--c-farm:#C99A8A;--c-gl:#8C3148;--c-mariafilo:#E5C9A8;--c-outras:#9CB39E;--c-animale:#8DA0C0;--c-acervo:#7E7078;--line:rgba(245,237,230,0.08);--line-strong:rgba(245,237,230,0.18);--font-display:'Fraunces',Georgia,serif;--font-body:'Instrument Sans',system-ui,sans-serif;--font-mono:ui-monospace,'JetBrains Mono',monospace;--fs-3xs:0.6875rem;--fs-2xs:0.75rem;--fs-xs:0.8125rem;--fs-sm:0.9375rem;--fs-base:1rem;--fs-lg:1.125rem;--fs-xl:1.3125rem;--fs-2xl:1.6rem;--fs-3xl:2.25rem;--fs-hero:clamp(2.5rem,1.6rem + 4vw,4.5rem);--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:48px;--sp-8:64px;--sp-9:96px;--r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--max-w:1440px;--gutter:clamp(1rem,3vw,2rem);--ease-out:cubic-bezier(0.2,0.8,0.2,1);--dur-fast:180ms;--dur-med:280ms}
+:root{--c-montagem:#C99A8A;--c-novo:#E5C9A8;--c-ajuste:#8C3148;--c-farm:#C99A8A;--c-gl:#8C3148;--c-mariafilo:#E5C9A8;--c-outras:#9CB39E;--c-animale:#8DA0C0;--c-acervo:#7E7078;--line:rgba(245,237,230,0.08);--line-strong:rgba(245,237,230,0.18);--font-display:'Fraunces',Georgia,serif;--font-body:'Instrument Sans',system-ui,sans-serif;--font-mono:ui-monospace,'JetBrains Mono',monospace;--fs-3xs:0.6875rem;--fs-2xs:0.75rem;--fs-xs:0.8125rem;--fs-sm:0.9375rem;--fs-base:1rem;--fs-lg:1.125rem;--fs-xl:1.3125rem;--fs-2xl:1.6rem;--fs-3xl:2.25rem;--fs-hero:clamp(2.5rem,1.6rem + 4vw,4.5rem);--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:48px;--sp-8:64px;--sp-9:96px;--r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--max-w:1680px;--gutter:clamp(1rem,3vw,2rem);--ease-out:cubic-bezier(0.2,0.8,0.2,1);--dur-fast:180ms;--dur-med:280ms}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--noir);color:var(--blush-80);font-family:var(--font-body);font-size:var(--fs-base);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -52,7 +52,8 @@ html[data-theme=light] .theme-toggle__sun{opacity:1;transform:scale(1) rotate(0d
 .print-btn svg{width:14px;height:14px;stroke:var(--rose);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur-fast) var(--ease-out)}
 .print-btn:hover svg{stroke:var(--blush)}
 @media print{
-  .topbar,.filter-bar,#sync-btn,.print-btn,.theme-toggle,.topbar__sep{display:none!important}
+  .topbar,.filter-bar,#sync-btn,.print-btn,.theme-toggle,.topbar__sep,.sidebar,.scrim,.filters-toggle{display:none!important}
+  .shell{display:block!important}
   body{background:#fff!important;color:#1a1a1a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body::before,body::after{display:none!important}
   .wrap{max-width:100%!important;padding-inline:1.5rem!important}
@@ -222,7 +223,71 @@ footer a:hover{color:var(--champagne)}
 .p-item__tag{font-family:var(--font-mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:999px;background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-line);line-height:1.6;white-space:nowrap}
 .p-item__tag--ext{background:rgba(140,49,72,0.10);color:var(--bordeaux);border-color:rgba(140,49,72,0.28)}
 
+/* ── Shell + filtros laterais ──────────────────────────── */
+:root{--topbar-h:69px;--sidebar-w:292px}
+.shell{display:flex;align-items:flex-start;width:100%;max-width:var(--max-w);margin-inline:auto}
+.shell__content{flex:1;min-width:0}
+.shell__content .wrap{max-width:none;margin-inline:0}
+.sidebar{width:var(--sidebar-w);flex-shrink:0;position:sticky;z-index:30;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));overflow-y:auto;overscroll-behavior:contain;border-right:1px solid var(--line);padding:var(--sp-5) var(--sp-4) var(--sp-8) var(--gutter);scrollbar-width:thin;scrollbar-color:var(--rose-line) transparent}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--rose-line);border-radius:3px}
+.sidebar__head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);padding-bottom:var(--sp-3);border-bottom:1px solid var(--line-strong)}
+.sidebar__title{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--rose)}
+.sidebar__count{font-family:var(--font-mono);font-size:9px;letter-spacing:0.10em;padding:3px 8px;border-radius:999px;border:1px solid var(--rose-line);background:var(--rose-soft);color:var(--rose);white-space:nowrap}
+.sidebar__close{display:none;width:28px;height:28px;border-radius:50%;background:var(--rose-soft);border:1px solid var(--rose-line);color:var(--rose);cursor:pointer;place-items:center;font-size:15px;line-height:1;flex-shrink:0}
+.fgroup{display:flex;flex-direction:column;gap:var(--sp-2);padding-block:var(--sp-4);border-bottom:1px solid var(--line)}
+.fgroup__label{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose)}
+.fgroup__hint{font-family:var(--font-body);font-size:11px;line-height:1.4;color:var(--blush-40)}
+.fgroup .filter-select{max-width:100%;width:100%}
+.fgroup .chip{font-size:10px;letter-spacing:0.10em;padding:5px 10px;min-height:28px}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden}
+.seg button{flex:1;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--blush-60);background:transparent;border:none;padding:7px 4px;cursor:pointer;transition:all var(--dur-fast) var(--ease-out)}
+.seg button:hover{color:var(--blush)}
+.seg button[aria-pressed=true]{background:var(--rose);color:var(--noir);font-weight:600}
+.dates{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-2)}
+.date-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.date-field>span{font-family:var(--font-mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-40)}
+.date-input{font-family:var(--font-mono);font-size:var(--fs-2xs);color:var(--blush-80);background:transparent;border:1px solid var(--line-strong);border-radius:var(--r-sm);padding:7px 8px;width:100%;min-height:34px;cursor:pointer;color-scheme:dark;transition:border-color var(--dur-fast) var(--ease-out)}
+.date-input:hover,.date-input:focus{border-color:var(--rose-line);outline:none;color:var(--blush)}
+.date-input::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.55;filter:invert(1)}
+.date-input:hover::-webkit-calendar-picker-indicator{opacity:0.9}
+html[data-theme=light] .date-input{color-scheme:light}
+html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:none}
+.sidebar__foot{display:flex;flex-direction:column;gap:var(--sp-2);padding-top:var(--sp-5)}
+.btn-ghost{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--blush-60);background:transparent;border:1px solid var(--line-strong);border-radius:999px;padding:9px 12px;cursor:pointer;transition:all var(--dur-fast) var(--ease-out)}
+.btn-ghost:hover{border-color:var(--rose-line);color:var(--blush)}
+.filters-toggle{display:none;align-items:center;gap:var(--sp-2);background:var(--rose-soft);border:1px solid var(--rose-line);color:var(--rose);padding:4px 12px;border-radius:999px;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;cursor:pointer}
+.filters-toggle:hover{border-color:var(--rose);color:var(--blush)}
+.scrim{display:none;position:fixed;inset:0;z-index:55;background:rgba(0,0,0,0.55);backdrop-filter:blur(2px)}
+.scrim.is-open{display:block}
+
+/* ── Gráfico de colunas (vazão) ─────────────────────────── */
+.chart{display:grid;grid-template-columns:48px 1fr;gap:0 var(--sp-3);margin-top:var(--sp-3)}
+.chart__y{position:relative;height:300px}
+.chart__y span{position:absolute;right:0;transform:translateY(50%);font-family:var(--font-mono);font-size:10px;letter-spacing:0.04em;color:var(--blush-40);white-space:nowrap}
+.chart__plot{position:relative;height:300px;border-bottom:1px solid var(--line-strong)}
+.chart__line{position:absolute;left:0;right:0;border-top:1px dashed var(--line);pointer-events:none}
+.chart__cols{position:absolute;inset:0;display:flex;align-items:flex-end;gap:clamp(2px,0.9vw,16px)}
+.chart__col{flex:1 1 0;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;position:relative;cursor:default}
+.chart__col:hover .chart__seg{filter:brightness(1.18)}
+.chart__total{position:absolute;left:-2px;right:-2px;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--blush);letter-spacing:0.02em;pointer-events:none;transition:opacity var(--dur-fast)}
+.chart--dense .chart__total{opacity:0}
+.chart--dense .chart__col:hover .chart__total{opacity:1}
+.chart__seg{width:100%;min-height:3px;transition:height var(--dur-med) var(--ease-out)}
+.chart__col>.chart__seg:first-of-type{border-radius:3px 3px 0 0}
+.chart__x{grid-column:2;display:flex;gap:clamp(2px,0.9vw,16px);padding-top:var(--sp-2)}
+.chart__x span{flex:1 1 0;min-width:0;text-align:center;font-family:var(--font-mono);font-size:10px;letter-spacing:0.03em;color:var(--blush-40);white-space:nowrap;overflow:hidden}
+.chart__empty{display:flex;flex-direction:column;gap:var(--sp-3);align-items:flex-start;padding:var(--sp-6) 0;color:var(--blush-60);font-size:var(--fs-sm);line-height:1.6}
+.chart__empty code{font-family:var(--font-mono);font-size:var(--fs-2xs);background:var(--rose-soft);border:1px solid var(--rose-line);color:var(--rose);padding:2px 7px;border-radius:var(--r-sm)}
+.chart__empty ol{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+
 /* ── Responsive ─────────────────────────────────────────── */
+@media(max-width:1180px){
+  .sidebar{position:fixed;top:0;left:0;z-index:60;width:min(320px,86vw);height:100vh;background:var(--noir-2);border-right:1px solid var(--line-strong);padding:var(--sp-5) var(--sp-4) var(--sp-8);transform:translateX(-101%);transition:transform var(--dur-med) var(--ease-out)}
+  .sidebar.is-open{transform:none;box-shadow:24px 0 60px rgba(0,0,0,0.45)}
+  .sidebar__close{display:grid}
+  .filters-toggle{display:inline-flex}
+}
 @media(max-width:880px){.grid-2{grid-template-columns:1fr}}
 @media(max-width:720px){
   .kpis{grid-template-columns:repeat(2,1fr)}
@@ -272,6 +337,7 @@ footer a:hover{color:var(--champagne)}
       </div>
     </div>
     <div class="topbar__meta">
+      <button class="filters-toggle" id="filters-toggle" aria-controls="sidebar" aria-expanded="false">Filtros</button>
       <span class="topbar__dot" id="sync-status">Sincronizado &middot; Trello</span>
       <span class="topbar__sep"></span>
       <span id="topbar-date">&mdash;</span>
@@ -298,6 +364,130 @@ footer a:hover{color:var(--champagne)}
   </div>
 </header>
 
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+
+<!-- ── Filtros laterais ─────────────────────────────────── -->
+<aside class="sidebar" id="sidebar" aria-label="Filtros do painel">
+  <div class="sidebar__head">
+    <span class="sidebar__title">Filtros</span>
+    <span class="sidebar__count" id="filtros-count">&mdash;</span>
+    <button class="sidebar__close" id="sidebar-close" aria-label="Fechar filtros">&times;</button>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Granularidade</span>
+    <div class="seg" id="seg-gran">
+      <button data-gran="semana" aria-pressed="false">Semana</button>
+      <button data-gran="mes"    aria-pressed="true">M&ecirc;s</button>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Per&iacute;odo</span>
+    <div class="dates">
+      <label class="date-field"><span>De</span><input type="date" class="date-input" id="dt-de" aria-label="Data inicial"></label>
+      <label class="date-field"><span>At&eacute;</span><input type="date" class="date-input" id="dt-ate" aria-label="Data final"></label>
+    </div>
+    <div class="chips" id="chips-periodo" style="margin-top:var(--sp-1)">
+      <button class="chip" aria-pressed="true"  data-preset="tudo">Tudo</button>
+      <button class="chip" aria-pressed="false" data-preset="30">30 d</button>
+      <button class="chip" aria-pressed="false" data-preset="90">90 d</button>
+      <button class="chip" aria-pressed="false" data-preset="365">12 m</button>
+    </div>
+    <span class="fgroup__hint">Vaz&atilde;o pela data de finaliza&ccedil;&atilde;o (movimenta&ccedil;&atilde;o); demais blocos pela &uacute;ltima atividade do card.</span>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Escopo</span>
+    <div class="chips" data-filter="escopo">
+      <button class="chip" aria-pressed="true"  data-value="producao">Produ&ccedil;&atilde;o</button>
+      <button class="chip" aria-pressed="false" data-value="tudo">+ Acervo</button>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Marca</span>
+    <div class="chips" data-filter="brand">
+      <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+      <button class="chip" aria-pressed="false" data-value="Farm BR">Farm BR</button>
+      <button class="chip" aria-pressed="false" data-value="GL">GL</button>
+      <button class="chip" aria-pressed="false" data-value="Maria Fil&#xF3;">Maria Fil&oacute;</button>
+      <button class="chip" aria-pressed="false" data-value="Animale Jeans">Animale Jeans</button>
+      <button class="chip" aria-pressed="false" data-value="Outras">Outras</button>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Fluxo</span>
+    <div class="chips" data-filter="type">
+      <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
+      <button class="chip" aria-pressed="false" data-value="Montagem">Montagem</button>
+      <button class="chip" aria-pressed="false" data-value="Novo">Novo</button>
+      <button class="chip" aria-pressed="false" data-value="Ajuste">Ajuste</button>
+      <button class="chip" aria-pressed="false" data-value="Acervo">Acervo</button>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Etapa</span>
+    <div class="chips" data-filter="etapa">
+      <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+      <button class="chip" aria-pressed="false" data-value="A Fazer">A Fazer</button>
+      <button class="chip" aria-pressed="false" data-value="Fazendo">Fazendo</button>
+      <button class="chip" aria-pressed="false" data-value="Em Aprovação">Em Aprov.</button>
+      <button class="chip" aria-pressed="false" data-value="Fazendo Liberação">Lib. Fa&ccedil;.</button>
+      <button class="chip" aria-pressed="false" data-value="Revisão Final">Revis&atilde;o</button>
+      <button class="chip" aria-pressed="false" data-value="Liberado/Feito">Liberado</button>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Origem</span>
+    <div class="chips" data-filter="source">
+      <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
+      <button class="chip" aria-pressed="false" data-value="interna">Interna</button>
+      <button class="chip" aria-pressed="false" data-value="externo">Externo</button>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Complexidade</span>
+    <div class="chips" data-filter="complexidade">
+      <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
+      <button class="chip" aria-pressed="false" data-value="Baixa">Baixa</button>
+      <button class="chip" aria-pressed="false" data-value="Média">M&eacute;dia</button>
+      <button class="chip" aria-pressed="false" data-value="Alta">Alta</button>
+    </div>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Estilista</span>
+    <select class="filter-select" id="sel-estilista" data-filter-sel="estilista"><option value="all">Todas</option></select>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Membro</span>
+    <select class="filter-select" id="sel-membro" data-filter-sel="membro"><option value="all">Todos</option></select>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Esta&ccedil;&atilde;o</span>
+    <select class="filter-select" id="sel-estacao" data-filter-sel="estacao"><option value="all">Todas</option></select>
+  </div>
+
+  <div class="fgroup">
+    <span class="fgroup__label">Cole&ccedil;&atilde;o</span>
+    <select class="filter-select" id="sel-colecao" data-filter-sel="colecao"><option value="all">Todas</option></select>
+  </div>
+
+  <div class="sidebar__foot">
+    <button class="btn-ghost" id="btn-limpar">Limpar filtros</button>
+  </div>
+</aside>
+
+<div class="shell__content">
 <main id="main">
 
 <section class="hero">
@@ -344,90 +534,6 @@ footer a:hover{color:var(--champagne)}
         <div class="kpi__mini" id="kpi-acervo-mini"></div>
       </div>
     </div>
-    <!-- Filters -->
-    <div class="filters" role="group" aria-label="Filtros do painel">
-      <div class="filters__group">
-        <span class="filters__label">Marca</span>
-        <div class="chips" data-filter="brand">
-          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
-          <button class="chip" aria-pressed="false" data-value="Farm BR">Farm BR</button>
-          <button class="chip" aria-pressed="false" data-value="GL">GL</button>
-          <button class="chip" aria-pressed="false" data-value="Maria Fil&#xF3;">Maria Fil&oacute;</button>
-          <button class="chip" aria-pressed="false" data-value="Animale Jeans">Animale Jeans</button>
-          <button class="chip" aria-pressed="false" data-value="Outras">Outras</button>
-        </div>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Tipo</span>
-        <div class="chips" data-filter="type">
-          <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
-          <button class="chip" aria-pressed="false" data-value="Montagem">Montagem</button>
-          <button class="chip" aria-pressed="false" data-value="Novo">Novo</button>
-          <button class="chip" aria-pressed="false" data-value="Ajuste">Ajuste</button>
-          <button class="chip" aria-pressed="false" data-value="Acervo">Acervo</button>
-        </div>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Escopo</span>
-        <div class="chips" data-filter="escopo">
-          <button class="chip" aria-pressed="true"  data-value="producao">Produ&ccedil;&atilde;o</button>
-          <button class="chip" aria-pressed="false" data-value="tudo">Produ&ccedil;&atilde;o + Acervo</button>
-        </div>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Origem</span>
-        <div class="chips" data-filter="source">
-          <button class="chip" aria-pressed="true"  data-value="all">Todos</button>
-          <button class="chip" aria-pressed="false" data-value="interna">Interna</button>
-          <button class="chip" aria-pressed="false" data-value="externo">Externo</button>
-        </div>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Etapa</span>
-        <div class="chips" data-filter="etapa">
-          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
-          <button class="chip" aria-pressed="false" data-value="A Fazer">A Fazer</button>
-          <button class="chip" aria-pressed="false" data-value="Fazendo">Fazendo</button>
-          <button class="chip" aria-pressed="false" data-value="Em Aprovação">Em Aprov.</button>
-          <button class="chip" aria-pressed="false" data-value="Fazendo Liberação">Lib. Fa&ccedil;.</button>
-          <button class="chip" aria-pressed="false" data-value="Revisão Final">Revis&atilde;o</button>
-          <button class="chip" aria-pressed="false" data-value="Liberado/Feito">Liberado</button>
-        </div>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Complexidade</span>
-        <div class="chips" data-filter="complexidade">
-          <button class="chip" aria-pressed="true"  data-value="all">Todas</button>
-          <button class="chip" aria-pressed="false" data-value="Baixa">Baixa</button>
-          <button class="chip" aria-pressed="false" data-value="Média">M&eacute;dia</button>
-          <button class="chip" aria-pressed="false" data-value="Alta">Alta</button>
-        </div>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Estilista</span>
-        <select class="filter-select" id="sel-estilista" data-filter-sel="estilista">
-          <option value="all">Todas</option>
-        </select>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Membro</span>
-        <select class="filter-select" id="sel-membro" data-filter-sel="membro">
-          <option value="all">Todos</option>
-        </select>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Esta&ccedil;&atilde;o</span>
-        <select class="filter-select" id="sel-estacao" data-filter-sel="estacao">
-          <option value="all">Todas</option>
-        </select>
-      </div>
-      <div class="filters__group">
-        <span class="filters__label">Cole&ccedil;&atilde;o</span>
-        <select class="filter-select" id="sel-colecao" data-filter-sel="colecao">
-          <option value="all">Todas</option>
-        </select>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -437,6 +543,28 @@ footer a:hover{color:var(--champagne)}
     <button class="chip" aria-pressed="false" data-tab="comparar">Comparar</button>
   </div>
 </div>
+
+<!-- ── B0 · Vazão (histórico de movimentações) ───────────── -->
+<section class="section" id="section-vazao">
+  <div class="wrap">
+    <div class="section__num">B0 &middot; Vaz&atilde;o</div>
+    <h2 class="section__title">Quantas pe&ccedil;as saem por per&iacute;odo.</h2>
+    <p class="section__intro">Cada barra conta as pe&ccedil;as que <em>cruzaram a linha de chegada</em> no per&iacute;odo &mdash; lido do hist&oacute;rico de movimenta&ccedil;&atilde;o dos cards no Trello, n&atilde;o da coluna em que o card est&aacute; hoje.</p>
+    <div class="card">
+      <div class="card__head">
+        <div><h3 class="card__title">Vaz&atilde;o &mdash; pe&ccedil;as finalizadas por per&iacute;odo</h3><span class="card__sub" id="sub-vazao">Barras empilhadas por fluxo &middot; Montagem TQ finalizada = Revis&atilde;o Final + Liberado/Feito</span></div>
+        <span class="card__num" id="vazao-total">&mdash;</span>
+      </div>
+      <div id="vazao-box"></div>
+      <div class="legend">
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-montagem)"></span>Montagem TQ</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-ajuste)"></span>Ajuste</span>
+        <span class="legend__item"><span class="legend__swatch" style="background:var(--c-novo)"></span>Novo</span>
+      </div>
+      <p class="note" id="note-vazao">&mdash;</p>
+    </div>
+  </div>
+</section>
 
 <section class="section">
   <div class="wrap">
@@ -767,6 +895,9 @@ footer a:hover{color:var(--champagne)}
   </div>
 </footer>
 
+</div><!-- /.shell__content -->
+</div><!-- /.shell -->
+
 <script>
 // ── Config ─────────────────────────────────────────────────────────────────
 const SUPABASE_URL="https://rvwatkeyjnbqnxkwadwo.supabase.co";
@@ -845,9 +976,13 @@ const DEMO=[
 ];
 
 const C=301.59;
-const AF={escopo:"producao",brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all",estacao:"all",colecao:"all"};
+const AF={escopo:"producao",brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all",estacao:"all",colecao:"all",de:"",ate:""};
 let TAB="painel";
 let ALL=[];
+let GRAN="mes";              // granularidade do gráfico de vazão: "semana" | "mes"
+let MOVS=[];                 // histórico de movimentação dos cards (tabela movimentacoes)
+let MOVS_STATUS="carregando";// carregando | ok | vazio | indisponivel
+let SYNC_INFO=null;          // resposta do ultimo /sync (avisa se o historico ainda esta importando)
 
 // ── Utils ─────────────────────────────────────────────────────────────────
 const pct=(n,t)=>t>0?Math.round(n/t*100):0;
@@ -884,11 +1019,31 @@ function getEtapa(coluna){
 }
 
 // ── Filters ───────────────────────────────────────────────────────────────
-function filtered(){
+// Janela de datas do filtro lateral. `de`/`ate` chegam como "AAAA-MM-DD";
+// o fim do intervalo inclui o dia inteiro (23:59:59).
+function janela(){
+  const ini=AF.de ?new Date(AF.de +"T00:00:00").getTime():null;
+  const fim=AF.ate?new Date(AF.ate+"T23:59:59.999").getTime():null;
+  return {ini,fim};
+}
+function dentroDaJanela(ts){
+  if(ts==null||isNaN(ts))return false;
+  const {ini,fim}=janela();
+  if(ini!=null&&ts<ini)return false;
+  if(fim!=null&&ts>fim)return false;
+  return true;
+}
+
+// semData=true ignora o filtro de período — usado pelo gráfico de vazão, que
+// recorta pela data de FINALIZAÇÃO (movimentação) e não pela última atividade.
+function filtered(semData){
+  const {ini,fim}=janela();
+  const filtraData=!semData&&(ini!=null||fim!=null);
   return ALL.filter(c=>{
     // Escopo: por padrão (produção) escondemos os cards de ACERVO GERAL.
     const isAcervo=(c.coluna||"").toLowerCase().includes("acervo");
     if(AF.escopo==="producao"&&isAcervo)return false;
+    if(filtraData&&!dentroDaJanela(c.data_atividade?new Date(c.data_atividade).getTime():null))return false;
     if(AF.brand!=="all"&&c.marca!==AF.brand)return false;
     if(AF.type!=="all"&&catTipo(c)!==AF.type)return false;
     if(AF.source==="interna"&&c.is_modelista_externo)return false;
@@ -1016,10 +1171,24 @@ function render(){
   document.getElementById("tbody-tempo").innerHTML=Object.entries(tpM).map(([n,v])=>({n,avg:v.s/v.n,n2:v.n})).sort((a,b)=>b.n2-a.n2).slice(0,6).map(m=>'<tr><td>'+m.n+'</td><td class="num">'+fmtH(m.avg)+'</td><td class="num">'+m.n2+'</td></tr>').join("");
   document.getElementById("note-complexidade").innerHTML=cxMap["Alta"]>0?"<strong>"+cxMap["Alta"]+"</strong> card"+(cxMap["Alta"]!==1?"s":"")+" de alta complexidade — onde o cronograma mais sente pressão.":"Sem dados de complexidade no filtro atual.";
 
+  renderVazao();
   renderRetrabalho();
   renderTempoColecao();
   renderPipeline();
+  atualizarBadgeFiltros();
   if(TAB==="comparar")renderComparar();
+}
+
+// Quantos filtros estão fora do padrão — mostrado no topo da barra lateral.
+function atualizarBadgeFiltros(){
+  const el=document.getElementById("filtros-count");
+  if(!el)return;
+  let n=0;
+  ["brand","type","source","etapa","complexidade","estilista","membro","estacao","colecao"].forEach(k=>{if(AF[k]!=="all")n++});
+  if(AF.escopo!=="producao")n++;
+  if(AF.de||AF.ate)n++;
+  el.textContent=n?n+(n===1?" ativo":" ativos"):"nenhum";
+  el.style.opacity=n?"1":"0.55";
 }
 
 // ── Retrabalho (soma de refações por molde / arte) ────────────────────────
@@ -1080,6 +1249,179 @@ function renderTempoColecao(){
   setTxt("sub-tempo-col",ents.length+" cole&ccedil;&otilde;es · "+fmtH(totalHoras)+" no total");
   const topCol=ents[0];
   set("note-tempo-colecao",topCol?"<strong>"+topCol[0]+"</strong> concentra o maior tempo acumulado — <strong>"+fmtH(topCol[1])+"</strong>.":"Sem dados de tempo no filtro atual.");
+}
+
+// ── Vazão · peças finalizadas (histórico de movimentações) ────────────────
+// Fonte: tabela `movimentacoes` no Supabase, alimentada pelo sync com as ações
+// updateCard:idList do Trello. Uma peça conta como finalizada quando ENTRA numa
+// coluna de encerramento do fluxo — não por estar parada nela hoje.
+const MESES_ABREV=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const VAZAO_FLUXOS=[
+  {nome:"Montagem TQ",cor:"var(--c-montagem)"},
+  {nome:"Ajuste",     cor:"var(--c-ajuste)"},
+  {nome:"Novo",       cor:"var(--c-novo)"},
+];
+
+function semAcento(s){return (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim()}
+
+// A que fluxo do quadro a coluna pertence (null = fora dos 3 fluxos, ex.: acervo).
+function fluxoColuna(col){
+  const c=semAcento(col);
+  if(!c||c.includes("acervo"))return null;
+  if(c.includes("montagem"))return "Montagem TQ";
+  if(c.includes("ajuste"))return "Ajuste";
+  if(c.includes("novo"))return "Novo";
+  return null;
+}
+
+// Entrar nesta coluna significa peça pronta?
+// Atenção às colunas "A fazer (2D TQ Liberado)" e "A fazer 2D Liberado": têm a
+// palavra "liberado" mas são ponto de PARTIDA, não de chegada.
+function colunaFinaliza(col){
+  const c=semAcento(col);
+  if(!c)return false;
+  if(c.includes("a fazer")||c.includes("2d"))return false;
+  if(c.includes("fazendo")||c.includes("em aprovacao"))return false;
+  const fl=fluxoColuna(col);
+  if(!fl)return false;
+  if(fl==="Montagem TQ"&&c.includes("revisao final"))return true; // montagem entregue à revisão
+  return c.includes("liberado")||c.includes("feito");
+}
+
+function chaveBucket(ts,gran){
+  const d=new Date(ts);
+  if(gran==="semana"){
+    const s=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));
+    s.setUTCDate(s.getUTCDate()-((s.getUTCDay()+6)%7)); // recua até a segunda-feira
+    return s.toISOString().slice(0,10);
+  }
+  return d.toISOString().slice(0,7);
+}
+function proximoBucket(chave,gran){
+  if(gran==="semana"){const d=new Date(chave+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+7);return d.toISOString().slice(0,10)}
+  const [y,m]=chave.split("-").map(Number);
+  return new Date(Date.UTC(m===12?y+1:y,m===12?0:m,1)).toISOString().slice(0,7);
+}
+function rotuloBucket(chave,gran){
+  const p=chave.split("-");
+  if(gran==="semana")return p[2]+"/"+p[1];
+  return MESES_ABREV[Number(p[1])-1]+"/"+p[0].slice(2);
+}
+
+// Escala "redonda" para o eixo Y (topo e passo inteiros, ~4 divisões).
+function escalaNice(max){
+  if(!(max>0))return{top:4,passo:1};
+  const bruto=max/4,mag=Math.pow(10,Math.floor(Math.log10(bruto)));
+  let passo=[1,2,2.5,5,10].map(f=>f*mag).find(p=>p>=bruto)||10*mag;
+  passo=Math.max(1,Math.round(passo));
+  return{top:Math.ceil(max/passo)*passo,passo};
+}
+
+function vazioVazao(){
+  if(MOVS_STATUS==="carregando")return '<div class="chart__empty"><p>Carregando histórico de movimentações…</p></div>';
+  if(MOVS_STATUS==="vazio")return '<div class="chart__empty"><p>A tabela <code>movimentacoes</code> existe, mas ainda está vazia.</p><p>Clique em <strong>Sincronizar</strong> no topo para importar o histórico do Trello.</p></div>';
+  return '<div class="chart__empty"><p>O histórico de movimentação ainda não está disponível no Supabase.</p><ol><li>Rode <code>supabase_movimentacoes.sql</code> no SQL Editor do Supabase.</li><li>Clique em <strong>Sincronizar</strong> aqui no topo para importar as movimentações do Trello.</li></ol></div>';
+}
+
+function renderVazao(){
+  const box=document.getElementById("vazao-box");
+  if(!box)return;
+  const setTxt=(id,t)=>{const e=document.getElementById(id);if(e)e.textContent=t};
+  const setHtml=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h};
+
+  setTxt("sub-vazao","Barras empilhadas por fluxo · "+(GRAN==="mes"?"por mês":"por semana")+" · Montagem TQ finalizada = Revisão Final + Liberado/Feito");
+
+  if(MOVS_STATUS!=="ok"){
+    box.innerHTML=vazioVazao();
+    setTxt("vazao-total","—");
+    setHtml("note-vazao",MOVS_STATUS==="carregando"?"Carregando…":"Sem histórico de movimentação para calcular a vazão.");
+    return;
+  }
+
+  // Cards que passam pelos filtros — ignorando o período, porque aqui o recorte
+  // de data é feito pela data de FINALIZAÇÃO e não pela última atividade.
+  const validos=new Set(filtered(true).map(c=>c.trello_id));
+
+  // Primeira finalização de cada card em cada fluxo (evita contar duas vezes o
+  // card que vai para Revisão Final e depois para Liberado/Feito).
+  const primeira=new Map();
+  for(const m of MOVS){
+    if(!validos.has(m.trello_id))continue;
+    if(!colunaFinaliza(m.lista_depois))continue;
+    const ts=new Date(m.data).getTime();
+    if(isNaN(ts))continue;
+    const fl=fluxoColuna(m.lista_depois),k=m.trello_id+"|"+fl;
+    if(!primeira.has(k)||ts<primeira.get(k).ts)primeira.set(k,{ts,fluxo:fl});
+  }
+
+  const eventos=[...primeira.values()].filter(e=>dentroDaJanela(e.ts));
+  if(!eventos.length){
+    box.innerHTML='<div class="chart__empty"><p>Nenhuma peça finalizada com os filtros atuais.</p></div>';
+    setTxt("vazao-total","0 peças");
+    setHtml("note-vazao","Amplie o período ou limpe os filtros para ver a vazão.");
+    return;
+  }
+
+  // Agrupa por período
+  const balde={};let min=null,max=null;
+  eventos.forEach(e=>{
+    const k=chaveBucket(e.ts,GRAN);
+    if(!balde[k]){balde[k]={};VAZAO_FLUXOS.forEach(f=>balde[k][f.nome]=0)}
+    balde[k][e.fluxo]++;
+    if(min===null||k<min)min=k;
+    if(max===null||k>max)max=k;
+  });
+
+  // Sequência contínua (períodos sem finalização aparecem como vazio)
+  let chaves=[];
+  for(let k=min;;k=proximoBucket(k,GRAN)){chaves.push(k);if(k===max||chaves.length>=400)break}
+  const LIMITE=80,cortou=Math.max(0,chaves.length-LIMITE);
+  if(cortou)chaves=chaves.slice(-LIMITE);
+
+  const val=(k,f)=>(balde[k]&&balde[k][f])||0;
+  const totais=chaves.map(k=>VAZAO_FLUXOS.reduce((s,f)=>s+val(k,f.nome),0));
+  const {top,passo}=escalaNice(Math.max(...totais,0));
+  const denso=chaves.length>18;
+
+  let yHtml="",linhas="";
+  for(let v=0;v<=top+1e-9;v+=passo){
+    const p=top>0?v/top*100:0;
+    yHtml+='<span style="bottom:'+p+'%">'+v+'</span>';
+    linhas+='<div class="chart__line" style="bottom:'+p+'%"></div>';
+  }
+
+  const cols=chaves.map((k,i)=>{
+    const tot=totais[i];
+    // Renderiza de cima para baixo: invertido para Montagem ficar na base.
+    const segs=VAZAO_FLUXOS.map(f=>({...f,v:val(k,f.nome)})).filter(f=>f.v>0);
+    const pilha=segs.slice().reverse().map(f=>'<div class="chart__seg" style="height:'+(top>0?f.v/top*100:0)+'%;background:'+f.cor+'"></div>').join("");
+    const titulo=rotuloBucket(k,GRAN)+" · "+(segs.length?segs.map(f=>f.nome+" "+f.v).join(" · ")+" · total "+tot:"sem finalizações");
+    return '<div class="chart__col" title="'+titulo+'">'+
+      (tot>0?'<span class="chart__total" style="bottom:calc('+(top>0?tot/top*100:0)+'% + 4px)">'+tot+'</span>':'')+
+      pilha+'</div>';
+  }).join("");
+
+  const saltoRot=chaves.length>26?Math.ceil(chaves.length/13):1;
+  const xHtml=chaves.map((k,i)=>'<span>'+((i%saltoRot===0||i===chaves.length-1)?rotuloBucket(k,GRAN):"")+'</span>').join("");
+
+  box.innerHTML='<div class="chart'+(denso?" chart--dense":"")+'">'+
+    '<div class="chart__y">'+yHtml+'</div>'+
+    '<div class="chart__plot">'+linhas+'<div class="chart__cols">'+cols+'</div></div>'+
+    '<div class="chart__x">'+xHtml+'</div></div>';
+
+  const totalGeral=totais.reduce((a,b)=>a+b,0);
+  const media=totalGeral/chaves.length;
+  const iMax=totais.indexOf(Math.max(...totais));
+  const unidade=GRAN==="mes"?"mês":"semana";
+  const porFluxo=VAZAO_FLUXOS.map(f=>({n:f.nome,v:chaves.reduce((s,k)=>s+val(k,f.nome),0)})).sort((a,b)=>b.v-a.v);
+  setTxt("vazao-total",totalGeral+(totalGeral===1?" peça":" peças"));
+  setHtml("note-vazao",
+    "<strong>"+totalGeral+"</strong> finaliza"+(totalGeral!==1?"ções":"ção")+" em <strong>"+chaves.length+"</strong> "+(chaves.length!==1?(GRAN==="mes"?"meses":"semanas"):unidade)+
+    " — média de <strong>"+media.toFixed(1).replace(".",",")+"</strong> por "+unidade+
+    (totais[iMax]>0?", pico de <strong>"+totais[iMax]+"</strong> em <em>"+rotuloBucket(chaves[iMax],GRAN)+"</em>":"")+
+    (porFluxo[0].v>0?". <strong>"+porFluxo[0].n+"</strong> responde por "+pct(porFluxo[0].v,totalGeral)+"% da vazão.":".")+
+    (cortou?' <span class="mono">(mostrando os últimos '+LIMITE+' períodos)</span>':"")+
+    (SYNC_INFO&&SYNC_INFO.mov_pendente?' <span class="mono" style="color:var(--champagne)">· histórico ainda sendo importado — clique em Sincronizar de novo para trazer períodos mais antigos</span>':""));
 }
 
 // ── Comparação A × B (aba Comparar) ───────────────────────────────────────
@@ -1339,7 +1681,94 @@ async function fetchCards(){
   return all;
 }
 
+// Histórico de movimentação dos cards — base do gráfico de vazão.
+// A tabela pode ainda não existir (migração não rodada): nesse caso o painel
+// segue funcionando e o gráfico mostra as instruções de instalação.
+async function fetchMovimentacoes(){
+  const PAGE=1000, MAX_PAGES=30;
+  let all=[], offset=0;
+  for(let i=0;i<MAX_PAGES;i++){
+    const ctrl=new AbortController();
+    const tid=setTimeout(()=>ctrl.abort(),12000);
+    let d;
+    try{
+      const r=await fetch(SUPABASE_URL+"/rest/v1/movimentacoes?select=trello_id,data,lista_antes,lista_depois&order=data.asc&limit="+PAGE+"&offset="+offset,{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},signal:ctrl.signal});
+      clearTimeout(tid);
+      if(!r.ok){MOVS_STATUS="indisponivel";return[]}
+      d=await r.json();
+    }catch(e){clearTimeout(tid);console.warn("movimentacoes indisponíveis",e);MOVS_STATUS="indisponivel";return[]}
+    if(!Array.isArray(d)){MOVS_STATUS="indisponivel";return[]}
+    all=all.concat(d);
+    if(d.length<PAGE)break;
+    offset+=PAGE;
+  }
+  MOVS_STATUS=all.length?"ok":"vazio";
+  return all;
+}
+
 // ── Event listeners ───────────────────────────────────────────────────────
+// Barra lateral (drawer no mobile)
+const sidebarEl=document.getElementById("sidebar");
+const scrimEl=document.getElementById("scrim");
+function abrirFiltros(abrir){
+  sidebarEl?.classList.toggle("is-open",abrir);
+  scrimEl?.classList.toggle("is-open",abrir);
+  document.getElementById("filters-toggle")?.setAttribute("aria-expanded",abrir?"true":"false");
+}
+document.getElementById("filters-toggle")?.addEventListener("click",()=>abrirFiltros(!sidebarEl?.classList.contains("is-open")));
+document.getElementById("sidebar-close")?.addEventListener("click",()=>abrirFiltros(false));
+scrimEl?.addEventListener("click",()=>abrirFiltros(false));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")abrirFiltros(false)});
+
+// Granularidade do gráfico de vazão
+document.querySelectorAll("#seg-gran button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    GRAN=btn.dataset.gran;
+    document.querySelectorAll("#seg-gran button").forEach(b=>b.setAttribute("aria-pressed",b===btn?"true":"false"));
+    renderVazao();
+  });
+});
+
+// Período — calendário nativo + atalhos
+function marcarPreset(v){
+  document.querySelectorAll("#chips-periodo .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.preset===v?"true":"false"));
+}
+function aplicarDatas(de,ate,preset){
+  AF.de=de;AF.ate=ate;
+  const iDe=document.getElementById("dt-de"),iAte=document.getElementById("dt-ate");
+  if(iDe)iDe.value=de;if(iAte)iAte.value=ate;
+  marcarPreset(preset);
+  render();
+}
+["dt-de","dt-ate"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("change",e=>{
+    AF[id==="dt-de"?"de":"ate"]=e.target.value||"";
+    marcarPreset(AF.de||AF.ate?"":"tudo");
+    render();
+  });
+});
+document.querySelectorAll("#chips-periodo .chip").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const p=btn.dataset.preset;
+    if(p==="tudo")return aplicarDatas("","","tudo");
+    const hoje=new Date(),ini=new Date();
+    ini.setDate(ini.getDate()-Number(p));
+    const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    aplicarDatas(iso(ini),iso(hoje),p);
+  });
+});
+
+// Limpar todos os filtros
+document.getElementById("btn-limpar")?.addEventListener("click",()=>{
+  Object.assign(AF,{escopo:"producao",brand:"all",type:"all",source:"all",etapa:"all",complexidade:"all",estilista:"all",membro:"all",estacao:"all",colecao:"all",de:"",ate:""});
+  document.querySelectorAll('.chips[data-filter]').forEach(g=>{
+    const padrao=g.dataset.filter==="escopo"?"producao":"all";
+    g.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.value===padrao?'true':'false'));
+  });
+  document.querySelectorAll('select[data-filter-sel]').forEach(s=>{s.value="all"});
+  aplicarDatas("","","tudo");
+});
+
 document.querySelectorAll('.chips[data-filter]').forEach(group=>{
   group.querySelectorAll('.chip[data-value]').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -1386,10 +1815,13 @@ document.getElementById('sync-btn')?.addEventListener('click',async()=>{
   btn.classList.add('sync-btn--loading');
   if(lbl)lbl.textContent='Sincronizando…';
   try{
-    await fetch('/.netlify/functions/sync',{method:'POST'});
+    const resp=await fetch('/.netlify/functions/sync',{method:'POST'});
+    try{SYNC_INFO=await resp.clone().json()}catch{SYNC_INFO=null}
     const raw=await fetchCards();
     ALL=raw.filter(c=>colAceita(c.coluna));
     if(ALL.length===0&&raw.length>0)ALL=raw;
+    MOVS_STATUS="carregando";
+    MOVS=await fetchMovimentacoes();
     populateSelects();
     render();
     btn.classList.remove('sync-btn--loading');
@@ -1415,9 +1847,10 @@ document.getElementById('sync-btn')?.addEventListener('click',async()=>{
 
 async function init(){
   try{
-    const raw=await fetchCards();
+    const [raw,movs]=await Promise.all([fetchCards(),fetchMovimentacoes()]);
     ALL=raw.filter(c=>colAceita(c.coluna));
     if(ALL.length===0&&raw.length>0)ALL=raw;
+    MOVS=movs;
     populateSelects();
     render();
   }catch(e){

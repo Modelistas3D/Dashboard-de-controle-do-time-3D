@@ -27,6 +27,9 @@ const COR_FREELANCER     = "red_dark";    // "MODELISTA EXTERNO"
 const COR_INV27          = "green";       // "Estação | INV27"
 const NOME_FREELANCER    = "Modelista Externo";
 const LOTE               = 500;  // lote maior = menos requisições no upsert (importante com o acervo)
+const MAX_PAGES_ACOES    = 3;    // teto de 3.000 movimentações por execução (o histórico completo entra em alguns syncs, sem estourar o tempo da function)
+const LOTE_MOV           = 1000; // movimentações por request no upsert
+const JANELA_INICIAL_DIAS= 540;  // primeira carga do histórico: ~18 meses
 
 // ─── HELPERS TRELLO ─────────────────────────────────────────────────────────────
 
@@ -96,42 +99,104 @@ async function buscarCards(boardId, idsColunas, env) {
   return filtrados;
 }
 
-async function buscarAcoesMovimentacao(boardId, env) {
-  console.log("[sync] Buscando histórico de movimentações...");
+// Busca as ações de movimentação entre colunas (updateCard:idList).
+// `since` recorta a janela: no sync incremental usamos a data da última
+// movimentação já gravada, o que mantém a chamada rápida no dia a dia.
+// O Trello devolve as ações da mais nova para a mais antiga; `before` caminha
+// para trás no tempo. `truncado: true` avisa que o teto de páginas foi atingido
+// e ainda há histórico mais antigo a buscar na próxima execução.
+async function buscarAcoesMovimentacao(boardId, env, since, before, maxPaginas) {
+  console.log(`[sync] Movimentações desde ${since}${before ? ` (antes de ${before})` : ""}...`);
   let todas = [];
-  let before = null;
-
-  // Limita a 6 meses para não exceder o timeout da Netlify Function
-  const since = new Date(Date.now() - 180 * 24 * 3_600_000).toISOString();
-  const MAX_PAGES = 4; // máx 4.000 ações
+  let cursor = before || null;
   let pagina = 0;
+  let truncado = false;
 
-  while (pagina < MAX_PAGES) {
+  while (true) {
+    if (pagina >= maxPaginas) { truncado = true; break; }
     const params = { filter: "updateCard:idList", limit: "1000", since };
-    if (before) params.before = before;
+    if (cursor) params.before = cursor;
 
     const resultados = await trelloGet(`/boards/${boardId}/actions`, params, env);
     if (!resultados.length) break;
     todas = todas.concat(resultados);
     pagina++;
-    if (resultados.length < 1000) break;
-    before = resultados[resultados.length - 1].id;
+    if (resultados.length < 1000) break;   // acabou o histórico da janela
+    cursor = resultados[resultados.length - 1].id;
   }
 
-  const porCard = {};
-  for (const a of todas) {
+  console.log(`[sync] ${todas.length} movimentações recebidas${truncado ? " (truncado)" : ""}`);
+  return { acoes: todas, truncado };
+}
+
+// Converte as ações do Trello em linhas da tabela `movimentacoes`.
+function processarMovimentacoes(acoes) {
+  const linhas = [];
+  const vistos = new Set();
+  for (const a of acoes) {
     const cardId = a?.data?.card?.id;
-    if (cardId) {
-      if (!porCard[cardId]) porCard[cardId] = [];
-      porCard[cardId].push(a);
+    const depois = a?.data?.listAfter?.name;
+    if (!cardId || !a.id || !a.date || vistos.has(a.id)) continue;
+    vistos.add(a.id);
+    linhas.push({
+      action_id:    a.id,
+      trello_id:    cardId,
+      card_nome:    a?.data?.card?.name || null,
+      data:         a.date,
+      lista_antes:  a?.data?.listBefore?.name || null,
+      lista_depois: depois || null,
+      membro:       a?.memberCreator?.fullName || a?.memberCreator?.username || null,
+    });
+  }
+  return linhas;
+}
+
+// Extremos do histórico já gravado — âncoras dos dois sentidos do sync:
+// a mais nova puxa o que aconteceu desde o último sync; a mais antiga serve de
+// cursor para continuar preenchendo o passado a cada execução.
+async function limitesMovimentacoes(env) {
+  const headers = { apikey: env.SUPABASE_SERVICE_KEY, Authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}` };
+  const uma = async (ordem) => {
+    const res = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/movimentacoes?select=action_id,data&order=data.${ordem}&limit=1`,
+      { headers }
+    );
+    if (!res.ok) return undefined;       // tabela ainda não existe
+    const linhas = await res.json();
+    return Array.isArray(linhas) && linhas.length ? linhas[0] : null;
+  };
+  try {
+    const nova = await uma("desc");
+    if (nova === undefined) return { semTabela: true };
+    if (nova === null) return { vazia: true };
+    const antiga = await uma("asc");
+    return { vazia: false, nova, antiga: antiga || nova };
+  } catch (e) {
+    console.warn("[sync] Não foi possível ler os limites das movimentações:", e.message);
+    return null;
+  }
+}
+
+async function upsertMovimentacoes(linhas, env) {
+  if (!linhas.length) return 0;
+  const url = `${env.SUPABASE_URL}/rest/v1/movimentacoes?on_conflict=action_id`;
+  const headers = {
+    "Content-Type":  "application/json",
+    "apikey":        env.SUPABASE_SERVICE_KEY,
+    "Authorization": `Bearer ${env.SUPABASE_SERVICE_KEY}`,
+    "Prefer":        "resolution=merge-duplicates,return=minimal",
+  };
+  let enviados = 0;
+  for (let i = 0; i < linhas.length; i += LOTE_MOV) {
+    const lote = linhas.slice(i, i + LOTE_MOV);
+    const res  = await fetch(url, { method: "POST", headers, body: JSON.stringify(lote) });
+    if (!res.ok) {
+      const texto = await res.text();
+      throw new Error(`Supabase upsert movimentacoes (lote ${i / LOTE_MOV + 1}): ${res.status} — ${texto}`);
     }
+    enviados += lote.length;
   }
-  // Ordenar por data crescente
-  for (const id of Object.keys(porCard)) {
-    porCard[id].sort((a, b) => new Date(a.date) - new Date(b.date));
-  }
-  console.log(`[sync] ${todas.length} movimentações para ${Object.keys(porCard).length} cards`);
-  return porCard;
+  return enviados;
 }
 
 // ─── DETECÇÃO DE ATRIBUTOS ───────────────────────────────────────────────────────
@@ -488,8 +553,7 @@ const handler = async (event) => {
     // 2. Cards
     const cardsRaw = await buscarCards(env.TRELLO_BOARD_ID, idsColunas, env);
 
-    // 3. Processar (o tempo agora vem da descrição do card — não buscamos mais
-    //    o histórico de movimentações, o que deixa o sync bem mais rápido)
+    // 3. Processar (o tempo/peça vem da descrição do card — parseTempoDescricao)
     const cards = processarCards(cardsRaw, mapaCols, {});
 
     // 4. Upsert no Supabase
@@ -498,6 +562,51 @@ const handler = async (event) => {
     // 5. Remove registros obsoletos (cards que saíram do escopo desde o último sync)
     const idsAtivos = cards.map(c => c.trello_id);
     const deletados = await limparObsoletos(idsAtivos, env);
+
+    // 6. Histórico de movimentação — base do gráfico de vazão.
+    //    Roda depois do upsert dos cards de propósito: se o teto de tempo da
+    //    function for atingido aqui, os cards já estão salvos.
+    //    Duas frentes por execução, ambas com teto de páginas:
+    //      a) o que aconteceu desde a última movimentação gravada;
+    //      b) backfill do passado, a partir da movimentação mais antiga gravada.
+    //    Quando (b) satura, `mov_pendente` avisa que outro sync traz mais.
+    let movimentacoes = 0;
+    let movPendente = false;
+    let movErro = null;
+    try {
+      const alvo = new Date(Date.now() - JANELA_INICIAL_DIAS * 24 * 3_600_000).toISOString();
+      const lim  = await limitesMovimentacoes(env);
+      let acoes = [];
+
+      if (lim && lim.semTabela) {
+        // Sem a tabela não adianta gastar chamadas no Trello.
+        throw new Error("tabela `movimentacoes` não encontrada no Supabase — rode supabase_movimentacoes.sql no SQL Editor");
+      }
+
+      if (!lim || lim.vazia) {
+        // Primeira carga: começa do presente e caminha para trás até o teto.
+        const r = await buscarAcoesMovimentacao(env.TRELLO_BOARD_ID, env, alvo, null, MAX_PAGES_ACOES);
+        acoes = r.acoes; movPendente = r.truncado;
+      } else {
+        // (a) novidades — 1 dia de sobreposição; o upsert deduplica por action_id
+        const desde = new Date(new Date(lim.nova.data).getTime() - 24 * 3_600_000).toISOString();
+        const novas = await buscarAcoesMovimentacao(env.TRELLO_BOARD_ID, env, desde, null, 2);
+        acoes = novas.acoes;
+
+        // (b) passado ainda não coberto
+        if (new Date(lim.antiga.data).getTime() > new Date(alvo).getTime()) {
+          const back = await buscarAcoesMovimentacao(env.TRELLO_BOARD_ID, env, alvo, lim.antiga.action_id, MAX_PAGES_ACOES);
+          acoes = acoes.concat(back.acoes);
+          movPendente = back.truncado;
+        }
+      }
+
+      movimentacoes = await upsertMovimentacoes(processarMovimentacoes(acoes), env);
+      console.log(`[sync] ${movimentacoes} movimentações gravadas${movPendente ? " — ainda há histórico anterior a importar" : ""}`);
+    } catch (e) {
+      movErro = e.message;
+      console.warn("[sync] Movimentações não sincronizadas:", e.message);
+    }
 
     const duracao = ((Date.now() - inicio) / 1000).toFixed(1);
     console.log(`[sync] ${total} cards sincronizados, ${deletados} obsoletos removidos em ${duracao}s`);
@@ -509,6 +618,9 @@ const handler = async (event) => {
         ok:          true,
         total,
         deletados,
+        movimentacoes,
+        mov_pendente: movPendente,
+        mov_erro:    movErro,
         colunas:     colunas.length,
         duracao_s:   parseFloat(duracao),
         extraido_em: new Date().toISOString(),
