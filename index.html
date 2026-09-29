@@ -87,6 +87,20 @@ html[data-theme=light] .theme-toggle__sun{opacity:1;transform:scale(1) rotate(0d
 .kpi__sub strong{color:var(--blush);font-weight:600}
 .kpi__mini{display:flex;gap:var(--sp-1);margin-top:2px;flex-wrap:wrap}
 .kpi__badge{font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;padding:2px 6px;border-radius:999px;border:1px solid var(--line-strong);color:var(--blush-60);white-space:nowrap}
+.cmp-recortes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:var(--sp-4)}
+.cmp-lado{align-items:flex-end;padding:var(--sp-4)}
+.cmp-lado__tag{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:var(--noir);align-self:center}
+#cmp-tbody td.num{white-space:nowrap}
+.cmp-cob td{font-size:var(--fs-2xs);color:var(--blush-60);padding-top:0}
+.fonte{margin-top:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);background:rgba(245,237,230,0.015)}
+.fonte summary{cursor:pointer;font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--rose)}
+.fonte summary:hover{color:var(--blush)}
+.fonte ul{margin:var(--sp-3) 0 var(--sp-1);padding-left:var(--sp-5);color:var(--blush-80);font-size:var(--fs-sm);line-height:1.6;max-width:80ch}
+.fonte li+li{margin-top:var(--sp-2)}
+.fonte strong{color:var(--blush);font-weight:600}
+.fonte code{font-family:var(--font-mono);font-size:0.9em;color:var(--champagne)}
+.fontes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:0 var(--sp-4)}
+.cmp-sec td{font-family:var(--font-mono);font-size:var(--fs-3xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--rose);padding-top:var(--sp-4)}
 .cmp-badge{font-family:var(--font-mono);font-size:var(--fs-2xs);letter-spacing:0.10em;padding:6px 12px;border-radius:999px;border:1px solid var(--rose-line);background:var(--rose-soft);color:var(--blush-60);white-space:nowrap}
 .filters{margin-top:var(--sp-7);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(245,237,230,0.015);display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--sp-5)}
 .filters__group{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
@@ -563,6 +577,15 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
       </div>
       <p class="note" id="note-vazao">&mdash;</p>
     </div>
+    <details class="fonte">
+      <summary>De onde vem o fluxo?</summary>
+      <ul>
+        <li>A cada sincroniza&ccedil;&atilde;o, o painel busca no Trello o <strong>hist&oacute;rico de movimenta&ccedil;&atilde;o</strong> de cada card: quando ele mudou de coluna, de onde saiu e para onde foi.</li>
+        <li>Uma pe&ccedil;a conta como <strong>finalizada</strong> na primeira vez que entra numa coluna de encerramento do seu fluxo: <strong>Liberado/Feito</strong> (e <strong>Revis&atilde;o Final</strong>, na Montagem TQ). Se voltar e sair de novo, conta s&oacute; a primeira vez.</li>
+        <li>Colunas como &ldquo;A fazer 2D liberado&rdquo; t&ecirc;m &ldquo;liberado&rdquo; no nome, mas s&atilde;o ponto de <em>partida</em> e n&atilde;o contam.</li>
+        <li>J&aacute; a <strong>etapa</strong> e o &ldquo;% j&aacute; liberado&rdquo; usam a coluna em que o card est&aacute; <em>hoje</em>, n&atilde;o o hist&oacute;rico.</li>
+      </ul>
+    </details>
   </div>
 </section>
 
@@ -806,6 +829,15 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
         <p class="note" id="note-tempo-colecao">&mdash;</p>
       </div>
     </div>
+    <details class="fonte">
+      <summary>De onde vem o tempo de trabalho?</summary>
+      <ul>
+        <li>Vem da <strong>descri&ccedil;&atilde;o do card</strong> no Trello, na linha <code>TEMPO DE TRABALHO: 02:30</code> (tamb&eacute;m aceita <code>2h30</code>). &Eacute; o tempo que a modelista informou ter trabalhado na pe&ccedil;a.</li>
+        <li>Card <strong>sem essa linha fica sem tempo</strong>: n&atilde;o entra na m&eacute;dia nem no total de horas, mas continua contando como pe&ccedil;a. Por isso mostramos quantas pe&ccedil;as t&ecirc;m tempo informado.</li>
+        <li>A <strong>complexidade</strong> vem da etiqueta do card. Sem etiqueta, &eacute; calculada por esse tempo: at&eacute; 1h Baixa, at&eacute; 2h M&eacute;dia, acima de 2h Alta.</li>
+        <li>Os valores s&atilde;o atualizados ao clicar em <strong>Sincronizar</strong>.</li>
+      </ul>
+    </details>
   </div>
 </section>
 
@@ -831,8 +863,26 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
   <div class="wrap">
     <div class="section__num">Comparar</div>
     <h2 class="section__title">Compara&ccedil;&atilde;o lado a lado.</h2>
-    <p class="section__intro">Escolha um campo e dois valores. Os filtros do topo valem como <em>contexto fixo</em> para os dois lados &mdash; s&oacute; o campo escolhido varia entre A e B.</p>
-    <div class="filters" style="margin-top:0">
+    <p class="section__intro" id="cmp-intro">Monte cada lado com sua pr&oacute;pria marca, esta&ccedil;&atilde;o e cole&ccedil;&atilde;o &mdash; ex.: Maria Fil&oacute; AV28 &times; Farm VER28. Os demais filtros do topo valem como <em>contexto fixo</em> para os dois lados.</p>
+    <div class="chips" id="cmp-modo" style="margin-bottom:var(--sp-4)">
+      <button class="chip" aria-pressed="true" data-modo="recorte">Cole&ccedil;&otilde;es (marca &middot; esta&ccedil;&atilde;o &middot; cole&ccedil;&atilde;o)</button>
+      <button class="chip" aria-pressed="false" data-modo="campo">Um campo</button>
+    </div>
+    <div class="cmp-recortes" id="cmp-recortes">
+      <div class="filters cmp-lado" style="margin-top:0">
+        <span class="cmp-lado__tag" style="background:var(--rose)">A</span>
+        <div class="filters__group"><span class="filters__label">Marca</span><select class="filter-select" id="cmp-a-marca"></select></div>
+        <div class="filters__group"><span class="filters__label">Esta&ccedil;&atilde;o</span><select class="filter-select" id="cmp-a-estacao"></select></div>
+        <div class="filters__group"><span class="filters__label">Cole&ccedil;&atilde;o</span><select class="filter-select" id="cmp-a-colecao"></select></div>
+      </div>
+      <div class="filters cmp-lado" style="margin-top:0">
+        <span class="cmp-lado__tag" style="background:var(--champagne)">B</span>
+        <div class="filters__group"><span class="filters__label">Marca</span><select class="filter-select" id="cmp-b-marca"></select></div>
+        <div class="filters__group"><span class="filters__label">Esta&ccedil;&atilde;o</span><select class="filter-select" id="cmp-b-estacao"></select></div>
+        <div class="filters__group"><span class="filters__label">Cole&ccedil;&atilde;o</span><select class="filter-select" id="cmp-b-colecao"></select></div>
+      </div>
+    </div>
+    <div class="filters" id="cmp-campo" style="margin-top:0;display:none">
       <div class="filters__group">
         <span class="filters__label">Comparar por</span>
         <select class="filter-select" id="cmp-dim">
@@ -883,6 +933,35 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
       </div>
     </div>
     <p class="note" id="cmp-nota">&mdash;</p>
+    <div class="fontes-grid">
+    <details class="fonte">
+      <summary>De onde vem o tempo de trabalho?</summary>
+      <ul>
+        <li>Vem da <strong>descri&ccedil;&atilde;o do card</strong> no Trello, na linha <code>TEMPO DE TRABALHO: 02:30</code> (tamb&eacute;m aceita <code>2h30</code>). &Eacute; o tempo que a modelista informou ter trabalhado na pe&ccedil;a.</li>
+        <li>Card <strong>sem essa linha fica sem tempo</strong>: n&atilde;o entra na m&eacute;dia nem no total de horas, mas continua contando como pe&ccedil;a. Por isso mostramos quantas pe&ccedil;as t&ecirc;m tempo informado.</li>
+        <li>A <strong>complexidade</strong> vem da etiqueta do card. Sem etiqueta, &eacute; calculada por esse tempo: at&eacute; 1h Baixa, at&eacute; 2h M&eacute;dia, acima de 2h Alta.</li>
+        <li>Os valores s&atilde;o atualizados ao clicar em <strong>Sincronizar</strong>.</li>
+      </ul>
+    </details>
+    <details class="fonte">
+      <summary>De onde vem o tempo em Fazendo?</summary>
+      <ul>
+        <li>Tamb&eacute;m vem do <strong>hist&oacute;rico de movimenta&ccedil;&atilde;o</strong>: soma o tempo entre o card entrar numa coluna &ldquo;Fazendo&rdquo; e sair dela (n&atilde;o inclui &ldquo;Fazendo Libera&ccedil;&atilde;o&rdquo;).</li>
+        <li>&Eacute; medido em <strong>dias corridos</strong>, com noites, fins de semana e esperas. Mostra quanto tempo a pe&ccedil;a ficou em andamento, <em>n&atilde;o</em> as horas trabalhadas &mdash; para isso use o tempo de trabalho da descri&ccedil;&atilde;o.</li>
+        <li>Mostramos a <strong>mediana</strong> (a pe&ccedil;a do meio), n&atilde;o a m&eacute;dia: a maioria passa poucas horas em Fazendo, mas alguns cards esquecidos na coluna por semanas puxariam a m&eacute;dia para cima.</li>
+        <li>S&oacute; conta passagens conclu&iacute;das: um card que est&aacute; em Fazendo agora s&oacute; entra quando sair da coluna. Cards cujo hist&oacute;rico ainda n&atilde;o foi importado tamb&eacute;m ficam de fora.</li>
+      </ul>
+    </details>
+    <details class="fonte">
+      <summary>De onde vem o fluxo?</summary>
+      <ul>
+        <li>A cada sincroniza&ccedil;&atilde;o, o painel busca no Trello o <strong>hist&oacute;rico de movimenta&ccedil;&atilde;o</strong> de cada card: quando ele mudou de coluna, de onde saiu e para onde foi.</li>
+        <li>Uma pe&ccedil;a conta como <strong>finalizada</strong> na primeira vez que entra numa coluna de encerramento do seu fluxo: <strong>Liberado/Feito</strong> (e <strong>Revis&atilde;o Final</strong>, na Montagem TQ). Se voltar e sair de novo, conta s&oacute; a primeira vez.</li>
+        <li>Colunas como &ldquo;A fazer 2D liberado&rdquo; t&ecirc;m &ldquo;liberado&rdquo; no nome, mas s&atilde;o ponto de <em>partida</em> e n&atilde;o contam.</li>
+        <li>J&aacute; a <strong>etapa</strong> e o &ldquo;% j&aacute; liberado&rdquo; usam a coluna em que o card est&aacute; <em>hoje</em>, n&atilde;o o hist&oacute;rico.</li>
+      </ul>
+    </details>
+    </div>
   </div>
 </section>
 
@@ -1236,7 +1315,7 @@ function renderTempoColecao(){
   const panorama=[
     {n:"Tempo médio / peça",sub:"equipe inteira",v:fmtH(mediaPeca),dot:"var(--rose)"},
     {n:"Tempo total acumulado",sub:"todas as peças com tempo",v:fmtH(totalHoras),dot:"var(--champagne)"},
-    {n:"Peças com tempo",sub:"base do cálculo",v:String(comTempo.length),dot:"var(--sage)"},
+    {n:"Peças com tempo",sub:"de "+cards.length+" no filtro · base do cálculo",v:String(comTempo.length),dot:"var(--sage)"},
   ].map(r=>'<div class="complex-row"><span class="complex-dot" style="background:'+r.dot+'"></span><div class="complex-row__label"><strong>'+r.n+'</strong><span>'+r.sub+'</span></div><span class="complex-row__num" style="font-size:var(--fs-xl)">'+r.v+'</span></div>').join("");
   set("tempo-panorama",panorama);
 
@@ -1455,28 +1534,67 @@ function matchDim(c,dim,val){
   return false;
 }
 
+// Tempo em "Fazendo" (dias corridos) por card, lido do histórico de movimentações.
+// Soma cada intervalo entre ENTRAR numa coluna "Fazendo" e SAIR dela. Intervalos
+// ainda abertos (card parado em Fazendo hoje) não entram — a peça ainda não terminou.
+// Card sem nenhum intervalo fechado fica fora (null), como o tempo da descrição.
+let FAZ_CACHE={movs:null,porCard:null};
+function diasEmFazendoPorCard(){
+  if(FAZ_CACHE.movs===MOVS)return FAZ_CACHE.porCard;
+  const porId={};
+  MOVS.forEach(m=>{const ts=new Date(m.data).getTime();if(!isNaN(ts))(porId[m.trello_id]=porId[m.trello_id]||[]).push({ts,col:m.lista_depois})});
+  const out={};
+  Object.entries(porId).forEach(([id,evs])=>{
+    evs.sort((a,b)=>a.ts-b.ts);
+    let ms=0,fechados=0;
+    for(let i=0;i<evs.length-1;i++){
+      if(getEtapa(evs[i].col)!=="Fazendo")continue;
+      ms+=evs[i+1].ts-evs[i].ts;fechados++;
+    }
+    if(fechados)out[id]=ms/86400000;
+  });
+  FAZ_CACHE={movs:MOVS,porCard:out};
+  return out;
+}
+
 function cmpMetrics(cards){
   const byC={Montagem:0,Novo:0,Ajuste:0,Acervo:0};
   cards.forEach(c=>{const k=catTipo(c);if(byC[k]!==undefined)byC[k]++});
   const comTempo=cards.filter(c=>c.tempo_horas!=null);
   const totalH=comTempo.reduce((s,c)=>s+c.tempo_horas,0);
   const mediaH=comTempo.length?totalH/comTempo.length:null;
+  const N=cards.length;
+  const rmolde=cards.reduce((s,c)=>s+(c.retrabalho_molde||0),0);
+  const rarte =cards.reduce((s,c)=>s+(c.retrabalho_arte ||0),0);
+  const ext   =cards.filter(c=>c.is_modelista_externo).length;
+  const lib   =cards.filter(c=>getEtapa(c.coluna)==="Liberado/Feito").length;
+  // Complexidade: % sobre as peças que têm complexidade calculada
+  const byCx={Baixa:0,"Média":0,Alta:0};
+  cards.forEach(c=>{const cx=c.complexidade==="Media"?"Média":c.complexidade;if(byCx[cx]!==undefined)byCx[cx]++});
+  const nCx=byCx.Baixa+byCx["Média"]+byCx.Alta;
+  const p=(n,t)=>t>0?n/t*100:null;
+  const faz=diasEmFazendoPorCard();
+  const comFaz=cards.map(c=>faz[c.trello_id]).filter(v=>v!=null);
   return {
-    N:cards.length,...byC,
-    totalH,mediaH,
-    rmolde:cards.reduce((s,c)=>s+(c.retrabalho_molde||0),0),
-    rarte: cards.reduce((s,c)=>s+(c.retrabalho_arte ||0),0),
-    ext:   cards.filter(c=>c.is_modelista_externo).length,
+    N,...byC,
+    totalH,mediaH,rmolde,rarte,ext,
+    nTempo:comTempo.length,pTempo:p(comTempo.length,N),
+    nFaz:comFaz.length,pFaz:p(comFaz.length,N),
+    // Mediana: poucos cards esquecidos em Fazendo por semanas distorceriam a média
+    fazMediana:comFaz.length?(()=>{const o=comFaz.slice().sort((a,b)=>a-b),k=o.length>>1;return o.length%2?o[k]:(o[k-1]+o[k])/2})():null,
+    pMontagem:p(byC.Montagem,N),pNovo:p(byC.Novo,N),pAjuste:p(byC.Ajuste,N),
+    pLib:p(lib,N),pExt:p(ext,N),
+    rmoldePP:N?rmolde/N:null,rartePP:N?rarte/N:null,
+    pBaixa:p(byCx.Baixa,nCx),pMedia:p(byCx["Média"],nCx),pAlta:p(byCx.Alta,nCx),
   };
 }
 
-// Resume os filtros ativos que valem como contexto (exclui o campo em comparação)
-function contextoAtivo(dim){
-  const skip=CMP_AFKEY[dim];
+// Resume os filtros ativos que valem como contexto (exclui os campos em comparação)
+function contextoAtivo(skipKeys){
   const out=[{label:"Escopo",value:AF.escopo==="tudo"?"Produção + Acervo":"Produção"}];
   [["brand","Marca"],["type","Tipo"],["source","Origem"],["etapa","Etapa"],["complexidade","Complexidade"],["estilista","Estilista"],["membro","Membro"],["estacao","Estação"],["colecao","Coleção"]]
     .forEach(([k,label])=>{
-      if(k===skip)return;
+      if(skipKeys.includes(k))return;
       const v=AF[k];
       if(!v||v==="all")return;
       out.push({label,value:cmpDisp(v)});
@@ -1494,38 +1612,134 @@ function popCmpValores(){
   else{sa.value=ops[0]||"";sb.value=ops[1]||ops[0]||"";}
 }
 
-function renderComparar(){
-  const dim=document.getElementById("cmp-dim").value;
-  const a=document.getElementById("cmp-a").value;
-  const b=document.getElementById("cmp-b").value;
+// ── Modo "Coleções": cada lado tem sua própria Marca + Estação + Coleção ──
+let CMP_MODO="recorte";
+const CMP_REC_CAMPOS=[["marca","brand"],["estacao","estacao"],["colecao","colecao"]];
 
-  // Base = filtros ativos como contexto, MAS ignorando o campo em comparação
-  const afKey=CMP_AFKEY[dim];
-  const saved=AF[afKey];AF[afKey]="all";
+// Lista fixa + valores que aparecem nos dados (para não esconder etiquetas novas)
+function opcoesRecorte(campo){
+  const fixas=campo==="marca"?MORD:campo==="estacao"?ESTACOES_FIXAS:COLECOES_FIXAS;
+  const extras=[...new Set(ALL.map(c=>c[campo]).filter(v=>v&&!fixas.includes(v)))].sort();
+  return fixas.concat(extras);
+}
+
+function popCmpRecortes(){
+  const padrao={a:{marca:"Maria Filó",estacao:"AV28"},b:{marca:"Farm BR",estacao:"VER28"}};
+  ["a","b"].forEach(lado=>CMP_REC_CAMPOS.forEach(([campo])=>{
+    const sel=document.getElementById("cmp-"+lado+"-"+campo);
+    if(!sel)return;
+    const atual=sel.value;
+    const ops=opcoesRecorte(campo);
+    sel.innerHTML='<option value="all">Todas</option>'+ops.map(v=>'<option value="'+v+'">'+v+'</option>').join("");
+    const alvo=atual||padrao[lado][campo]||"all";
+    sel.value=ops.includes(alvo)?alvo:"all";
+  }));
+}
+
+function recorteLado(lado){
+  const r={};
+  CMP_REC_CAMPOS.forEach(([campo])=>{r[campo]=document.getElementById("cmp-"+lado+"-"+campo).value});
+  return r;
+}
+function rotuloRecorte(r){
+  const partes=CMP_REC_CAMPOS.map(([campo])=>r[campo]).filter(v=>v!=="all");
+  return partes.length?partes.join(" · "):"Tudo";
+}
+function matchRecorte(c,r){
+  return CMP_REC_CAMPOS.every(([campo])=>r[campo]==="all"||c[campo]===r[campo]);
+}
+
+// Base comum: filtros do topo, ignorando os campos que cada lado define
+function baseSemCampos(afKeys){
+  const saved=afKeys.map(k=>AF[k]);
+  afKeys.forEach(k=>AF[k]="all");
   const base=filtered();
-  AF[afKey]=saved;
+  afKeys.forEach((k,i)=>AF[k]=saved[i]);
+  return base;
+}
 
-  const setA=base.filter(c=>matchDim(c,dim,a));
-  const setB=base.filter(c=>matchDim(c,dim,b));
+function renderComparar(){
+  let setA,setB,labelA,labelB,skipKeys,notaIguais,criterio;
+  if(CMP_MODO==="recorte"){
+    const rA=recorteLado("a"),rB=recorteLado("b");
+    skipKeys=CMP_REC_CAMPOS.map(([,k])=>k);
+    const base=baseSemCampos(skipKeys);
+    setA=base.filter(c=>matchRecorte(c,rA));
+    setB=base.filter(c=>matchRecorte(c,rB));
+    labelA=rotuloRecorte(rA);labelB=rotuloRecorte(rB);
+    notaIguais=labelA===labelB?"Os dois lados estão iguais — mude a <strong>marca</strong>, <strong>estação</strong> ou <strong>coleção</strong> de um deles.":"";
+    criterio="por marca · estação · coleção";
+  }else{
+    const dim=document.getElementById("cmp-dim").value;
+    const a=document.getElementById("cmp-a").value;
+    const b=document.getElementById("cmp-b").value;
+    skipKeys=[CMP_AFKEY[dim]];
+    const base=baseSemCampos(skipKeys);
+    setA=base.filter(c=>matchDim(c,dim,a));
+    setB=base.filter(c=>matchDim(c,dim,b));
+    labelA=cmpDisp(a)||"A";labelB=cmpDisp(b)||"B";
+    notaIguais=a===b?"Escolha <strong>dois valores diferentes</strong> de "+CMP_NOME[dim]+" para comparar.":"";
+    criterio="por "+CMP_NOME[dim];
+  }
   const mA=cmpMetrics(setA),mB=cmpMetrics(setB);
 
   // Contexto ativo (quais filtros estão valendo para os dois lados)
   document.getElementById("cmp-contexto").innerHTML=
     '<span class="mono" style="color:var(--rose);font-size:var(--fs-2xs)">Contexto:</span> '+
-    contextoAtivo(dim).map(x=>'<span class="cmp-badge">'+x.label+': <strong style="color:var(--blush)">'+x.value+'</strong></span>').join("");
+    contextoAtivo(skipKeys).map(x=>'<span class="cmp-badge">'+x.label+': <strong style="color:var(--blush)">'+x.value+'</strong></span>').join("");
 
-  // Métricas comparáveis (peças + tempo + retrabalho) — usadas no espelho e na tabela
+  // Métricas: absolutas (volume) e proporcionais (comparáveis entre coleções de tamanhos diferentes).
+  // bom: "maior"/"menor" colore o Δ; null = neutro. espelho: entra no gráfico espelhado.
   const METR=[
-    {n:"Total de peças",   get:m=>m.N,      kind:"num"},
-    {n:"Tempo médio / peça",get:m=>m.mediaH, kind:"time"},
-    {n:"Tempo total",      get:m=>m.totalH, kind:"time"},
-    {n:"Retrabalho molde", get:m=>m.rmolde, kind:"num"},
-    {n:"Retrabalho arte",  get:m=>m.rarte,  kind:"num"},
+    {sec:"Volume"},
+    {n:"Total de peças",          get:m=>m.N,         kind:"num",   bom:null,    espelho:true},
+    {n:"Tempo total",             get:m=>m.totalH,    kind:"time",  bom:null},
+    {n:"% já liberado",           get:m=>m.pLib,      kind:"pct",   bom:"maior", espelho:true},
+    {sec:"Mix de tipos"},
+    {n:"% Montagem",              get:m=>m.pMontagem, kind:"pct",   bom:null,    espelho:true},
+    {n:"% Novo",                  get:m=>m.pNovo,     kind:"pct",   bom:null,    espelho:true},
+    {n:"% Ajuste",                get:m=>m.pAjuste,   kind:"pct",   bom:null,    espelho:true},
+    {sec:"Esforço e qualidade"},
+    {n:"Tempo de trabalho / peça",get:m=>m.mediaH,    kind:"time",  bom:"menor", espelho:true},
+    {n:"↳ peças com tempo na descrição", get:m=>m.pTempo, kind:"pct", bom:"maior", cob:m=>m.nTempo+" de "+m.N},
+    {n:"Tempo em Fazendo (mediana)", get:m=>m.fazMediana,  kind:"dias",  bom:"menor", espelho:true},
+    {n:"↳ peças com histórico de Fazendo", get:m=>m.pFaz, kind:"pct", bom:"maior", cob:m=>m.nFaz+" de "+m.N},
+    {n:"Retrabalho molde / peça", get:m=>m.rmoldePP,  kind:"ratio", bom:"menor", espelho:true},
+    {n:"Retrabalho arte / peça",  get:m=>m.rartePP,   kind:"ratio", bom:"menor", espelho:true},
+    {n:"Retrabalho molde (total)",get:m=>m.rmolde,    kind:"num",   bom:null},
+    {n:"Retrabalho arte (total)", get:m=>m.rarte,     kind:"num",   bom:null},
+    {n:"% modelista externo",     get:m=>m.pExt,      kind:"pct",   bom:null,    espelho:true},
+    {sec:"Complexidade"},
+    {n:"% Baixa",                 get:m=>m.pBaixa,    kind:"pct",   bom:null},
+    {n:"% Média",                 get:m=>m.pMedia,    kind:"pct",   bom:null},
+    {n:"% Alta",                  get:m=>m.pAlta,     kind:"pct",   bom:null,    espelho:true},
   ];
-  const fmtMetr=(v,kind)=>kind==="time"?fmtH(v):(v==null?0:v);
+  const fmtNum=v=>String(v).replace(".",",");
+  const fmtDias=v=>v<1?fmtH(v*24):fmtNum(v.toFixed(1))+" d";
+  const fmtMetr=(v,kind)=>{
+    if(v==null)return kind==="num"?0:"—";
+    if(kind==="time")return fmtH(v);
+    if(kind==="pct")return Math.round(v)+"%";
+    if(kind==="ratio")return fmtNum(v.toFixed(2));
+    if(kind==="dias")return fmtDias(v);
+    return v;
+  };
+  const fmtDelta=(ra,rb,kind)=>{
+    if(kind!=="num"&&(ra==null||rb==null))return {txt:"—",diff:0};
+    // Arredonda antes de subtrair para o Δ bater com os valores exibidos
+    const r=kind==="pct"?v=>Math.round(v||0):kind==="ratio"?v=>Math.round((v||0)*100)/100:v=>v||0;
+    const diff=kind==="dias"?r(rb)-r(ra):Math.round((r(rb)-r(ra))*100)/100;
+    const sinal=diff>0?"+":diff<0?"−":"";
+    const abs=Math.abs(diff);
+    if(kind==="time")return {txt:sinal+fmtH(abs),diff};
+    if(kind==="pct")return {txt:sinal+Math.round(abs)+" p.p.",diff};
+    if(kind==="ratio")return {txt:sinal+fmtNum(abs.toFixed(2)),diff};
+    if(kind==="dias")return {txt:sinal+fmtDias(abs),diff};
+    return {txt:sinal+abs,diff};
+  };
 
   // Gráfico espelhado: A à esquerda (rosa), B à direita (champagne); escala por linha
-  document.getElementById("cmp-mirror").innerHTML=METR.map(m=>{
+  document.getElementById("cmp-mirror").innerHTML=METR.filter(m=>m.espelho).map(m=>{
     const va=m.get(mA)||0, vb=m.get(mB)||0, mx=Math.max(va,vb,0.0001);
     return '<div style="display:grid;grid-template-columns:1fr 160px 1fr;align-items:center;gap:var(--sp-2);margin:10px 0">'+
       '<div style="display:flex;justify-content:flex-end;height:18px"><div style="width:'+pct(va,mx)+'%;background:var(--rose);height:100%;border-radius:3px 0 0 3px"></div></div>'+
@@ -1534,33 +1748,38 @@ function renderComparar(){
       '</div>';
   }).join("");
 
-  // Tabela: métrica × A × B × Δ
+  // Tabela: métrica × A × B × Δ (B − A)
   document.getElementById("cmp-tbody").innerHTML=METR.map(m=>{
+    if(m.sec)return '<tr class="cmp-sec"><td colspan="4">'+m.sec+'</td></tr>';
     const ra=m.get(mA), rb=m.get(mB);
-    let av,bv,dv,diff;
-    if(m.kind==="time"){
-      av=fmtH(ra);bv=fmtH(rb);
-      diff=(rb||0)-(ra||0);
-      dv=(diff>0?"+":diff<0?"−":"")+fmtH(Math.abs(diff));
-    }else{
-      av=(ra==null?0:ra);bv=(rb==null?0:rb);diff=bv-av;
-      dv=(diff>0?"+":"")+diff;
-    }
-    const cor=diff>0?"var(--sage)":diff<0?"var(--bordeaux)":"var(--blush-60)";
-    return '<tr><td>'+m.n+'</td><td class="num">'+av+'</td><td class="num">'+bv+'</td><td class="num" style="color:'+cor+'">'+dv+'</td></tr>';
+    const d=fmtDelta(ra,rb,m.kind);
+    const melhora=m.bom==="maior"?d.diff>0:d.diff<0;
+    const cor=!m.bom||d.diff===0?"var(--blush-60)":melhora?"var(--sage)":"var(--bordeaux)";
+    const cel=(mm,v)=>m.cob?'<span style="color:var(--blush-60)">'+m.cob(mm)+'</span> · '+fmtMetr(v,m.kind):fmtMetr(v,m.kind);
+    return '<tr'+(m.cob?' class="cmp-cob"':'')+'><td>'+m.n+'</td><td class="num">'+cel(mA,ra)+'</td><td class="num">'+cel(mB,rb)+'</td><td class="num" style="color:'+cor+'">'+d.txt+'</td></tr>';
   }).join("");
 
   // Legendas / textos
-  document.getElementById("cmp-leg-a").textContent=cmpDisp(a)||"A";
-  document.getElementById("cmp-leg-b").textContent=cmpDisp(b)||"B";
-  document.getElementById("cmp-th-a").textContent=cmpDisp(a)||"A";
-  document.getElementById("cmp-th-b").textContent=cmpDisp(b)||"B";
-  document.getElementById("cmp-vis-sub").textContent=cmpDisp(a)+" × "+cmpDisp(b);
-  if(a===b){
-    document.getElementById("cmp-nota").innerHTML="Escolha <strong>dois valores diferentes</strong> de "+CMP_NOME[dim]+" para comparar.";
-  }else{
-    document.getElementById("cmp-nota").innerHTML="Comparando <strong>"+cmpDisp(a)+"</strong> ("+mA.N+" cards) e <strong>"+cmpDisp(b)+"</strong> ("+mB.N+" cards) por "+CMP_NOME[dim]+", dentro do contexto de filtros ativo.";
-  }
+  document.getElementById("cmp-leg-a").textContent=labelA;
+  document.getElementById("cmp-leg-b").textContent=labelB;
+  document.getElementById("cmp-th-a").textContent=labelA;
+  document.getElementById("cmp-th-b").textContent=labelB;
+  document.getElementById("cmp-vis-sub").textContent=labelA+" × "+labelB;
+  document.getElementById("cmp-nota").innerHTML=notaIguais||
+    "Comparando <strong>"+labelA+"</strong> ("+mA.N+" cards) e <strong>"+labelB+"</strong> ("+mB.N+" cards) "+criterio+", dentro do contexto de filtros ativo."+
+    " Percentuais e valores “por peça” permitem comparar coleções de tamanhos diferentes."+
+    ((!mA.N||!mB.N)?' <span style="color:var(--champagne)">Um dos lados não tem cards no contexto atual.</span>':"");
+}
+
+function setCmpModo(modo){
+  CMP_MODO=modo;
+  document.querySelectorAll("#cmp-modo .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.modo===modo?"true":"false"));
+  document.getElementById("cmp-recortes").style.display=modo==="recorte"?"":"none";
+  document.getElementById("cmp-campo").style.display=modo==="campo"?"":"none";
+  document.getElementById("cmp-intro").innerHTML=modo==="recorte"
+    ?"Monte cada lado com sua própria marca, estação e coleção — ex.: Maria Filó AV28 × Farm VER28. Os demais filtros do topo valem como <em>contexto fixo</em> para os dois lados."
+    :"Escolha um campo e dois valores. Os filtros do topo valem como <em>contexto fixo</em> para os dois lados — só o campo escolhido varia entre A e B.";
+  renderComparar();
 }
 
 function setTab(t){
@@ -1801,6 +2020,9 @@ document.getElementById('cmp-dim')?.addEventListener('change',()=>{popCmpValores
 document.getElementById('cmp-a')?.addEventListener('change',renderComparar);
 document.getElementById('cmp-b')?.addEventListener('change',renderComparar);
 popCmpValores(); // popula os valores A/B iniciais
+popCmpRecortes();
+document.querySelectorAll('#cmp-modo .chip').forEach(b=>b.addEventListener('click',()=>setCmpModo(b.dataset.modo)));
+document.querySelectorAll('#cmp-recortes select').forEach(s=>s.addEventListener('change',renderComparar));
 
 document.querySelector('.theme-toggle')?.addEventListener('click',()=>{
   const isLight=document.documentElement.getAttribute('data-theme')==='light';
@@ -1822,7 +2044,7 @@ document.getElementById('sync-btn')?.addEventListener('click',async()=>{
     if(ALL.length===0&&raw.length>0)ALL=raw;
     MOVS_STATUS="carregando";
     MOVS=await fetchMovimentacoes();
-    populateSelects();
+    populateSelects();popCmpRecortes();
     render();
     btn.classList.remove('sync-btn--loading');
     btn.classList.add('sync-btn--ok');
@@ -1851,7 +2073,7 @@ async function init(){
     ALL=raw.filter(c=>colAceita(c.coluna));
     if(ALL.length===0&&raw.length>0)ALL=raw;
     MOVS=movs;
-    populateSelects();
+    populateSelects();popCmpRecortes();
     render();
   }catch(e){
     console.error('init error',e);
