@@ -523,7 +523,7 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
       <div class="kpi kpi--accent">
         <span class="kpi__label">Total &middot; Cards</span>
         <span class="kpi__num" id="kpi-total">&mdash;</span>
-        <span class="kpi__sub">Colunas v&aacute;lidas do quadro 3D.</span>
+        <span class="kpi__sub" id="kpi-total-sub">Colunas v&aacute;lidas do quadro 3D.</span>
       </div>
       <div class="kpi">
         <span class="kpi__label"><span class="kpi__dot" style="background:var(--c-montagem)"></span>Montagem</span>
@@ -574,7 +574,7 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
     <p class="section__intro">Cada barra conta as pe&ccedil;as que <em>cruzaram a linha de chegada</em> no per&iacute;odo &mdash; lido do hist&oacute;rico de movimenta&ccedil;&atilde;o dos cards no Trello, n&atilde;o da coluna em que o card est&aacute; hoje.</p>
     <div class="card">
       <div class="card__head">
-        <div><h3 class="card__title">Vaz&atilde;o &mdash; pe&ccedil;as finalizadas por per&iacute;odo</h3><span class="card__sub" id="sub-vazao">Barras empilhadas por fluxo &middot; Montagem TQ finalizada = Revis&atilde;o Final + Liberado/Feito &middot; Revis&atilde;o TQ finalizada = Revis&atilde;o TQ | Feito</span></div>
+        <div><h3 class="card__title">Vaz&atilde;o &mdash; pe&ccedil;as finalizadas por per&iacute;odo</h3><span class="card__sub" id="sub-vazao">Barras empilhadas por fluxo &middot; pe&ccedil;a conclu&iacute;da = entrou em Liberado/Feito</span></div>
         <span class="card__num" id="vazao-total">&mdash;</span>
       </div>
       <div id="vazao-box"></div>
@@ -590,9 +590,11 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
       <summary>De onde vem o fluxo?</summary>
       <ul>
         <li>A cada sincroniza&ccedil;&atilde;o, o painel busca no Trello o <strong>hist&oacute;rico de movimenta&ccedil;&atilde;o</strong> de cada card: quando ele mudou de coluna, de onde saiu e para onde foi.</li>
-        <li>Uma pe&ccedil;a conta como <strong>finalizada</strong> na primeira vez que entra numa coluna de encerramento do seu fluxo: <strong>Liberado/Feito</strong> (e <strong>Revis&atilde;o Final</strong>, na Montagem TQ). Se voltar e sair de novo, conta s&oacute; a primeira vez.</li>
+        <li>Uma pe&ccedil;a conta como <strong>conclu&iacute;da</strong> quando entra numa coluna <strong>Liberado/Feito</strong> do seu fluxo. <strong>Revis&atilde;o Final</strong> ainda n&atilde;o &eacute; conclus&atilde;o.</li>
+        <li>Dentro do per&iacute;odo escolhido, cada pe&ccedil;a conta <strong>uma vez</strong>. Se ela j&aacute; tinha sido liberada antes e foi liberada de novo no per&iacute;odo, conta no per&iacute;odo.</li>
         <li>As colunas <strong>&ldquo;🔍 Revis&atilde;o TQ&rdquo;</strong> formam um fluxo pr&oacute;prio (revis&atilde;o dos arquivos 3D, em geral vindos do Acervo ou da Montagem liberada): a pe&ccedil;a conta como finalizada ao entrar em <strong>Revis&atilde;o TQ | Feito</strong>. As antigas &ldquo;Revis&atilde;o TQ OLD&rdquo; n&atilde;o entram.</li>
         <li>Colunas como &ldquo;A fazer 2D liberado&rdquo; t&ecirc;m &ldquo;liberado&rdquo; no nome, mas s&atilde;o ponto de <em>partida</em> e n&atilde;o contam.</li>
+        <li><strong>Com um per&iacute;odo no filtro</strong>, o painel inteiro passa a contar as pe&ccedil;as <em>conclu&iacute;das</em> nele &mdash; inclusive as que depois foram para o Acervo &mdash; e o tipo vale pelo fluxo em que a pe&ccedil;a foi liberada. <strong>Sem per&iacute;odo</strong>, o painel mostra a carga atual do quadro.</li>
         <li>J&aacute; a <strong>etapa</strong> e o &ldquo;% j&aacute; liberado&rdquo; usam a coluna em que o card est&aacute; <em>hoje</em>, n&atilde;o o hist&oacute;rico.</li>
       </ul>
     </details>
@@ -697,10 +699,10 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
   <div class="wrap">
     <div class="section__num">B4 &middot; Equipe</div>
     <h2 class="section__title">Carga consolidada por modelista.</h2>
-    <p class="section__intro">Vis&atilde;o integrada do bloco 4: quem est&aacute; com mais pe&ccedil;as e em que tipo. Quando o card tem mais de uma pessoa, a pe&ccedil;a &eacute; dividida entre elas &mdash; 2 pessoas contam 0,5 cada.</p>
+    <p class="section__intro">Sem per&iacute;odo no filtro, mostra a carga atual do quadro. Com um per&iacute;odo, mostra as pe&ccedil;as <em>conclu&iacute;das</em> nele &mdash; que entraram em Liberado/Feito. Card com mais de uma pessoa &eacute; dividido entre elas: 2 pessoas contam 0,5 cada.</p>
     <div class="card">
       <div class="card__head">
-        <div><h3 class="card__title">Tabela &middot; Modelistas</h3><span class="card__sub">Bloco 4.4 &middot; pe&ccedil;as por tipo &middot; card com 2 pessoas = 0,5 para cada</span></div>
+        <div><h3 class="card__title">Tabela &middot; Modelistas</h3><span class="card__sub" id="sub-equipe">Carga atual do quadro &middot; card com 2 pessoas = 0,5 para cada</span></div>
         <span class="card__num">Fig. 05</span>
       </div>
       <div class="table-wrap">
@@ -968,9 +970,11 @@ html[data-theme=light] .date-input::-webkit-calendar-picker-indicator{filter:non
       <summary>De onde vem o fluxo?</summary>
       <ul>
         <li>A cada sincroniza&ccedil;&atilde;o, o painel busca no Trello o <strong>hist&oacute;rico de movimenta&ccedil;&atilde;o</strong> de cada card: quando ele mudou de coluna, de onde saiu e para onde foi.</li>
-        <li>Uma pe&ccedil;a conta como <strong>finalizada</strong> na primeira vez que entra numa coluna de encerramento do seu fluxo: <strong>Liberado/Feito</strong> (e <strong>Revis&atilde;o Final</strong>, na Montagem TQ). Se voltar e sair de novo, conta s&oacute; a primeira vez.</li>
+        <li>Uma pe&ccedil;a conta como <strong>conclu&iacute;da</strong> quando entra numa coluna <strong>Liberado/Feito</strong> do seu fluxo. <strong>Revis&atilde;o Final</strong> ainda n&atilde;o &eacute; conclus&atilde;o.</li>
+        <li>Dentro do per&iacute;odo escolhido, cada pe&ccedil;a conta <strong>uma vez</strong>. Se ela j&aacute; tinha sido liberada antes e foi liberada de novo no per&iacute;odo, conta no per&iacute;odo.</li>
         <li>As colunas <strong>&ldquo;🔍 Revis&atilde;o TQ&rdquo;</strong> formam um fluxo pr&oacute;prio (revis&atilde;o dos arquivos 3D, em geral vindos do Acervo ou da Montagem liberada): a pe&ccedil;a conta como finalizada ao entrar em <strong>Revis&atilde;o TQ | Feito</strong>. As antigas &ldquo;Revis&atilde;o TQ OLD&rdquo; n&atilde;o entram.</li>
         <li>Colunas como &ldquo;A fazer 2D liberado&rdquo; t&ecirc;m &ldquo;liberado&rdquo; no nome, mas s&atilde;o ponto de <em>partida</em> e n&atilde;o contam.</li>
+        <li><strong>Com um per&iacute;odo no filtro</strong>, o painel inteiro passa a contar as pe&ccedil;as <em>conclu&iacute;das</em> nele &mdash; inclusive as que depois foram para o Acervo &mdash; e o tipo vale pelo fluxo em que a pe&ccedil;a foi liberada. <strong>Sem per&iacute;odo</strong>, o painel mostra a carga atual do quadro.</li>
         <li>J&aacute; a <strong>etapa</strong> e o &ldquo;% j&aacute; liberado&rdquo; usam a coluna em que o card est&aacute; <em>hoje</em>, n&atilde;o o hist&oacute;rico.</li>
       </ul>
     </details>
@@ -1087,6 +1091,8 @@ let SYNC_INFO=null;          // resposta do ultimo /sync (avisa se o historico a
 const pct=(n,t)=>t>0?Math.round(n/t*100):0;
 function fmtH(h){if(h==null)return"—";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+"h "+String(mm).padStart(2,"0")+"m"}
 // Peça dividida entre quem está no card: 2 pessoas = 0,5 para cada uma.
+// Quem é freelance (não depende do card: a etiqueta "Modelista Externo" marca o card, não a pessoa)
+const FREELANCERS=["Modelistas 3D"];
 function pesoMembro(c){const n=mArr(c.membros).filter(Boolean).length;return n?1/n:0}
 function fmtPeca(v){return Number.isInteger(v)?String(v):String(Math.round(v*10)/10).replace(".",",")}
 function mArr(m){if(!m)return[];if(Array.isArray(m))return m;try{return JSON.parse(m)}catch{return[]}}
@@ -1098,13 +1104,14 @@ function topE(cards,f){const c={};cards.forEach(x=>{c[x[f]]=(c[x[f]]||0)+1});con
 // Categoria de exibição: cards na coluna ACERVO GERAL contam como "Acervo"
 // (independente do tipo da etiqueta); os demais mantêm Montagem/Novo/Ajuste.
 function catTipo(c){
+  if(c._tipoPeriodo)return c._tipoPeriodo;
   if((c.coluna||"").toLowerCase().includes("acervo"))return "Acervo";
   if(isRevisaoTQ(c.coluna))return "Revisão TQ";
   return c.tipo;
 }
 // Tipo para os gráficos por fluxo: igual a catTipo, mas os cards de acervo
 // mantêm o tipo da etiqueta (eles só aparecem com o escopo "Produção + Acervo").
-function tipoFluxo(c){return isRevisaoTQ(c.coluna)?"Revisão TQ":c.tipo}
+function tipoFluxo(c){return c._tipoPeriodo||(isRevisaoTQ(c.coluna)?"Revisão TQ":c.tipo)}
 const TIPOS_FLUXO=[
   {t:"Montagem",  k:"M",cor:"var(--c-montagem)"},
   {t:"Novo",      k:"N",cor:"var(--c-novo)"},
@@ -1150,16 +1157,50 @@ function dentroDaJanela(ts){
 
 // semData=true ignora o filtro de período — usado pelo gráfico de vazão, que
 // recorta pela data de FINALIZAÇÃO (movimentação) e não pela última atividade.
-function filtered(semData){
+// Tipo do fluxo em que a peça foi concluída → categoria do painel.
+const FLUXO_TIPO={"Montagem TQ":"Montagem","Novo":"Novo","Ajuste":"Ajuste","Revisão TQ":"Revisão TQ"};
+
+// Cards concluídos no período do filtro → tipo da conclusão (a 1ª no período).
+// Mesma regra de conclusoesNoPeriodo; cache por histórico + datas do filtro.
+let CONC_CACHE={movs:null,de:null,ate:null,mapa:null};
+function concluidosNoPeriodo(){
+  if(CONC_CACHE.movs===MOVS&&CONC_CACHE.de===AF.de&&CONC_CACHE.ate===AF.ate)return CONC_CACHE.mapa;
+  const prim=new Map();
+  for(const m of MOVS){
+    if(!colunaFinaliza(m.lista_depois))continue;
+    const ts=new Date(m.data).getTime();
+    if(!dentroDaJanela(ts))continue;
+    if(!prim.has(m.trello_id)||ts<prim.get(m.trello_id).ts)prim.set(m.trello_id,{ts,tipo:FLUXO_TIPO[fluxoColuna(m.lista_depois)]});
+  }
+  const mapa=new Map([...prim].map(([id,v])=>[id,v.tipo]));
+  CONC_CACHE={movs:MOVS,de:AF.de,ate:AF.ate,mapa};
+  return mapa;
+}
+function periodoAtivo(){const {ini,fim}=janela();return ini!=null||fim!=null}
+function porConclusao(){return periodoAtivo()&&MOVS_STATUS==="ok"}
+
+// semData: ignora o período (Vazão e equipe fazem o recorte pela data de conclusão).
+// opts.historico: base para contar conclusões — inclui cards que já foram para o
+// Acervo e não filtra por tipo (o tipo vale pelo fluxo da conclusão, não pelo card).
+function filtered(semData,opts={}){
   const {ini,fim}=janela();
   const filtraData=!semData&&(ini!=null||fim!=null);
-  return ALL.filter(c=>{
+  // Com período e histórico disponível: só peças concluídas no período, com o
+  // tipo da conclusão — mesmo que o card já esteja no Acervo.
+  const conc=filtraData&&MOVS_STATUS==="ok";
+  let fonte=ALL;
+  if(conc){
+    const mapa=concluidosNoPeriodo();
+    fonte=ALL.filter(c=>mapa.has(c.trello_id)).map(c=>({...c,_tipoPeriodo:mapa.get(c.trello_id)}));
+  }
+  return fonte.filter(c=>{
     // Escopo: por padrão (produção) escondemos os cards de ACERVO GERAL.
     const isAcervo=(c.coluna||"").toLowerCase().includes("acervo");
-    if(AF.escopo==="producao"&&isAcervo)return false;
-    if(filtraData&&!dentroDaJanela(c.data_atividade?new Date(c.data_atividade).getTime():null))return false;
+    if(!conc&&!opts.historico&&AF.escopo==="producao"&&isAcervo)return false;
+    // Sem histórico, cai no filtro antigo pela última atividade do card.
+    if(filtraData&&!conc&&!dentroDaJanela(c.data_atividade?new Date(c.data_atividade).getTime():null))return false;
     if(AF.brand!=="all"&&c.marca!==AF.brand)return false;
-    if(AF.type!=="all"&&catTipo(c)!==AF.type)return false;
+    if(!opts.historico&&AF.type!=="all"&&catTipo(c)!==AF.type)return false;
     if(AF.source==="interna"&&c.is_modelista_externo)return false;
     if(AF.source==="externo"&&!c.is_modelista_externo)return false;
     if(AF.etapa!=="all"&&getEtapa(c.coluna)!==AF.etapa)return false;
@@ -1206,6 +1247,7 @@ function render(){
   cards.forEach(c=>{const k=catTipo(c);if(byT[k]!==undefined)byT[k]++});
 
   document.getElementById("kpi-total").textContent=N;
+  document.getElementById("kpi-total-sub").textContent=porConclusao()?"Peças concluídas no período (entraram em Liberado/Feito).":"Colunas válidas do quadro 3D.";
   document.getElementById("meta-total").textContent=N+" cards lidos";
   document.getElementById("kpi-montagem").innerHTML=byT.Montagem+'<sub>'+pct(byT.Montagem,N)+'%</sub>';
   document.getElementById("kpi-novo").innerHTML=byT.Novo+'<sub>'+pct(byT.Novo,N)+'%</sub>';
@@ -1227,7 +1269,7 @@ function render(){
   const mods=new Set();cards.forEach(c=>mArr(c.membros).forEach(m=>{if(m)mods.add(m)}));
   const topM=topE(cards,"marca");
   const extN=cards.filter(c=>c.is_modelista_externo).length;
-  document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+' cards</strong> em produção entre '+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
+  document.getElementById("hero-tldr").innerHTML='<span class="label">Resumo</span><p><strong style="color:var(--blush)">'+N+(porConclusao()?' peças</strong> concluídas no período entre ':' cards</strong> em produção entre ')+marcas.length+' marca'+(marcas.length!==1?'s':'')+', '+ests.length+' estilista'+(ests.length!==1?'s':'')+' e '+mods.size+' modelista'+(mods.size!==1?'s':'')+'. '+(topM?'<strong style="color:var(--blush)">'+topM.name+' concentra '+pct(topM.count,N)+'%</strong> do volume. ':'')+( extN>0?'O <strong style="color:var(--blush)">Modelista Externo</strong> responde por '+pct(extN,N)+'% dos cards.':'')+' </p>';
 
   document.getElementById("donut-tipo-total").textContent=N;
   document.getElementById("sub-tipo").textContent='Bloco 1.3 · '+N+' cards';
@@ -1255,12 +1297,28 @@ function render(){
   document.getElementById("gbars-marca").innerHTML=MORD.filter(m=>(byM[m]||0)>0).map(m=>{const mc=cards.filter(c=>c.marca===m),mM=mc.filter(c=>tipoFluxo(c)==="Montagem").length,mN=mc.filter(c=>tipoFluxo(c)==="Novo").length,mA=mc.filter(c=>tipoFluxo(c)==="Ajuste").length,tot=byM[m]||0;return'<div class="gbar-row"><div class="gbar-row__name"><strong>'+m+'</strong><span>'+tot+' cards · '+pct(tot,N)+'%</span></div><div class="gbar-row__bars"><div class="gbar"><span class="gbar__type">Montagem</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mM,maxG)+'%;background:var(--c-montagem)"></div></div><span class="gbar__val">'+mM+'</span></div><div class="gbar"><span class="gbar__type">Novo</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mN,maxG)+'%;background:var(--c-novo)"></div></div><span class="gbar__val">'+mN+'</span></div><div class="gbar"><span class="gbar__type">Ajuste</span><div class="gbar__bar"><div class="gbar__fill" style="width:'+pct(mA,maxG)+'%;background:var(--c-ajuste)"></div></div><span class="gbar__val">'+mA+'</span></div></div></div>'}).join("");
   document.getElementById("note-marca-tipo").innerHTML="Calendários distintos sob o mesmo ateliê.";
 
-  const modMap={};cards.forEach(c=>{const w=pesoMembro(c),t=tipoFluxo(c),tf=TIPOS_FLUXO.find(x=>x.t===t);mArr(c.membros).forEach(m=>{if(!m)return;if(!modMap[m])modMap[m]={M:0,N:0,A:0,R:0,ext:false};if(tf)modMap[m][tf.k]+=w;if(c.is_modelista_externo)modMap[m].ext=true})});
+  // Sem período: carga atual do quadro (cards nas colunas hoje).
+  // Com período: peças CONCLUÍDAS no período, pelo histórico (mesma regra da Vazão).
+  const {ini:jIni,fim:jFim}=janela();
+  const porPeriodo=(jIni!=null||jFim!=null)&&MOVS_STATUS==="ok";
+  const FLUXO_K={"Montagem TQ":"M","Novo":"N","Ajuste":"A","Revisão TQ":"R"};
+  let itensEquipe;
+  if(porPeriodo){
+    const base=filtered(true,{historico:true}),porId=Object.fromEntries(base.map(c=>[c.trello_id,c]));
+    itensEquipe=conclusoesNoPeriodo(new Set(base.map(c=>c.trello_id))).map(e=>({c:porId[e.id],k:FLUXO_K[e.fluxo]})).filter(x=>x.c&&x.k);
+  }else{
+    itensEquipe=cards.map(c=>{const tf=TIPOS_FLUXO.find(x=>x.t===tipoFluxo(c));return {c,k:tf&&tf.k}});
+  }
+  const modMap={};itensEquipe.forEach(({c,k})=>{const ms=mArr(c.membros).filter(Boolean),w=ms.length?1/ms.length:1;(ms.length?ms:["Sem membro no card"]).forEach(m=>{if(!modMap[m])modMap[m]={M:0,N:0,A:0,R:0,ext:FREELANCERS.includes(m)};if(k)modMap[m][k]+=w})});
   const srtM=Object.entries(modMap).map(([n,v])=>({n,...v,t:v.M+v.N+v.A+v.R})).sort((a,b)=>b.t-a.t);
-  document.getElementById("tbody-equipe").innerHTML=srtM.map(m=>'<tr><td>'+m.n+'</td><td>'+(m.ext?'<span class="pill pill--ext">Freelance</span>':'<span class="pill">Interna</span>')+'</td><td class="num">'+fmtPeca(m.M)+'</td><td class="num num--muted">'+fmtPeca(m.N)+'</td><td class="num num--muted">'+fmtPeca(m.A)+'</td><td class="num num--muted">'+fmtPeca(m.R)+'</td><td class="num"><strong>'+fmtPeca(m.t)+'</strong></td></tr>').join("");
+  document.getElementById("tbody-equipe").innerHTML=srtM.map(m=>'<tr><td>'+m.n+'</td><td>'+(m.n==="Sem membro no card"?'<span class="num--muted">—</span>':m.ext?'<span class="pill pill--ext">Freelance</span>':'<span class="pill">Interna</span>')+'</td><td class="num">'+fmtPeca(m.M)+'</td><td class="num num--muted">'+fmtPeca(m.N)+'</td><td class="num num--muted">'+fmtPeca(m.A)+'</td><td class="num num--muted">'+fmtPeca(m.R)+'</td><td class="num"><strong>'+fmtPeca(m.t)+'</strong></td></tr>').join("");
   const topMod=srtM[0],topExt=srtM.find(m=>m.ext);
-  const compart=cards.filter(c=>mArr(c.membros).filter(Boolean).length>1).length;
-  document.getElementById("note-equipe").innerHTML=(topMod?"<strong>"+topMod.n+"</strong> sustenta o maior volume com <strong>"+fmtPeca(topMod.t)+"</strong> peças.":"")+(topExt?" O <em>Modelista Externo</em> responde por <strong>"+fmtPeca(topExt.A)+"</strong> ajuste"+(topExt.A!==1?"s":"")+".":" ")+(compart?" <strong>"+compart+"</strong> card"+(compart!==1?"s":"")+" com mais de uma pessoa — divididos entre elas.":"");
+  const compart=itensEquipe.filter(({c})=>mArr(c.membros).filter(Boolean).length>1).length;
+  const fmtD=t=>new Date(t).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+  document.getElementById("sub-equipe").innerHTML=porPeriodo
+    ?"Pe&ccedil;as conclu&iacute;das "+(jIni!=null?"de "+fmtD(jIni)+" ":"")+(jFim!=null?"at&eacute; "+fmtD(jFim):"")+" &middot; card com 2 pessoas = 0,5 para cada"
+    :"Carga atual do quadro &middot; card com 2 pessoas = 0,5 para cada";
+  document.getElementById("note-equipe").innerHTML=(topMod?"<strong>"+topMod.n+"</strong> sustenta o maior volume com <strong>"+fmtPeca(topMod.t)+"</strong> peças.":"")+(topExt?" <em>"+topExt.n+"</em> (freelance) responde por <strong>"+fmtPeca(topExt.t)+"</strong> peça"+(topExt.t!==1?"s":"")+".":" ")+(compart?" <strong>"+compart+"</strong> card"+(compart!==1?"s":"")+" com mais de uma pessoa — divididos entre elas.":"")+(porPeriodo?" Conta cada peça uma vez no período, na data em que entrou em Liberado/Feito.":"");
 
   const extC=cards.filter(c=>c.is_modelista_externo),intC=cards.filter(c=>!c.is_modelista_externo),extN2=extC.length;
   document.getElementById("donut-ext-pct").textContent=pct(extN2,N)+"%";
@@ -1403,10 +1461,28 @@ function colunaFinaliza(col){
   if(!c)return false;
   if(c.includes("a fazer")||c.includes("2d"))return false;
   if(c.includes("fazendo")||c.includes("em aprovacao"))return false;
-  const fl=fluxoColuna(col);
-  if(!fl)return false;
-  if(fl==="Montagem TQ"&&c.includes("revisao final"))return true; // montagem entregue à revisão
+  if(c.includes("revisao final"))return false; // ainda não é conclusão
+  if(!fluxoColuna(col))return false;
   return c.includes("liberado")||c.includes("feito");
+}
+
+// Peças concluídas dentro do período do filtro. Regra única do painel:
+//  - conclusão = ENTRAR numa coluna Liberado/Feito do fluxo (Revisão Final não conta);
+//  - peça liberada de novo no período conta, mesmo que já tenha sido liberada antes;
+//  - dentro do período, cada peça conta uma vez por fluxo (a 1ª liberação no período).
+function fluxoPassaTipo(fluxo){return AF.type==="all"||FLUXO_TIPO[fluxo]===AF.type}
+function conclusoesNoPeriodo(validos){
+  const prim=new Map();
+  for(const m of MOVS){
+    if(!validos.has(m.trello_id))continue;
+    if(!colunaFinaliza(m.lista_depois))continue;
+    const ts=new Date(m.data).getTime();
+    if(!dentroDaJanela(ts))continue;
+    const fl=fluxoColuna(m.lista_depois),k=m.trello_id+"|"+fl;
+    if(!fluxoPassaTipo(fl))continue;
+    if(!prim.has(k)||ts<prim.get(k).ts)prim.set(k,{id:m.trello_id,ts,fluxo:fl});
+  }
+  return [...prim.values()];
 }
 
 function chaveBucket(ts,gran){
@@ -1450,7 +1526,7 @@ function renderVazao(){
   const setTxt=(id,t)=>{const e=document.getElementById(id);if(e)e.textContent=t};
   const setHtml=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h};
 
-  setTxt("sub-vazao","Barras empilhadas por fluxo · "+(GRAN==="mes"?"por mês":"por semana")+" · Montagem TQ finalizada = Revisão Final + Liberado/Feito");
+  setTxt("sub-vazao","Barras empilhadas por fluxo · "+(GRAN==="mes"?"por mês":"por semana")+" · peça concluída = entrou em Liberado/Feito");
 
   if(MOVS_STATUS!=="ok"){
     box.innerHTML=vazioVazao();
@@ -1461,21 +1537,9 @@ function renderVazao(){
 
   // Cards que passam pelos filtros — ignorando o período, porque aqui o recorte
   // de data é feito pela data de FINALIZAÇÃO e não pela última atividade.
-  const validos=new Set(filtered(true).map(c=>c.trello_id));
+  const validos=new Set(filtered(true,{historico:true}).map(c=>c.trello_id));
 
-  // Primeira finalização de cada card em cada fluxo (evita contar duas vezes o
-  // card que vai para Revisão Final e depois para Liberado/Feito).
-  const primeira=new Map();
-  for(const m of MOVS){
-    if(!validos.has(m.trello_id))continue;
-    if(!colunaFinaliza(m.lista_depois))continue;
-    const ts=new Date(m.data).getTime();
-    if(isNaN(ts))continue;
-    const fl=fluxoColuna(m.lista_depois),k=m.trello_id+"|"+fl;
-    if(!primeira.has(k)||ts<primeira.get(k).ts)primeira.set(k,{ts,fluxo:fl});
-  }
-
-  const eventos=[...primeira.values()].filter(e=>dentroDaJanela(e.ts));
+  const eventos=conclusoesNoPeriodo(validos);
   if(!eventos.length){
     box.innerHTML='<div class="chart__empty"><p>Nenhuma peça finalizada com os filtros atuais.</p></div>';
     setTxt("vazao-total","0 peças");

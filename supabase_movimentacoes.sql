@@ -3,8 +3,8 @@
 -- Histórico de movimentação dos cards entre as colunas do Trello.
 --
 -- É a base do gráfico "Vazão — peças finalizadas por período":
--- uma peça conta como finalizada na data em que ENTROU numa coluna
--- de encerramento do fluxo (Revisão Final / Liberado / Feito) —
+-- uma peça conta como concluída na data em que ENTROU numa coluna
+-- Liberado / Feito do fluxo (Revisão Final ainda não é conclusão) —
 -- e não pela coluna em que o card está parado hoje.
 --
 -- Como usar:
@@ -51,34 +51,38 @@ CREATE POLICY "Escrita apenas service_role nas movimentações"
     USING (auth.role() = 'service_role');
 
 -- ── View de apoio: peças finalizadas por mês ───────────────────
--- Espelha a regra usada no dashboard (primeira entrada de cada card
--- em coluna de encerramento, por fluxo). Útil para conferência no SQL.
+-- Espelha a regra usada no dashboard: dentro do período (aqui, o mês),
+-- cada card conta uma vez por fluxo, na 1ª entrada em Liberado/Feito
+-- naquele mês. Útil para conferência no SQL.
 
 CREATE OR REPLACE VIEW vazao_mensal AS
 WITH finalizacoes AS (
     SELECT
         trello_id,
         CASE
+            WHEN lower(lista_depois) LIKE '%revisão tq%' OR lower(lista_depois) LIKE '%revisao tq%' THEN 'Revisão TQ'
             WHEN lower(lista_depois) LIKE '%montagem%' THEN 'Montagem TQ'
             WHEN lower(lista_depois) LIKE '%ajuste%'   THEN 'Ajuste'
             WHEN lower(lista_depois) LIKE '%novo%'     THEN 'Novo'
         END                       AS fluxo,
+        date_trunc('month', data) AS mes,
         MIN(data)                 AS finalizado_em
     FROM movimentacoes
     WHERE lower(lista_depois) NOT LIKE '%a fazer%'
       AND lower(lista_depois) NOT LIKE '%2d%'
       AND lower(lista_depois) NOT LIKE '%fazendo%'
       AND lower(lista_depois) NOT LIKE '%acervo%'
+      AND lower(lista_depois) NOT LIKE '%old%'
+      AND lower(lista_depois) NOT LIKE '%revisão final%'
+      AND lower(lista_depois) NOT LIKE '%revisao final%'
       AND (
             lower(lista_depois) LIKE '%liberado%'
          OR lower(lista_depois) LIKE '%feito%'
-         OR lower(lista_depois) LIKE '%revisão final%'
-         OR lower(lista_depois) LIKE '%revisao final%'
       )
-    GROUP BY 1, 2
+    GROUP BY 1, 2, 3
 )
 SELECT
-    date_trunc('month', finalizado_em) AS mes,
+    mes,
     fluxo,
     COUNT(*)                           AS pecas
 FROM finalizacoes
