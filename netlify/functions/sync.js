@@ -53,6 +53,13 @@ function normCol(s) {
   return s.replace(/[^\w\s]/g, " ").toLowerCase().replace(/\s+/g, " ").trim();
 }
 
+// normCol descarta letras acentuadas ("Revisão" → "revis o"), então aqui
+// removemos só os acentos antes de comparar.
+function isRevisaoTQ(nome) {
+  const c = (nome || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return c.includes("revisao tq") && !c.includes("old");
+}
+
 async function buscarColunas(boardId, env) {
   const todas = await trelloGet(`/boards/${boardId}/lists`, { filter: "open" }, env);
   const targetNorm = normCol(TARGET_COLUMN);
@@ -81,6 +88,15 @@ async function buscarColunas(boardId, env) {
   if (acervo.length) {
     escopo.push(...acervo);
     console.log(`[sync] +${acervo.length} coluna(s) de acervo incluída(s): ${acervo.map(c => c.name).join(", ")}`);
+  }
+
+  // Colunas "🔍 Revisão TQ | …" ficam depois da coluna alvo no quadro, mas são
+  // um fluxo próprio que o dashboard acompanha. As antigas "Revisão TQ OLD" ficam de fora.
+  acervo.forEach(c => jaNoEscopo.add(c.id));
+  const revisao = todas.filter(c => isRevisaoTQ(c.name) && !jaNoEscopo.has(c.id));
+  if (revisao.length) {
+    escopo.push(...revisao);
+    console.log(`[sync] +${revisao.length} coluna(s) de Revisão TQ incluída(s): ${revisao.map(c => c.name).join(", ")}`);
   }
 
   console.log(`[sync] ${escopo.length} colunas no escopo`);
