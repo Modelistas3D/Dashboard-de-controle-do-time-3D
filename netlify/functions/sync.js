@@ -478,16 +478,30 @@ async function limparObsoletos(idsAtivos, env) {
     "Prefer":        "return=minimal",
   };
 
-  // 1. Busca todos os trello_id atualmente no banco
-  const selectRes = await fetch(
-    `${env.SUPABASE_URL}/rest/v1/cards?select=trello_id`,
-    { headers }
-  );
-  if (!selectRes.ok) {
-    console.warn(`[sync] Limpeza: falha ao buscar IDs do banco — ${selectRes.status}`);
+  // Trello vazio quase sempre é erro de leitura — não apaga o banco inteiro por isso.
+  if (!idsAtivos.length) {
+    console.warn("[sync] Limpeza: nenhum card ativo recebido do Trello — limpeza ignorada.");
     return 0;
   }
-  const todos = await selectRes.json();
+
+  // 1. Busca todos os trello_id atualmente no banco. O PostgREST devolve no
+  //    máximo ~1000 linhas por requisição, então paginamos; sem isso, os cards
+  //    além dos primeiros 1000 nunca eram conferidos e ficavam "fantasmas".
+  const PAGE = 1000;
+  const todos = [];
+  for (let offset = 0; ; offset += PAGE) {
+    const selectRes = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/cards?select=trello_id&order=id.asc&limit=${PAGE}&offset=${offset}`,
+      { headers }
+    );
+    if (!selectRes.ok) {
+      console.warn(`[sync] Limpeza: falha ao buscar IDs do banco — ${selectRes.status}`);
+      return 0;
+    }
+    const pagina = await selectRes.json();
+    todos.push(...pagina);
+    if (pagina.length < PAGE) break;
+  }
   const ativosSet = new Set(idsAtivos);
   const obsoletos = todos.map(r => r.trello_id).filter(id => !ativosSet.has(id));
 
